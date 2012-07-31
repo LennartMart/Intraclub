@@ -24,7 +24,8 @@ CREATE TABLE IF NOT EXISTS `intra_spelerperspeeldag` (
 
 CREATE TABLE IF NOT EXISTS `intra_spelerperseizoen` (
   `speler_id` int(11) NOT NULL,
-  `seizoen_id` int(11) NOT NULL,  
+  `seizoen_id` int(11) NOT NULL,
+  `basispunten` int(11) NOT NULL,
   `gespeelde_sets` int(11) NOT NULL,
   `gewonnen_sets` int(11) NOT NULL,
   `gespeelde_punten` int(11) NOT NULL,
