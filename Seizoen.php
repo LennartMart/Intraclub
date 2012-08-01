@@ -25,6 +25,7 @@ class Seizoen
             //Pak de eindpunten en zet deze als basispunten!
             //Eerst: ID vorige seizoen ophalen
             $vorige_seizoen = $this->get_huidig_seizoen();
+            $vorige_seizoen_id = $vorige_seizoen['seizoen_id'];
 
             //Seizoen bestaat niet -> invullen in database
             $query = "INSERT INTO intra_seizoen SET seizoen='$seizoen'";
@@ -35,7 +36,7 @@ class Seizoen
 
             //Haal de eindstand op van elke speler van vorig seizoen
             //En voeg nieuwe rij toe in spelerperseizoen
-            $resultaat = mysql_query("SELECT speler_id, huidige__punten FROM intra_spelerperseizoen WHERE seizoen_id='$vorige_seizoen';");
+            $resultaat = mysql_query("SELECT speler_id, huidige__punten FROM intra_spelerperseizoen WHERE seizoen_id='$vorige_seizoen_id';");
             while($rij = mysql_fetch_array($resultaat)) {
                 $insert_query = "
                     INSERT INTO
@@ -65,6 +66,6 @@ class Seizoen
 
     function get_huidig_seizoen(){
         $resultaat = mysql_query("SELECT seizoen_id FROM intra_seizoen ORDER BY seizoen_id DESC LIMIT 1;");
-        return @mysql_result($resultaat, 0, seizoen_id);
+        return mysql_fetch_assoc($resultaat);
     }
 }

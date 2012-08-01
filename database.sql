@@ -47,8 +47,8 @@ CREATE TABLE IF NOT EXISTS `intra_spelers` (
   PRIMARY KEY (`speler_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `intra_uitslagen` (
-  `uitslag_id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `intra_wedstrijden` (
+  `wedstrijd_id` int(11) NOT NULL AUTO_INCREMENT,
   `speeldag_id` int(11) NOT NULL,
   `team1_speler1` int(11) NOT NULL,
   `team1_speler2` int(11) NOT NULL,
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `intra_uitslagen` (
   `set2_2` int(11) NOT NULL,
   `set3_1` int(11) NOT NULL,
   `set3_2` int(11) NOT NULL,
-  PRIMARY KEY (`uitslag_id`),
+  PRIMARY KEY (`wedstrijd_id`),
   KEY `speeldag_id` (`speeldag_id`),
   KEY `team1_speler1` (`team1_speler1`),
   KEY `team1_speler2` (`team1_speler2`),
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS `intra_uitslagen` (
   KEY `team2_speler2` (`team2_speler2`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
-ALTER TABLE `intra_uitslagen`
+ALTER TABLE `intra_wedstrijden`
 	ADD CONSTRAINT `uitslagenSpeeldagFK` FOREIGN KEY (`speeldag_id`) REFERENCES `intra_speeldagen` (`speeldag_id`) ON DELETE CASCADE,
 	ADD CONSTRAINT `team1_speler1FK` FOREIGN KEY (`team1_speler1`) REFERENCES `intra_spelers` (`speler_id`) ON DELETE NO ACTION,
 	ADD CONSTRAINT `team1_speler2FK` FOREIGN KEY (`team1_speler2`) REFERENCES `intra_spelers` (`speler_id`) ON DELETE NO ACTION,
