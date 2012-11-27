@@ -54,22 +54,28 @@ class Wedstrijd
         if( $gelukt )
         {
             $row = mysql_fetch_assoc($result)
-            $this->wedstrijd_id = $row['wedstrijd_id'];
-            $this->speeldag_id = $row['speeldag_id'];;
-            $this->team1_speler1 = $row['team1_speler1'];
-            $this->team1_speler2 = $row['team1_speler2'];
-            $this->team2_speler1 = $row['team2_speler1'];
-            $this->team2_speler2 = $row['team2_speler2'];
-            $this->set1_1 = $row['set1_1'];
-            $this->set1_2 = $row['set1_2'];
-            $this->set2_1 = $row['set2_1'];
-            $this->set2_2 = $row['set2_2'];
-            $this->set3_1 = $row['set3_1'];
-            $this->set3_2 = $row['set3_2'];
+            $this->vulop($row);
             return TRUE;
         }
 
         return FALSE;
+    }
+     
+    //input = associatieve tabel uit db
+    //Kan gebruikt worden in speeldag bij alle wedstrijden op te halen
+    function vulop($resultaat){
+        $this->wedstrijd_id = $resultaat['wedstrijd_id'];
+        $this->speeldag_id = $resultaat['speeldag_id'];;
+        $this->team1_speler1 = $resultaat['team1_speler1'];
+        $this->team1_speler2 = $resultaat['team1_speler2'];
+        $this->team2_speler1 = $resultaat['team2_speler1'];
+        $this->team2_speler2 = $resultaat['team2_speler2'];
+        $this->set1_1 = $resultaat['set1_1'];
+        $this->set1_2 = $resultaat['set1_2'];
+        $this->set2_1 = $resultaat['set2_1'];
+        $this->set2_2 = $resultaat['set2_2'];
+        $this->set3_1 = $resultaat['set3_1'];
+        $this->set3_2 = $resultaat['set3_2'];
     }
     function update($wedstrijd){
 
