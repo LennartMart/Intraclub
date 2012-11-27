@@ -9,18 +9,18 @@
 include('connect.php');
 class Wedstrijd
 {
-    private $wedstrijd_id;
-    private $speeldag_id;
-    private $team1_speler1;
-    private $team1_speler2;
-    private $team2_speler1;
-    private $team2_speler2;
-    private $set1_1;
-    private $set1_2;
-    private $set2_1;
-    private $set2_2;
-    private $set3_1;
-    private $set3_2;
+    public $wedstrijd_id;
+    public $speeldag_id;
+    public $team1_speler1;
+    public $team1_speler2;
+    public $team2_speler1;
+    public $team2_speler2;
+    public $set1_1;
+    public $set1_2;
+    public $set2_1;
+    public $set2_2;
+    public $set3_1;
+    public $set3_2;
 
     function __construct(){
         $this->db = new ConnectionSettings();
