@@ -9,6 +9,13 @@ include('connect.php');
 include('seizoen.php');
 class Speler
 {
+    public $id = "";
+    public $voornaam = "";
+    public $achternaam = "";
+    public $geslacht = "";
+    public $jeugd = "";
+    public $klassement = "";
+
     function __construct(){
         $this->db = new ConnectionSettings();
         $this->db->connect();
@@ -62,6 +69,8 @@ class Speler
         }
 
     }
+     
+    //Hoort deze functie hier thuis?
     function get_gemiddelde_allespelers($seizoen_id){
         $query = "SELECT AVG(huidige_punten) as gemiddelde_alle from intra_spelerperseizoen where seizoen_id = '$seizoen_id';";
         $resultaat = mysql_query($query);
