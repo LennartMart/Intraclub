@@ -20,6 +20,12 @@ class Speeldag
         return mysql_fetch_assoc($resultaat);
     }
 
+    function get_wedstrijden_speeldag($speeldag_id){
+        //Verzamel de wedstrijden uit DB, vul de members van de Wedstrijd-objecten in en return een List<Wedstrijden>
+        //TODO: deze code hier invullen.
+
+    }
+
     function get_laatste_speeldag(){
         $resultaat = mysql_query("SELECT * FROM intra_speeldagen ORDER BY speeldag_id DESC LIMIT 1;");
         return mysql_fetch_assoc($resultaat);
