@@ -65,7 +65,7 @@ class Seizoen
     }
 
     function get_huidig_seizoen(){
-        $resultaat = mysql_query("SELECT seizoen_id FROM intra_seizoen ORDER BY seizoen_id DESC LIMIT 1;");
+        $resultaat = mysql_query("SELECT seizoen_id, seizoen FROM intra_seizoen ORDER BY seizoen_id DESC LIMIT 1;");
         return mysql_fetch_assoc($resultaat);
     }
 }
