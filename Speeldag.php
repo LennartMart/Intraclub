@@ -16,7 +16,7 @@ class Speeldag
     }
 
     function get($speeldag_id){
-        $resultaat = mysql_query("SELECT * FROM intra_speeldagen WHERE speeldag_id= '$speeldag_id';");
+        $resultaat = mysql_query("SELECT * FROM intra_speeldagen WHERE id= '$speeldag_id';");
         return mysql_fetch_assoc($resultaat);
     }
 
@@ -27,7 +27,7 @@ class Speeldag
     }
 
     function get_laatste_speeldag(){
-        $resultaat = mysql_query("SELECT * FROM intra_speeldagen ORDER BY speeldag_id DESC LIMIT 1;");
+        $resultaat = mysql_query("SELECT * FROM intra_speeldagen ORDER BY id DESC LIMIT 1;");
         return mysql_fetch_assoc($resultaat);
     }
 
