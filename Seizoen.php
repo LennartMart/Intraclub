@@ -25,7 +25,7 @@ class Seizoen
             //Pak de eindpunten en zet deze als basispunten!
             //Eerst: ID vorige seizoen ophalen
             $vorige_seizoen = $this->get_huidig_seizoen();
-            $vorige_seizoen_id = $vorige_seizoen['seizoen_id'];
+            $vorige_seizoen_id = $vorige_seizoen['id'];
 
             //Seizoen bestaat niet -> invullen in database
             $query = "INSERT INTO intra_seizoen SET seizoen='$seizoen'";
@@ -65,7 +65,7 @@ class Seizoen
     }
 
     function get_huidig_seizoen(){
-        $resultaat = mysql_query("SELECT seizoen_id, seizoen FROM intra_seizoen ORDER BY seizoen_id DESC LIMIT 1;");
+        $resultaat = mysql_query("SELECT id, seizoen FROM intra_seizoen ORDER BY id DESC LIMIT 1;");
         return mysql_fetch_assoc($resultaat);
     }
 }
