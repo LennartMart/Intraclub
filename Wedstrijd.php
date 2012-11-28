@@ -48,7 +48,7 @@ class Wedstrijd
 
     function get($wedstrijd_id){
         //Haal wedstrijd op en vul de members in
-        $get_query = "SELECT from intra_wedstrijden WHERE wedstrijd_id = '$wedstrijd_id';";
+        $get_query = "SELECT from intra_wedstrijden WHERE id = '$wedstrijd_id';";
 
         $gelukt = mysql_query($get_query);
         if( $gelukt )
@@ -64,7 +64,7 @@ class Wedstrijd
     //input = associatieve tabel uit db
     //Kan gebruikt worden in speeldag bij alle wedstrijden op te halen
     function vulop($resultaat){
-        $this->wedstrijd_id = $resultaat['wedstrijd_id'];
+        $this->wedstrijd_id = $resultaat['id'];
         $this->speeldag_id = $resultaat['speeldag_id'];;
         $this->team1_speler1 = $resultaat['team1_speler1'];
         $this->team1_speler2 = $resultaat['team1_speler2'];
