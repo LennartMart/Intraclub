@@ -77,7 +77,7 @@ class Speler
         return @mysql_result($resultaat, 0, gemiddelde_alle);
     }
     function get_basisinfo($speler_id){
-        $query = "SELECT * from intra_spelers where speler_id = '$speler_id';";
+        $query = "SELECT * from intra_spelers where id = '$speler_id';";
         $resultaat = mysql_query($query);
 
         //return assoc tabel
