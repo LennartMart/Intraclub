@@ -26,10 +26,9 @@ class Wedstrijd
         $this->db = new ConnectionSettings();
         $this->db->connect();
     }
-    function __construct($wedstrijd_id){
-        $this->db = new ConnectionSettings();
-        $this->db->connect();
-        $this->get($wedstrijd_id);
+    static function metId($wedstrijd_id){
+        $instance = new self();
+        $instance->get($wedstrijd_id);
     }
     function voeg_toe($data){
         //Beveiliging insert data!
@@ -41,7 +40,7 @@ class Wedstrijd
         }
         $insert_query = "INSERT INTO intra_wedstrijden 
                   SET (speeldag_id,team1_speler1,team1_speler2,team2_speler1,team2_speler2,set1_1,set1_2,set2_1,set2_2,set3_1,set3_2)
-                  VALUES($data['speeldag_id'],$data['team1_speler1'],$data['team1_speler2'],$data['team2_speler1'],$data['team2_speler2'],$data['set1_1'],$data['set1_2'],$data['set2_1'],$data['set2_2'],$data['set3_1'],$data['set3_2']);";
+                  VALUES(${data}['speeldag_id'],${data}['team1_speler1'],${data}['team1_speler2'],${data}['team2_speler1'],${data}['team2_speler2'],${data}['set1_1'],${data}['set1_2'],${data}['set2_1'],${data}['set2_2'],${data}['set3_1'],${data}['set3_2']);";
         
         return mysql_query($insert_query);        
     }
@@ -53,7 +52,7 @@ class Wedstrijd
         $gelukt = mysql_query($get_query);
         if( $gelukt )
         {
-            $row = mysql_fetch_assoc($result)
+            $row = mysql_fetch_assoc($gelukt);
             $this->vulop($row);
             return TRUE;
         }
