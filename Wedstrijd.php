@@ -80,4 +80,78 @@ class Wedstrijd
 
     }
 
+    function bepaal_winnaar() {
+        $gewonnen_sets_team1 = 0;
+        $gewonnen_sets_team2 = 0;
+        $totaal_winnende_team = 0;
+        $totaal_verliezende_team = 0;
+        $aantal_sets_gespeeld = 0;
+
+        if($this->set1_1 > $this->set1_2)
+        {
+            $gewonnen_sets_team1 ++;
+        }
+        else
+        {
+            $gewonnen_sets_team2++;
+        }
+        if($this->set2_1 > $this->set2_2)
+        {
+            $gewonnen_sets_team1 ++;
+        }
+        else
+        {
+            $gewonnen_sets_team2++;
+        }
+        if( $this->set3_1 != 0 || $this->set3_2 != 0)
+        {
+            $aantal_sets_gespeeld = 3;
+            if($this->set3_1 > $this->set3_2)
+            {
+                $gewonnen_sets_team1 ++;
+            }
+            else
+            {
+                $gewonnen_sets_team2++;
+            }
+        }
+        else{
+            $aantal_sets_gespeeld = 2;
+        }
+
+        $winnaar = ($gewonnen_sets_team1 > $gewonnen_sets_team2) ? 1 : 2;
+
+        $totaal_team1 = trim_score($this->set1_1,$this->set1_2) + trim_score($this->set2_1, $this->set2_2) + trim_score($this->set3_1, $this->set3_2);
+        $totaal_team2 = trim_score($this->set1_2,$this->set1_1) + trim_score($this->set2_2, $this->set2_1) + trim_score($this->set3_2, $this->set3_1);
+
+        if($winnaar == 1) {
+            $getrimd_totaal_winnende_team = $totaal_team1;
+            $getrimd_totaal_verliezende_team = $totaal_team2;
+            $totaal_winnende_team = $this->set1_1 + $this->set2_1 + $this->set3_1;
+            $totaal_verliezende_team = $this->set1_2 + $this->set2_2 + $this->set3_2;
+            $id_winnaars = array($this->team1_speler1, $this->team1_speler2);
+            $id_verliezers = array($this->team2_speler1, $this->team2_speler2);
+        }
+        else{
+            $getrimd_totaal_winnende_team = $totaal_team2;
+            $getrimd_totaal_verliezende_team = $totaal_team1;
+            $totaal_winnende_team = $this->set1_2 + $this->set2_2 + $this->set3_2;
+            $totaal_verliezende_team = $this->set1_1 + $this->set2_1 + $this->set3_1;
+            $id_winnaars = array($this->team2_speler1, $this->team2_speler2);
+            $id_verliezers = array($this->team1_speler1, $this->team1_speler2);
+        }
+
+        $return["winnaar"] = $winnaar;
+        $return["aantal_sets"] = $aantal_sets_gespeeld;
+        $return["totaal_winnaars"] = $totaal_winnende_team;
+        $return["totaal_verliezers"] = $totaal_verliezende_team;
+        $return["gemiddelde_winnaars"] = $getrimd_totaal_winnende_team / $aantal_sets_gespeeld;
+        $return["gemiddelde_verliezers"] = $getrimd_totaal_verliezende_team / $aantal_sets_gespeeld;
+        $return["id_winnaars"] = $id_winnaars;
+        $return["id_verliezers"] = $id_verliezers;
+        $return["aantal_punten"] = $totaal_verliezende_team + $totaal_winnende_team;
+
+        return $return;
+    }
+
 }

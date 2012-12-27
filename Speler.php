@@ -108,8 +108,8 @@ class Speler
         return mysql_fetch_assoc($resultaat);
     }
 
-    function get_seizoen_stats($speler_id, $seizoen_id){
-        $query = "SELECT * from intra_spelerperseizoen where speler_id = '$speler_id' AND seizoen_id = '$seizoen_id';";
+    function get_seizoen_stats($seizoen_id){
+        $query = "SELECT * from intra_spelerperseizoen where speler_id = '$this->id' AND seizoen_id = '$seizoen_id';";
         $resultaat = mysql_query($query);
 
         //return assoc tabel
@@ -158,6 +158,39 @@ class Speler
         $this->klassement = ${speler}['klassement'];
     }
 
+    function get_wedstrijden($seizoen_id)
+    {
+        $query = sprintf("SELECT * FROM  intra_wedstrijden
+			  WHERE (
+			  		  (
+					     team1_speler1='%s' OR
+					 	 team1_speler2='%s' OR
+						 team2_speler1='%s' OR
+						 team2_speler2='%s'
+					  ) AND seizoen_id = '%s'
+					)
+			  ORDER BY id ASC;",
+            mysql_real_escape_string($this->id),
+            mysql_real_escape_string($this->id),
+            mysql_real_escape_string($this->id),
+            mysql_real_escape_string($this->id),
+            mysql_real_escape_string($seizoen_id));
+
+        $resultaat = mysql_query($query);
+
+        $wedstrijden = array();
+
+        while($wedstrijd_array = mysql_fetch_array($resultaat))
+        {
+            $wedstrijd = new Wedstrijd();
+            $wedstrijd->vulop($wedstrijd_array);
+            $wedstrijden[] = $wedstrijd;
+        }
+
+        return $wedstrijden;
+
+
+    }
 
 
 

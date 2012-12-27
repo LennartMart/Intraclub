@@ -8,10 +8,18 @@ include('connect.php');
 include('Wedstrijd.php');
 class Speeldag
 {
+    public $id;
+    public $speeldagnummer;
+    public $gemiddeld_verliezend;
 
     function __construct(){
         $this->db = new ConnectionSettings();
         $this->db->connect();
+    }
+    static function metId($speeldag_id){
+        $instance = new self();
+        $instance->get($speeldag_id);
+        return $instance;
     }
     function voeg_toe($data){
         $query = "
@@ -27,12 +35,12 @@ class Speeldag
 
     function get($speeldag_id){
         $resultaat = mysql_query("SELECT * FROM intra_speeldagen WHERE id= '$speeldag_id';");
-        return mysql_fetch_assoc($resultaat);
+        $this->vulop($resultaat);
     }
 
-    function get_wedstrijden_speeldag($speeldag_id){
+    function get_wedstrijden_speeldag(){
         //Verzamel de wedstrijden uit DB, vul de members van de Wedstrijd-objecten in en return een List<Wedstrijden>
-        $resultaat = mysql_query("SELECT * FROM intra_wedstrijden WHERE speeldag_id= '$speeldag_id';");
+        $resultaat = mysql_query("SELECT * FROM intra_wedstrijden WHERE speeldag_id= '$this->id';");
         $wedstrijden = array();
         while($array_uitslagen = mysql_fetch_array($resultaat))
         {
@@ -47,13 +55,21 @@ class Speeldag
         $resultaat = mysql_query("SELECT * FROM intra_speeldagen ORDER BY id DESC LIMIT 1;");
         return mysql_fetch_assoc($resultaat);
     }
-
-    function update($speeldag){
-        $query = "
+    function vulop($data)
+    {
+        $this->id = ${data}['id'];
+        $this->gemiddeld_verliezend = ${data}['gemiddeld_verliezend'];
+        $this->speeldagnummer = ${data}['speeldagnummer'];
+    }
+    function update(){
+        $query = sprintf("
             UPDATE intra_speeldagen
-            set gemiddeld_verliezend = ${speeldag}['verliezend']
-            WHERE id = ${speeldag}['speeldag_id']
-        ";
+            set gemiddeld_verliezend = '%s'
+            WHERE id = '%s';
+        ",
+            mysql_real_escape_string($this->gemiddeld_verliezend),
+            mysql_real_escape_string($this->id))
+        ;
         return mysql_query($query);
     }
 

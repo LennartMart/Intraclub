@@ -82,16 +82,76 @@ class Seizoen
     {
         $this->get_huidig_seizoen();
         $speeldagen = $this->get_speeldagen_seizoen($this->id);
+        $gemiddelde_verliezers_array = array();
+        $speeldagnummer = 1;
 
+        // Gemiddelde verliezers bepalen
         foreach($speeldagen as $key => $value)
         {
-            $speeldag = new Speeldag();
-            $wedstrijden = $speeldag->get_wedstrijden_speeldag($key);
+            $gemiddelde_verliezers = 0;
+            $aantal_wedstrijden = 0;
+            $speeldag = Speeldag::metId($key);
+            $wedstrijden = $speeldag->get_wedstrijden_speeldag();
+
             foreach($wedstrijden as $wedstrijd)
             {
-                $winnaar_array = $this->bepaal_winnaar($wedstrijd);
+                $huidige_wedstrijd = new Wedstrijd();
+                $huidige_wedstrijd = $wedstrijd;
+
+                $score_array = $huidige_wedstrijd->bepaald_winnaar();
+                $gemiddelde_verliezers += ${$score_array}['gemiddelde_verliezers'];
+                $aantal_wedstrijden++;
             }
+
+            $gemiddelde_verliezend_speeldag =  $gemiddelde_verliezers/$aantal_wedstrijden;
+            $speeldag->gemiddeld_verliezend = $gemiddelde_verliezend_speeldag;
+            $speeldag->update();
+            $gemiddelde_verliezers_array[$speeldagnummer] = $speeldag;
+            $speeldagnummer ++;
         }
+
+
+
+        //Resultaat per speler bepalen
+        $alle_spelers = new Speler();
+        $alle_spelers = $alle_spelers->get_alle_spelers();
+        foreach($alle_spelers as $speler_array)
+        {
+            $speler = new Speler();
+            $speler = $speler_array;
+            $seizoen_stats = $speler->get_seizoen_stats($this->id);
+
+            $uitslag_array = array();
+            // basispunt als beginwaarde zetten
+            $uitslag_array[0] = ${seizoen_stats}['basispunten'];
+            $speeldag = 1;
+            $totaal = 0;
+            $afwezig = 0;
+            $afwezig_array = array();
+            $gespeelde_sets = 0;
+            $gewonnen_sets = 0;
+            $gespeelde_punten = 0;
+            $gewonnen_punten = 0;
+            $gewonnen_spelletjes = 0;
+
+
+            $wedstrijden_speler = $speler->get_wedstrijden($this->id);
+            foreach($wedstrijden_speler as $wedstrijd_speler)
+            {
+                $wedstrijd = new Wedstrijd();
+                $wedstrijd = $wedstrijd_speler;
+                $winnaar_array = $wedstrijd->bepaal_winnaar();
+                //Verder TO DO ....
+
+            }
+
+
+        }
+
+
+
+
+
 
     }
 
@@ -114,77 +174,5 @@ class Seizoen
         return ($score1 > 21 || $score2 > 21) ? 21/max($score1, $score2) * $score1 : $score1;
     }
 
-    function bepaal_winnaar($wedstrijd) {
-        $gewonnen_sets_team1 = 0;
-        $gewonnen_sets_team2 = 0;
-        $totaal_winnende_team = 0;
-        $totaal_verliezende_team = 0;
-        $aantal_sets_gespeeld = 0;
 
-        if($wedstrijd->set1_1 > $wedstrijd->set1_2)
-        {
-            $gewonnen_sets_team1 ++;
-        }
-        else
-        {
-            $gewonnen_sets_team2++;
-        }
-        if($wedstrijd->set2_1 > $wedstrijd->set2_2)
-        {
-            $gewonnen_sets_team1 ++;
-        }
-        else
-        {
-            $gewonnen_sets_team2++;
-        }
-        if( $wedstrijd->set3_1 != 0 || $wedstrijd->set3_2 != 0)
-        {
-            $aantal_sets_gespeeld = 3;
-            if($wedstrijd->set3_1 > $wedstrijd->set3_2)
-            {
-                $gewonnen_sets_team1 ++;
-            }
-            else
-            {
-                $gewonnen_sets_team2++;
-            }
-        }
-        else{
-            $aantal_sets_gespeeld = 2;
-        }
-
-        $winnaar = ($gewonnen_sets_team1 > $gewonnen_sets_team2) ? 1 : 2;
-
-        $totaal_team1 = trim_score($wedstrijd->set1_1,$wedstrijd->set1_2) + trim_score($wedstrijd->set2_1, $wedstrijd->set2_2) + trim_score($wedstrijd->set3_1, $wedstrijd->set3_2);
-        $totaal_team2 = trim_score($wedstrijd->set1_2,$wedstrijd->set1_1) + trim_score($wedstrijd->set2_2, $wedstrijd->set2_1) + trim_score($wedstrijd->set3_2, $wedstrijd->set3_1);
-
-        if($winnaar == 1) {
-            $getrimd_totaal_winnende_team = $totaal_team1;
-            $getrimd_totaal_verliezende_team = $totaal_team2;
-            $totaal_winnende_team = $wedstrijd->set1_1 + $wedstrijd->set2_1 + $wedstrijd->set3_1;
-            $totaal_verliezende_team = $wedstrijd->set1_2 + $wedstrijd->set2_2 + $wedstrijd->set3_2;
-            $id_winnaars = array($wedstrijd->team1_speler1, $wedstrijd->team1_speler2);
-            $id_verliezers = array($wedstrijd->team2_speler1, $wedstrijd->team2_speler2);
-        }
-        else{
-            $getrimd_totaal_winnende_team = $totaal_team2;
-            $getrimd_totaal_verliezende_team = $totaal_team1;
-            $totaal_winnende_team = $wedstrijd->set1_2 + $wedstrijd->set2_2 + $wedstrijd->set3_2;
-            $totaal_verliezende_team = $wedstrijd->set1_1 + $wedstrijd->set2_1 + $wedstrijd->set3_1;
-            $id_winnaars = array($wedstrijd->team2_speler1, $wedstrijd->team2_speler2);
-            $id_verliezers = array($wedstrijd->team1_speler1, $wedstrijd->team1_speler2);
-        }
-
-        $return["winnaar"] = $winnaar;
-        $return["aantal_sets"] = $aantal_sets_gespeeld;
-        $return["totaal_winnaars"] = $totaal_winnende_team;
-        $return["totaal_verliezers"] = $totaal_verliezende_team;
-        $return["gemiddelde_winnaars"] = $getrimd_totaal_winnende_team / $aantal_sets_gespeeld;
-        $return["gemiddelde_verliezers"] = $getrimd_totaal_verliezende_team / $aantal_sets_gespeeld;
-        $return["id_winnaars"] = $id_winnaars;
-        $return["id_verliezers"] = $id_verliezers;
-        $return["aantal_punten"] = $totaal_verliezende_team + $totaal_winnende_team;
-
-        return $return;
-    }
 }
