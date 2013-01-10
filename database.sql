@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS `intra_seizoen` (
 CREATE TABLE IF NOT EXISTS `intra_speeldagen` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `speeldagnummer` int(11) NOT NULL,
+  'datum' DATE NOT NULL,
   `seizoen_id` int(11) NOT NULL,
   `gemiddeld_verliezend` int(11) DEFAULT NULL,
   PRIMARY KEY (`speeldag_id`),
@@ -14,6 +15,7 @@ CREATE TABLE IF NOT EXISTS `intra_speeldagen` (
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `intra_spelerperspeeldag` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `speler_id` int(11) NOT NULL,
   `speeldag_id` int(11) NOT NULL,
   `ranking` int(11) NOT NULL,
@@ -23,6 +25,7 @@ CREATE TABLE IF NOT EXISTS `intra_spelerperspeeldag` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `intra_spelerperseizoen` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `speler_id` int(11) NOT NULL,
   `seizoen_id` int(11) NOT NULL,
   `basispunten` int(11) NOT NULL,
@@ -31,7 +34,6 @@ CREATE TABLE IF NOT EXISTS `intra_spelerperseizoen` (
   `gewonnen_sets` int(11) NOT NULL,
   `gespeelde_punten` int(11) NOT NULL,
   `gewonnen_punten` int(11) NOT NULL,
-  `aanwezig` int(11) NOT NULL,
   KEY `speler_id` (`speler_id`),
   KEY `seizoen_id` (`seizoen_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -40,6 +42,7 @@ CREATE TABLE IF NOT EXISTS `intra_spelers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `voornaam` varchar(32) NOT NULL,
   `naam` varchar(32) NOT NULL,
+  `is_lid` tinyint(1) NOT NULL,
   `geslacht` enum('Man','Vrouw') NOT NULL,
   `jeugd` tinyint(1) NOT NULL,
   `klassement` enum('A','B1','B2','C1','C2','D','Recreant') NOT NULL,

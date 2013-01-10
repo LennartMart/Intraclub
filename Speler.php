@@ -6,7 +6,8 @@
  */
 
 include('connect.php');
-include('seizoen.php');
+include('Seizoen.php');
+include('Wedstrijd.php');
 class Speler
 {
     public $id = "";
@@ -35,11 +36,11 @@ class Speler
                 jeugd = '%s',
                 klassement= '%s'
                 ",
-                mysql_real_escape_string(${data}['voornaam']),
-                mysql_real_escape_string(${data}['achternaam']),
-                mysql_real_escape_string(${data}['geslacht']),
-                mysql_real_escape_string(${data}['jeugd']),
-                mysql_real_escape_string(${data}['klassement']));
+                mysql_real_escape_string($data['voornaam']),
+                mysql_real_escape_string($data['achternaam']),
+                mysql_real_escape_string($data['geslacht']),
+                mysql_real_escape_string($data['jeugd']),
+                mysql_real_escape_string($data['klassement']));
 
         $result = mysql_query($query);
         if(!$result) {
@@ -48,8 +49,8 @@ class Speler
         else{
             //Haal de gegenereerde ID op.
             $speler_id = mysql_insert_id();
-            $seizoen = new Seizoen();
-            $huidig_seizoen = $seizoen->get_huidig_seizoen();
+
+            $huidig_seizoen = Seizoen::huidig_seizoen();
             $gemiddelde_overal = $this->get_gemiddelde_allespelers($huidig_seizoen);
             //Insert een rij voor de speler in het huidige seizoen
             $query = sprintf("
@@ -80,15 +81,20 @@ class Speler
 
     }
 
+    /**
+     * Haalt alle spelers op uit de database
+     * Enkel diegenen die lid zijn!
+     * @return Speler[]
+     */
     function get_alle_spelers()
     {
-        $resultaat = mysql_query("SELECT * from intra_spelers");
+        $resultaat = mysql_query("SELECT * from intra_spelers where is_lid = 1");
         $spelers = array();
         while($array_spelers = mysql_fetch_array($resultaat))
         {
             $speler = new Speler();
             $speler->vulop($array_spelers);
-            array_push($spelers,$speler);
+            $spelers[] = $speler;
         }
         return $spelers;
 
@@ -125,7 +131,7 @@ class Speler
     }
 
     function update_basisinfo($data){
-        $query = "
+        $query = sprintf("
             UPDATE
                 intra_spelers
             SET
@@ -137,7 +143,13 @@ class Speler
 
             WHERE
                 id = ${data}['id']
-        ";
+            ",
+            mysql_real_escape_string($data['voornaam']),
+            mysql_real_escape_string($data['achternaam']),
+            mysql_real_escape_string($data['geslacht']),
+            mysql_real_escape_string($data['jeugd']),
+            mysql_real_escape_string($data['klassement']),
+            mysql_real_escape_string($data['id']));
 
         return mysql_query($query);
     }
@@ -150,14 +162,18 @@ class Speler
 
     private function vulop($speler)
     {
-        $this->id = ${speler}['id'];
-        $this->voornaam = ${speler}['voornaam'];
-        $this->achternaam = ${speler}['achternaam'];
-        $this->geslacht = ${speler}['geslacht'];
-        $this->jeugd = ${speler}['jeugd'];
-        $this->klassement = ${speler}['klassement'];
+        $this->id = $speler['id'];
+        $this->voornaam = $speler['voornaam'];
+        $this->achternaam = $speler['achternaam'];
+        $this->geslacht = $speler['geslacht'];
+        $this->jeugd = $speler['jeugd'];
+        $this->klassement = $speler['klassement'];
     }
 
+    /**
+     * @param $seizoen_id
+     * @return Wedstrijd[]
+     */
     function get_wedstrijden($seizoen_id)
     {
         $query = sprintf("SELECT * FROM  intra_wedstrijden
