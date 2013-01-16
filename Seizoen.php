@@ -8,10 +8,11 @@ include('connect.php');
 include('Speeldag.php');
 include('Wedstrijd.php');
 include('Speler.php');
+include('Spelers.php');
 class Seizoen
 {
-    private $id;
-    private $seizoen;
+    public $id;
+    public $seizoen;
 
     function __construct()
     {
@@ -76,8 +77,6 @@ class Seizoen
         }
     }
 
-
-
     private function get_huidig_seizoen(){
         $query = mysql_query("SELECT id, seizoen FROM intra_seizoen ORDER BY id DESC LIMIT 1;");
         $resultaat = mysql_fetch_assoc($query);
@@ -110,7 +109,7 @@ class Seizoen
             {
                 /* @var $wedstrijd Wedstrijd */
                 $score_array = $wedstrijd->bepaald_winnaar();
-                $gemiddelde_verliezers += $$score_array['gemiddelde_verliezers'];
+                $gemiddelde_verliezers += $score_array['gemiddelde_verliezers'];
                 $aantal_wedstrijden++;
             }
 
@@ -124,12 +123,10 @@ class Seizoen
 
         $laatste_speeldag = $speeldagnummer -1;
 
-        //MultiArray om alle spelertussenstanden in op te slaan
-
-
         //Resultaat per speler bepalen
-        $alle_spelers = new Speler();
-        $alle_spelers = $alle_spelers->get_alle_spelers();
+        $alle_spelers = new Spelers();
+        $alle_spelers = $alle_spelers->get_spelers(true);
+
         foreach($alle_spelers as $speler)
         {
             /* @var $speler Speler */
@@ -140,13 +137,13 @@ class Seizoen
             // basispunt als beginwaarde zetten
             $uitslag_array[0] = $seizoen_stats['basispunten'];
             $speeldag = 1;
-            $totaal = 0;
-            $afwezig_array = array();
-            $gespeelde_sets = 0;
-            $gewonnen_sets = 0;
-            $gespeelde_punten = 0;
-            $gewonnen_punten = 0;
-            $gewonnen_matchen = 0;
+
+            $seizoen_stats = array();
+            $seizoen_stats["gespeelde_sets"] = 0;
+            $seizoen_stats["gewonnen_sets"] = 0;
+            $seizoen_stats["gespeelde_punten"] = 0;
+            $seizoen_stats["gewonnen_punten"] = 0;
+            $seizoen_stats["gewonnen_matchen"] = 0;
 
             $wedstrijden_speler = $speler->get_wedstrijden($this->id);
             foreach($wedstrijden_speler as $wedstrijd_speler)
@@ -158,7 +155,6 @@ class Seizoen
                     //Speler niet aanwezig op $speeldag
                     //Geef hem gemiddelde verliezers van die speeldag!
                     $uitslag_array[$speeldag] = $gemiddelde_verliezers_array[$speeldag];
-                    $afwezig_array[$speeldag] = true;
                     $speeldag++;
                 }
                 // meerdere spelletjes gespeeld, OVERSLAAN
@@ -169,22 +165,22 @@ class Seizoen
                 //We zitten goed!
                 else if($speeldag == $huidige_speeldag) {
                     $winnaar_array = $wedstrijd_speler->bepaal_winnaar();
-                    $gespeelde_punten += $winnaar_array["aantal_punten"];
-                    $gespeelde_sets += $winnaar_array["aantal_sets"];
+                    $seizoen_stats["gespeelde_punten"] += $winnaar_array["aantal_punten"];
+                    $seizoen_stats["gespeelde_sets"] += $winnaar_array["aantal_sets"];
                     $afwezig_array[$speeldag] = false;
 
                     if(in_array($speler->id, $winnaar_array["id_winnaars"])) {
                         // speler heeft gewonnen!
                         $uitslag_array[$speeldag] = $winnaar_array["gemiddelde_punten_winnaars"];
-                        $gewonnen_punten += $winnaar_array["totaal_punten_winnaars"];
-                        $gewonnen_sets += 2;
-                        $gewonnen_matchen++;
+                        $seizoen_stats["gespeelde_punten"] += $winnaar_array["totaal_punten_winnaars"];
+                        $seizoen_stats["gewonnen_sets"] += 2;
+                        $seizoen_stats["gewonnen_matchen"]++;
                     }
                     else {
                         // speler heeft verloren, jammer
                         $uitslag_array[$speeldag] = $winnaar_array["gemiddelde_punten_verliezers"];
-                        $gewonnen_punten += $winnaar_array["totaal_punten_verliezers"];
-                        $gewonnen_sets += $winnaar_array["aantal_sets"] - 2;
+                        $seizoen_stats["gewonnen_punten"] += $winnaar_array["totaal_punten_verliezers"];
+                        $seizoen_stats["gewonnen_sets"] += $winnaar_array["aantal_sets"] - 2;
                     }
 
                     //Volgende speeldag...
@@ -194,41 +190,56 @@ class Seizoen
             // laatste speeldagen niet aanwezig
             while($speeldag <= $laatste_speeldag) {
                 $uitslag_array[$speeldag] = $gemiddelde_verliezers_array[$speeldag];
-                $afwezig_array[$speeldag] = true;
                 $speeldag++;
             }
 
+            //We hebben nu $uitslag_array[speeldag] met gemiddelde voor elke speeldag van de speler
+            //Geef speeldag  mee, samen met uitslag speeldag.
+            //Ranking = 0, want we weten dit niet!
+            //Hebben gemiddelde speeldag, MAAR MOETEN GEMIDDELDE TOT DIE SPEELDAG BEREKENEN! => done
 
-
-            //We hebben nu $uitslag_array[speeldag] met gemiddelde voor elke speeldag en afwezig_array[speeldag] met afwezigheden...
-            for($i = 1; i<=$laatste_speeldag; $i++){
-                //start met basispunten => zitten in 0!
+            //  spelers rankschikken per speeldag en dan pas update_speeldagstats => enkel nog update_speeldagstats
+            foreach($speeldagen_seizoen as $speeldag)
+            {
+                /* @var $speeldag Speeldag */
                 $som =0;
-                $aantal_speeldagen = 0;
-                for($j =0; $j<=$i; $j++){
+                for($j =0; $j<=$speeldag->speeldagnummer; $j++){
                     $som += $uitslag_array[$j];
-                    $aantal_speeldagen++;
                 }
-                $id_speeldag = array_search($aantal_speeldagen -1, $speeldagen_seizoen);
-                $tussenstand_speeldag = $som/($aantal_speeldagen-1);
-                //REWRITE: scheiden van gemiddelde en afwezigheden!
-                $ranking_spelers_alle_speeldagen[$aantal_speeldagen-1][$speler->id] = array( "afwezig" => $afwezig_array[$aantal_speeldagen-1],
-                                                                                             "gemiddelde" => $tussenstand_speeldag
-                                                                                            );
+                //Tussenstand speeldag delen door aantal speeldagen +1
+                //+1 = basispunten
+                $tussenstand_speeldag = $som/($speeldag->speeldagnummer +1);
+                $ranking_spelers_alle_speeldagen[$speeldag->id][] = array('speler_id' => $speler->id, 'gemiddelde' => $tussenstand_speeldag);
 
             }
-
-
             //Ten slotte: update seizoeninfo!
-
+            $speler->update_seizoenstats($seizoen_stats);
 
         }
 
-        foreach($speeldagen_seizoen as $key => $value)
+        //Magic Sorting
+        //Gebaseerd op http://php.net/manual/en/function.array-multisort.php
+        //Deze foreach sorteert de spelers per speeldag
+        foreach($speeldagen_seizoen as $speeldag)
         {
-            $tesorteren_array = $ranking_spelers_alle_speeldagen[$value];
+            /* @var $speeldag Speeldag */
+            // Obtain a list of columns
+            foreach ($ranking_spelers_alle_speeldagen[$speeldag->id] as $key => $row) {
+                $speler_id[$key]  = $row['speler_id'];
+                $gemiddelde[$key] = $row['gemiddelde'];
+            }
+
+            // Add $data as the last parameter, to sort by the common key
+            array_multisort($gemiddelde, SORT_DESC,$data);
+
+            foreach ($ranking_spelers_alle_speeldagen[$speeldag->id] as $key => $row) {
+                //Update the speeldagstats
+                $speler = new Speler();
+                $speler->update_speeldagstats($row['speler_id'], $speeldag,$row['gemiddelde'],$key);
+            }
 
         }
+
 
 
 

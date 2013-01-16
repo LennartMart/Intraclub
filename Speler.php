@@ -81,51 +81,22 @@ class Speler
 
     }
 
-    /**
-     * Haalt alle spelers op uit de database
-     * Enkel diegenen die lid zijn!
-     * @return Speler[]
-     */
-    function get_alle_spelers()
-    {
-        $resultaat = mysql_query("SELECT * from intra_spelers where is_lid = 1");
-        $spelers = array();
-        while($array_spelers = mysql_fetch_array($resultaat))
-        {
-            $speler = new Speler();
-            $speler->vulop($array_spelers);
-            $spelers[] = $speler;
-        }
-        return $spelers;
-
-    }
-    //Hoort deze functie hier thuis?
-    function get_gemiddelde_allespelers($seizoen_id){
-        $query = sprintf("SELECT AVG(huidige_punten) as gemiddelde_alle from intra_spelerperseizoen where seizoen_id = '%s';",mysql_real_escape_string($seizoen_id)) ;
-        $resultaat = mysql_query($query);
-        return @mysql_result($resultaat, 0, gemiddelde_alle);
-    }
-
-    function get_basisinfo($speler_id){
-        $query = sprintf("SELECT * from intra_spelers where id = '%s';", mysql_real_escape_string($speler_id));
-        $resultaat = mysql_query($query);
-
-        //return assoc tabel
-        return mysql_fetch_assoc($resultaat);
-    }
-
     function get_seizoen_stats($seizoen_id){
-        $query = "SELECT * from intra_spelerperseizoen where speler_id = '$this->id' AND seizoen_id = '$seizoen_id';";
+        $query = sprintf("SELECT * from intra_spelerperseizoen where speler_id = '%s' AND seizoen_id = '%s';",
+                            mysql_real_escape_string($this->id),
+                            mysql_real_escape_string($seizoen_id));
         $resultaat = mysql_query($query);
 
         //return assoc tabel
         return mysql_fetch_assoc($resultaat);
     }
 
-    function get_speeldagstats($speler_id, $speeldag_id){
-        $query = "SELECT * from intra_spelerperspeeldag where speler_id = '$speler_id' AND speeldag_id = '$speeldag_id';";
-        $resultaat = mysql_query($query);
+    function get_speeldagstats($speeldag_id){
+        $query = sprintf("SELECT * from intra_spelerperspeeldag where speler_id = '%s' AND speeldag_id = '%s';",
+                            mysql_real_escape_string($this->id),
+                            mysql_real_escape_string($speeldag_id));
 
+        $resultaat = mysql_query($query);
         //return assoc tabel
         return mysql_fetch_assoc($resultaat);
     }
@@ -135,32 +106,57 @@ class Speler
             UPDATE
                 intra_spelers
             SET
-                voornaam = ${data}['voornaam'],
-                achternaam = ${data}['achternaam'],
-                geslacht = ${data}['geslacht'],
-                jeugd = ${data}['jeugd'],
-                klassement_id= ${data}['klassement']
+                voornaam = '%s',
+                achternaam = '%s',
+                geslacht = '%s',
+                jeugd = '%s',
+                klassement_id= '%s'
+                is_lid = '%s'
 
             WHERE
-                id = ${data}['id']
+                id = '%s';
             ",
             mysql_real_escape_string($data['voornaam']),
             mysql_real_escape_string($data['achternaam']),
             mysql_real_escape_string($data['geslacht']),
             mysql_real_escape_string($data['jeugd']),
             mysql_real_escape_string($data['klassement']),
+            mysql_real_escape_string($data['is_lid']),
             mysql_real_escape_string($data['id']));
 
-        return mysql_query($query);
+        $gelukt =  mysql_query($query);
+        if($gelukt)
+        {
+            $huidig_seizoen = Seizoen::huidig_seizoen();
+            $query = sprintf("
+            UPDATE
+                intra_spelerperseizoen
+            SET
+                is_lid = '%s',
+
+            WHERE
+                speler_id = '%s'
+                AND
+                seizoen_id = '%s';
+            ",
+                mysql_real_escape_string($data['is_lid']),
+                mysql_real_escape_string($data['id']),
+                mysql_real_escape_string($huidig_seizoen->id));
+            return mysql_query($query);
+        }
+        else{
+            return false;
+        }
     }
 
     function update_seizoenstats($data){
+
     }
 
-    function update_speeldagstats($data){
+    function update_speeldagstats($speler_id, $speeldag, $tussenstand_speeldag, $ranking){
     }
 
-    private function vulop($speler)
+    function vulop($speler)
     {
         $this->id = $speler['id'];
         $this->voornaam = $speler['voornaam'];
