@@ -5,6 +5,7 @@
  * Time: 21:36
  */
 include('connect.php');
+
 include('Speeldag.php');
 include('Wedstrijd.php');
 include('Speler.php');
@@ -108,7 +109,7 @@ class Seizoen
             foreach($wedstrijden as $wedstrijd)
             {
                 /* @var $wedstrijd Wedstrijd */
-                $score_array = $wedstrijd->bepaald_winnaar();
+                $score_array = $wedstrijd->bepaal_winnaar();
                 $gemiddelde_verliezers += $score_array['gemiddelde_verliezers'];
                 $aantal_wedstrijden++;
             }
@@ -249,7 +250,7 @@ class Seizoen
 
     }
 
-    private function get_speeldagen($seizoen_id)
+    public function get_speeldagen($seizoen_id)
     {
         $query = sprintf("SELECT id, speeldagnummer from intra_speeldagen WHERE seizoen_id = '%s';", mysql_real_escape_string($seizoen_id));
         $resultaat = $query;

@@ -180,7 +180,7 @@ class Wedstrijd
         return $return;
     }
 
-    function trim_score($score1, $score2) {
+    private function trim_score($score1, $score2) {
         return ($score1 > 21 || $score2 > 21) ? 21/max($score1, $score2) * $score1 : $score1;
     }
 
