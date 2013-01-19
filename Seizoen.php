@@ -213,6 +213,7 @@ class Seizoen
 
             }
             //Ten slotte: update seizoeninfo!
+            $seizoen_stats["seizoen"] = $this->id;
             $speler->update_seizoenstats($seizoen_stats);
 
         }
@@ -235,7 +236,7 @@ class Seizoen
             foreach ($ranking_spelers_alle_speeldagen[$speeldag->id] as $key => $row) {
                 //Update the speeldagstats
                 $speler = new Speler();
-                $speler->update_speeldagstats($row['speler_id'], $speeldag,$row['gemiddelde'],$key);
+                $speler->update_speeldagstats($row['speler_id'], $speeldag->id,$row['gemiddelde'],$key);
             }
 
         }

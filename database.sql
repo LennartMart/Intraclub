@@ -1,16 +1,16 @@
 CREATE TABLE IF NOT EXISTS `intra_seizoen` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `seizoen` varchar(32) NOT NULL,
-  PRIMARY KEY (`seizoen_id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `intra_speeldagen` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `speeldagnummer` int(11) NOT NULL,
-  'datum' DATE NOT NULL,
+  `datum` DATE NOT NULL,
   `seizoen_id` int(11) NOT NULL,
   `gemiddeld_verliezend` int(11) DEFAULT NULL,
-  PRIMARY KEY (`speeldag_id`),
+  PRIMARY KEY (`id`),
   KEY `seizoen_id` (`seizoen_id`)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS `intra_spelerperseizoen` (
   `gewonnen_sets` int(11) NOT NULL,
   `gespeelde_punten` int(11) NOT NULL,
   `gewonnen_punten` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
   KEY `speler_id` (`speler_id`),
   KEY `seizoen_id` (`seizoen_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -45,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `intra_spelers` (
   `geslacht` enum('Man','Vrouw') NOT NULL,
   `jeugd` tinyint(1) NOT NULL,
   `klassement` enum('A','B1','B2','C1','C2','D','Recreant') NOT NULL,
-  PRIMARY KEY (`speler_id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `intra_wedstrijden` (
@@ -88,4 +89,3 @@ ALTER TABLE `intra_speeldagen`
 		ADD CONSTRAINT `speeldagenSeizoenFK` FOREIGN KEY (`seizoen_id`) REFERENCES `intra_seizoen` (`id`) ON DELETE NO ACTION;
 		
 		
-

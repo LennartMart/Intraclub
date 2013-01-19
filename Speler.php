@@ -151,9 +151,48 @@ class Speler
 
     function update_seizoenstats($data){
 
+        $query = sprintf("
+            UPDATE
+                intra_spelerperseizoen
+            SET
+                basispunten = '%s',
+                huidige_punten = '%s',
+                gespeelde_sets = '%s',
+                gewonnen_sets = '%s',
+                gespeelde_punten= '%s'
+                gewonnen_punten = '%s'
+
+            WHERE
+                speler_id = '%s' and seizoen_id = '%s';
+            ",
+            mysql_real_escape_string($data['basispunten']),
+            mysql_real_escape_string($data['huidige_punten']),
+            mysql_real_escape_string($data['gespeelde_sets']),
+            mysql_real_escape_string($data['gewonnen_sets']),
+            mysql_real_escape_string($data['gespeelde_punten']),
+            mysql_real_escape_string($data['gewonnen_punten']),
+            mysql_real_escape_string($this->id),
+            mysql_real_escape_string($data['seizoen']));
+
+        return mysql_query($query);
     }
 
-    function update_speeldagstats($speler_id, $speeldag, $tussenstand_speeldag, $ranking){
+    function update_speeldagstats($speler_id, $speeldag_id, $tussenstand_speeldag, $ranking){
+        $query = sprintf("
+            UPDATE
+                intra_spelerperspeeldag
+            SET
+                ranking = '%s',
+                gemiddelde = '%s',
+            WHERE
+                speler_id = '%s' and speeldag_id = '%s';
+            ",
+            mysql_real_escape_string($ranking),
+            mysql_real_escape_string($tussenstand_speeldag),
+            mysql_real_escape_string($speler_id),
+            mysql_real_escape_string($speeldag_id));
+
+        return mysql_query($query);
     }
 
     function vulop($speler)

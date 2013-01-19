@@ -91,7 +91,19 @@ class Wedstrijd
         $this->set3_2 = $resultaat['set3_2'];
     }
     function update($wedstrijd){
+        //Beveiliging insert data!
+        //Derde set = 0 indien niet gespeeld
+        if($wedstrijd['set3_1'] == "" && $wedstrijd['set3_2'] == "")
+        {
+            $wedstrijd['set3_1'] = 0;
+            $wedstrijd['set3_2'] = 0;
+        }
+        $insert_query = "UPDATE intra_wedstrijden
+                  SET (speeldag_id,team1_speler1,team1_speler2,team2_speler1,team2_speler2,set1_1,set1_2,set2_1,set2_2,set3_1,set3_2)
+                  VALUES(${wedstrijd}['speeldag_id'],${wedstrijd}['team1_speler1'],${wedstrijd}['team1_speler2'],${wedstrijd}['team2_speler1'],${wedstrijd}['team2_speler2'],${wedstrijd}['set1_1'],${wedstrijd}['set1_2'],${wedstrijd}['set2_1'],${wedstrijd}['set2_2'],${wedstrijd}['set3_1'],${wedstrijd}['set3_2'])
+                  WHERE id = ${wedstrijd}['id'];";
 
+        return mysql_query($insert_query);
     }
 
     function bepaal_winnaar() {
