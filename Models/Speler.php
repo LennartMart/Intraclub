@@ -6,9 +6,12 @@
      */
 
     include('../connect.php');
+    include('../Interfaces/ISpeler.php');
     include('Seizoen.php');
     include('Wedstrijd.php');
-    class Speler
+    include('Spelers.php');
+
+    class Speler implements ISpeler
     {
         public $id = "";
         public $voornaam = "";
