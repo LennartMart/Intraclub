@@ -3,9 +3,9 @@
      * User: Lennart
      * Date: 15-1-13
      */
-    include('../connect.php');
-    include('../Interfaces/ISpelers.php');
-    include('Speler.php');
+    require_once(__DIR__ . '/../connect.php');
+    require_once(__DIR__ . '/../Interfaces/ISpelers.php');
+    require_once(__DIR__ . '/Speler.php');
 
     class Spelers implements ISpelers
     {

@@ -4,12 +4,12 @@
      * Date: 1/08/12
      * Time: 21:36
      */
-    include('../connect.php');
-    include('../Interfaces/ISeizoen.php');
-    include('Spelers.php');
-    include('Wedstrijd.php');
-    include('Speler.php');
-    include('Speeldag.php');
+    require_once(__DIR__ . '/../connect.php');
+    require_once(__DIR__ . '/../Interfaces/ISeizoen.php');
+    require_once(__DIR__ . '/Spelers.php');
+    require_once(__DIR__ . '/Wedstrijd.php');
+    require_once(__DIR__ . '/Speler.php');
+    require_once(__DIR__ . '/Speeldag.php');
 
     class Seizoen implements ISeizoen
     {
@@ -54,6 +54,10 @@
                 //Haal de eindstand op van elke speler van vorig seizoen
                 //En voeg nieuwe rij toe in spelerperseizoen
                 $resultaat = mysql_query("SELECT speler_id, huidige__punten FROM intra_spelerperseizoen WHERE seizoen_id='$vorige_seizoen_id';");
+                if($resultaat == false)
+                {
+                    echo "Geen spelers in de db";
+                }
                 while ($rij = mysql_fetch_array($resultaat)) {
                     $insert_query = sprintf("
                     INSERT INTO
@@ -255,3 +259,4 @@
 
 
     }
+

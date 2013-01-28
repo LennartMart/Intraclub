@@ -1,7 +1,7 @@
 <?php
 
-    include('../connect.php');
-    include('../Interfaces/IWedstrijd.php');
+    require_once(__DIR__ . '/../connect.php');
+    require_once(__DIR__ . '/../Interfaces/IWedstrijd.php');
 
     class Wedstrijd implements IWedstrijd
     {

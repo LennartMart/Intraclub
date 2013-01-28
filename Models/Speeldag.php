@@ -1,7 +1,7 @@
 <?php
-    include('../connect.php');
-    include('../Interfaces/ISpeeldag.php');
-    include('Wedstrijd.php');
+    require_once(__DIR__ . '/../connect.php');
+    require_once(__DIR__ . '/../Interfaces/ISpeeldag.php');
+    require_once(__DIR__ . '/Wedstrijd.php');
 
     class Speeldag implements ISpeeldag
     {

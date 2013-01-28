@@ -5,11 +5,11 @@
      * Time: 14:09
      */
 
-    include('../connect.php');
-    include('../Interfaces/ISpeler.php');
-    include('Seizoen.php');
-    include('Wedstrijd.php');
-    include('Spelers.php');
+    require_once(__DIR__ . '/../connect.php');
+    require_once(__DIR__ . '/../Interfaces/ISpeler.php');
+    require_once(__DIR__ . '/Seizoen.php');
+    require_once(__DIR__ . '/Wedstrijd.php');
+    require_once(__DIR__ . '/Spelers.php');
 
     class Speler implements ISpeler
     {
