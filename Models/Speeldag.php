@@ -81,7 +81,7 @@
          */
         function get_wedstrijden()
         {
-            $query = sprintf("SELECT * FROM intra_wedstrijden WHERE speeldag_id= '%s';", mysql_real_escape_string($this->id));
+            $query = sprintf("SELECT * FROM intra_wedstrijden WHERE speeldag_id= '%s' ORDER BY id ASC;", mysql_real_escape_string($this->id));
             $resultaat = mysql_query($query);
             $wedstrijden = array();
             while ($array_uitslagen = mysql_fetch_array($resultaat)) {
