@@ -8,4 +8,5 @@
     {
         function get_spelers($is_lid);
         function get_gemiddelde_allespelers($seizoen_id);
+        function get_klassementen();
     }

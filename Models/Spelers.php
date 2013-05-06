@@ -39,4 +39,10 @@
             $resultaat = mysql_query($query);
             return @mysql_result($resultaat, 0, gemiddelde_alle);
         }
+
+        function get_klassementen()
+        {
+            $query = mysql_query("SELECT Naam,Leeftijd FROM Namen");
+
+        }
     }

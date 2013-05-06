@@ -153,17 +153,17 @@
                 foreach ($wedstrijden_speler as $wedstrijd_speler) {
                     /* @var $wedstrijd_speler Wedstrijd */
                     $huidige_speeldag = Speeldag::metId($wedstrijd_speler->speeldag_id);
-                    while ($huidige_speeldag > $speeldag) {
+                    while ($huidige_speeldag->speeldagnummer > $speeldag) {
                         //Speler niet aanwezig op $speeldag
                         //Geef hem gemiddelde verliezers van die speeldag!
                         $uitslag_array[$speeldag] = $gemiddelde_verliezers_array[$speeldag];
                         $speeldag++;
                     }
                     // meerdere spelletjes gespeeld, OVERSLAAN
-                    if ($speeldag > $huidige_speeldag) {
+                    if ($speeldag > $huidige_speeldag->speeldagnummer) {
                         //Meermaals aanwezig op huidige speeldag
                     } //We zitten goed!
-                    else if ($speeldag == $huidige_speeldag) {
+                    else if ($speeldag == $huidige_speeldag->speeldagnummer) {
                         $winnaar_array = $wedstrijd_speler->bepaal_winnaar();
                         $seizoen_stats["gespeelde_punten"] += $winnaar_array["aantal_punten"];
                         $seizoen_stats["gespeelde_sets"] += $winnaar_array["aantal_sets"];

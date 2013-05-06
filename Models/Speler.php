@@ -13,12 +13,13 @@
 
     class Speler implements ISpeler
     {
-        public $id = "";
-        public $voornaam = "";
-        public $achternaam = "";
-        public $geslacht = "";
-        public $jeugd = "";
-        public $klassement = "";
+        public $id;
+        public $voornaam;
+        public $achternaam;
+        public $geslacht;
+        public $jeugd;
+        public $klassement;
+        public $is_lid;
 
         function __construct()
         {
@@ -29,8 +30,8 @@
         //Maak een nieuwe speler aan
         function create($data)
         {
-
             //Insert een nieuwe rij in de spelerstabel
+            //Nieuwe speler is automatisch lid - waarom zou je hem anders toevoegen?
             $query = sprintf("
             INSERT INTO
                 intra_spelers
@@ -39,7 +40,8 @@
                 achternaam = '%s',
                 geslacht = '%s',
                 jeugd = '%s',
-                klassement= '%s'
+                klassement= '%s',
+                is_lid = 1
                 ",
                 mysql_real_escape_string($data['voornaam']),
                 mysql_real_escape_string($data['achternaam']),
@@ -57,21 +59,22 @@
                 $huidig_seizoen = Seizoen::huidig_seizoen();
                 $spelers = new Spelers();
                 $gemiddelde_overal = $spelers->get_gemiddelde_allespelers($huidig_seizoen);
+
                 //Insert een rij voor de speler in het huidige seizoen
                 $query = sprintf("
-            INSERT INTO
-                intra_spelerperseizoen
-            SET
-              speler_id = '%s',
-              seizoen_id = '%s',
-              basispunten = '%s',
-              huidige_punten = '%s',
-              gespeelde_sets = 0,
-              gewonnen_sets = 0,
-              gespeelde_punten = 0,
-              gewonnen_punten = 0,
-              aanwezig = 0,
-              ",
+                            INSERT INTO
+                                intra_spelerperseizoen
+                            SET
+                              speler_id = '%s',
+                              seizoen_id = '%s',
+                              basispunten = '%s',
+                              huidige_punten = '%s',
+                              gespeelde_sets = 0,
+                              gewonnen_sets = 0,
+                              gespeelde_punten = 0,
+                              gewonnen_punten = 0,
+                              aanwezig = 0,
+                              ",
                     mysql_real_escape_string($speler_id),
                     mysql_real_escape_string($huidig_seizoen),
                     mysql_real_escape_string($gemiddelde_overal),
@@ -89,8 +92,9 @@
         function get_seizoen_stats($seizoen_id)
         {
             $query = sprintf("SELECT * from intra_spelerperseizoen where speler_id = '%s' AND seizoen_id = '%s';",
-                mysql_real_escape_string($this->id),
-                mysql_real_escape_string($seizoen_id));
+                                mysql_real_escape_string($this->id),
+                                mysql_real_escape_string($seizoen_id)
+                            );
             $resultaat = mysql_query($query);
 
             //return assoc tabel
@@ -100,8 +104,9 @@
         function get_speeldagstats($speeldag_id)
         {
             $query = sprintf("SELECT * from intra_spelerperspeeldag where speler_id = '%s' AND speeldag_id = '%s';",
-                mysql_real_escape_string($this->id),
-                mysql_real_escape_string($speeldag_id));
+                                mysql_real_escape_string($this->id),
+                                mysql_real_escape_string($speeldag_id)
+                            );
 
             $resultaat = mysql_query($query);
             //return assoc tabel
@@ -111,44 +116,44 @@
         function update_basisinfo($data)
         {
             $query = sprintf("
-            UPDATE
-                intra_spelers
-            SET
-                voornaam = '%s',
-                achternaam = '%s',
-                geslacht = '%s',
-                jeugd = '%s',
-                klassement_id= '%s'
-                is_lid = '%s'
+                UPDATE
+                    intra_spelers
+                SET
+                    voornaam = '%s',
+                    achternaam = '%s',
+                    geslacht = '%s',
+                    jeugd = '%s',
+                    klassement_id= '%s'
+                    is_lid = '%s'
 
-            WHERE
-                id = '%s';
-            ",
-                mysql_real_escape_string($data['voornaam']),
-                mysql_real_escape_string($data['achternaam']),
-                mysql_real_escape_string($data['geslacht']),
-                mysql_real_escape_string($data['jeugd']),
-                mysql_real_escape_string($data['klassement']),
-                mysql_real_escape_string($data['is_lid']),
-                mysql_real_escape_string($data['id']));
+                WHERE
+                    id = '%s';
+                ",
+                    mysql_real_escape_string($data['voornaam']),
+                    mysql_real_escape_string($data['achternaam']),
+                    mysql_real_escape_string($data['geslacht']),
+                    mysql_real_escape_string($data['jeugd']),
+                    mysql_real_escape_string($data['klassement']),
+                    mysql_real_escape_string($data['is_lid']),
+                    mysql_real_escape_string($data['id']));
 
             $gelukt = mysql_query($query);
             if ($gelukt) {
                 $huidig_seizoen = Seizoen::huidig_seizoen();
                 $query = sprintf("
-            UPDATE
-                intra_spelerperseizoen
-            SET
-                is_lid = '%s',
+                            UPDATE
+                                intra_spelerperseizoen
+                            SET
+                                is_lid = '%s',
 
-            WHERE
-                speler_id = '%s'
-                AND
-                seizoen_id = '%s';
-            ",
-                    mysql_real_escape_string($data['is_lid']),
-                    mysql_real_escape_string($data['id']),
-                    mysql_real_escape_string($huidig_seizoen->id));
+                            WHERE
+                                speler_id = '%s'
+                                AND
+                                seizoen_id = '%s';
+                            ",
+                            mysql_real_escape_string($data['is_lid']),
+                            mysql_real_escape_string($data['id']),
+                            mysql_real_escape_string($huidig_seizoen->id));
                 return mysql_query($query);
             } else {
                 return false;
@@ -222,20 +227,20 @@
         function get_wedstrijden($seizoen_id)
         {
             $query = sprintf("SELECT * FROM  intra_wedstrijden
-			  WHERE (
-			  		  (
-					     team1_speler1='%s' OR
-					 	 team1_speler2='%s' OR
-						 team2_speler1='%s' OR
-						 team2_speler2='%s'
-					  ) AND seizoen_id = '%s'
-					)
-			  ORDER BY id ASC;",
-                mysql_real_escape_string($this->id),
-                mysql_real_escape_string($this->id),
-                mysql_real_escape_string($this->id),
-                mysql_real_escape_string($this->id),
-                mysql_real_escape_string($seizoen_id));
+                                  WHERE (
+                                          (
+                                             team1_speler1='%s' OR
+                                             team1_speler2='%s' OR
+                                             team2_speler1='%s' OR
+                                             team2_speler2='%s'
+                                          ) AND seizoen_id = '%s'
+                                        )
+                                  ORDER BY id ASC;",
+                            mysql_real_escape_string($this->id),
+                            mysql_real_escape_string($this->id),
+                            mysql_real_escape_string($this->id),
+                            mysql_real_escape_string($this->id),
+                            mysql_real_escape_string($seizoen_id));
 
             $resultaat = mysql_query($query);
 
