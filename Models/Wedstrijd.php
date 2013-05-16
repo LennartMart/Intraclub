@@ -195,7 +195,7 @@
                 $id_winnaars = array($this->team2_speler1, $this->team2_speler2);
                 $id_verliezers = array($this->team1_speler1, $this->team1_speler2);
             }
-            $return = [
+            $return = array(
                 "winnaar" => $winnaar,
                 "aantal_sets" => $aantal_sets_gespeeld,
                 "totaal_punten_winnaars" => $totaal_winnende_team,
@@ -205,7 +205,7 @@
                 "id_winnaars" => $id_winnaars,
                 "id_verliezers" => $id_verliezers,
                 "aantal_punten" => $totaal_verliezende_team + $totaal_winnende_team
-            ];
+            );
             return $return;
         }
 

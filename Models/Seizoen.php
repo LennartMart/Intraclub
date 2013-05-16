@@ -111,7 +111,9 @@
             $speeldagnummer = 1;
             $ranking_spelers_alle_speeldagen = array();
 
-            // Gemiddelde verliezers bepalen
+            /*
+             * BEGIN BEPALEN GEMIDDELDE VERLIEZERS / SPEELDAG
+             */
             foreach ($speeldagen_seizoen as $speeldag) {
                 /* @var $speeldag Speeldag */
                 $gemiddelde_verliezers = 0;
@@ -134,6 +136,9 @@
                 $gemiddelde_verliezers_array[$speeldagnummer] = $speeldag->gemiddeld_verliezend;
                 $speeldagnummer++;
             }
+            /*
+             * EINDE BEPALEN VERLIEZERS
+             */
 
             $laatste_speeldag = $speeldagnummer - 1;
 
@@ -150,12 +155,13 @@
                 $uitslag_array[0] = $seizoen_stats['basispunten'];
                 $speeldag = 1;
 
-                $seizoen_stats = array();
-                $seizoen_stats["gespeelde_sets"] = 0;
-                $seizoen_stats["gewonnen_sets"] = 0;
-                $seizoen_stats["gespeelde_punten"] = 0;
-                $seizoen_stats["gewonnen_punten"] = 0;
-                $seizoen_stats["gewonnen_matchen"] = 0;
+                $seizoen_stats = array(
+                    "gespeelde_sets" => 0,
+                    "gewonnen_sets" => 0,
+                    "gespeelde_punten" => 0,
+                    "gewonnen_punten" => 0,
+                    "gewonnen_matchen" => 0
+                );
 
                 $wedstrijden_speler = $speler->get_wedstrijden($this->id);
                 foreach ($wedstrijden_speler as $wedstrijd_speler) {
