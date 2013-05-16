@@ -19,8 +19,8 @@ CREATE TABLE IF NOT EXISTS `intra_spelerperspeeldag` (
   `speeldag_id` int(11) NOT NULL,
   `ranking` int(11) NOT NULL,
   `gemiddelde` int(11) NOT NULL,
-  KEY `speler_id` (`speler_id`),
-  KEY `speeldag_id` (`speeldag_id`)
+  PRIMARY KEY (`speler_id`, `speeldag_id`)
+
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `intra_spelerperseizoen` (

@@ -23,18 +23,25 @@
             $this->db = new ConnectionSettings();
             $this->db->connect();
         }
-
         /**
-         * Creatie van ingevuld wedstrijdobject
-         * @static
+         * public get
          * @param $wedstrijd_id
+         * @return bool true indien alles netjes ingevuld
          */
-        static function metId($wedstrijd_id)
+        public function get($wedstrijd_id)
         {
-            $instance = new self();
-            $instance->get($wedstrijd_id);
-        }
+            //Haal wedstrijd op en vul de members in
+            $get_query = "SELECT from intra_wedstrijden WHERE id = '$wedstrijd_id';";
 
+            $gelukt = mysql_query($get_query);
+            if ($gelukt) {
+                $row = mysql_fetch_assoc($gelukt);
+                $this->vulop($row);
+                return TRUE;
+            }
+
+            return FALSE;
+        }
         /**
          * Voegt een nieuwe speeldag toe aan de database.
          * @param $data : moet alle info bevatten van de twee teams + speeldag_id
@@ -76,25 +83,7 @@
             return mysql_query($insert_query);
         }
 
-        /**
-         * Private get functie voor de static functie metId
-         * @param $wedstrijd_id
-         * @return bool true indien alles netjes ingevuld
-         */
-        private function get($wedstrijd_id)
-        {
-            //Haal wedstrijd op en vul de members in
-            $get_query = "SELECT from intra_wedstrijden WHERE id = '$wedstrijd_id';";
 
-            $gelukt = mysql_query($get_query);
-            if ($gelukt) {
-                $row = mysql_fetch_assoc($gelukt);
-                $this->vulop($row);
-                return TRUE;
-            }
-
-            return FALSE;
-        }
 
         /**
          * Vult een object van Wedstrijd op
@@ -206,17 +195,17 @@
                 $id_winnaars = array($this->team2_speler1, $this->team2_speler2);
                 $id_verliezers = array($this->team1_speler1, $this->team1_speler2);
             }
-
-            $return["winnaar"] = $winnaar;
-            $return["aantal_sets"] = $aantal_sets_gespeeld;
-            $return["totaal_punten_winnaars"] = $totaal_winnende_team;
-            $return["totaal_punten_verliezers"] = $totaal_verliezende_team;
-            $return["gemiddelde_punten_winnaars"] = $getrimd_totaal_winnende_team / $aantal_sets_gespeeld;
-            $return["gemiddelde_punten_verliezers"] = $getrimd_totaal_verliezende_team / $aantal_sets_gespeeld;
-            $return["id_winnaars"] = $id_winnaars;
-            $return["id_verliezers"] = $id_verliezers;
-            $return["aantal_punten"] = $totaal_verliezende_team + $totaal_winnende_team;
-
+            $return = [
+                "winnaar" => $winnaar,
+                "aantal_sets" => $aantal_sets_gespeeld,
+                "totaal_punten_winnaars" => $totaal_winnende_team,
+                "totaal_punten_verliezers" => $totaal_verliezende_team,
+                "gemiddelde_punten_winnaars" => $getrimd_totaal_winnende_team / $aantal_sets_gespeeld,
+                "gemiddelde_punten_verliezers" => $getrimd_totaal_verliezende_team / $aantal_sets_gespeeld,
+                "id_winnaars" => $id_winnaars,
+                "id_verliezers" => $id_verliezers,
+                "aantal_punten" => $totaal_verliezende_team + $totaal_winnende_team
+            ];
             return $return;
         }
 

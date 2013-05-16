@@ -191,21 +191,27 @@
         }
 
         //TODO: Wat als er nog geen data zit in db?
+        //FIx? ON DUPLICATE KEY
         function update_speeldagstats($speler_id, $speeldag_id, $tussenstand_speeldag, $ranking)
         {
             $query = sprintf("
-            UPDATE
+            INSERT INTO
                 intra_spelerperspeeldag
             SET
                 ranking = '%s',
                 gemiddelde = '%s',
-            WHERE
-                speler_id = '%s' and speeldag_id = '%s';
+                speler_id = '%s',
+                speeldag_id = '%s'
+            ON DUPLICATE KEY UPDATE
+                ranking = '%s',
+                gemiddelde = '%s'
             ",
-                mysql_real_escape_string($ranking),
-                mysql_real_escape_string($tussenstand_speeldag),
-                mysql_real_escape_string($speler_id),
-                mysql_real_escape_string($speeldag_id));
+            mysql_real_escape_string($ranking),
+            mysql_real_escape_string($tussenstand_speeldag),
+            mysql_real_escape_string($speler_id),
+            mysql_real_escape_string($speeldag_id),
+            mysql_real_escape_string($ranking),
+            mysql_real_escape_string($tussenstand_speeldag));
 
             return mysql_query($query);
         }

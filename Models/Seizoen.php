@@ -22,14 +22,30 @@
             $this->db->connect();
         }
 
-        static function huidig_seizoen()
+        public function get_huidig_seizoen()
         {
-            $instance = new self();
-            $instance->get_huidig_seizoen();
-            return $instance;
+            $query = mysql_query("SELECT id, seizoen FROM intra_seizoen ORDER BY id DESC LIMIT 1;");
+            $resultaat = mysql_fetch_assoc($query);
+            $this->id = $resultaat['id'];
+            $this->seizoen = $resultaat['seizoen'];
+            return TRUE;
         }
 
-        function create($seizoen)
+
+        public function get_seizoenen()
+        {
+            $resultaat = mysql_query("SELECT * FROM intra_seizoen");
+            $seizoenen = array();
+            while ($array_seizoen = mysql_fetch_array($resultaat)) {
+                $seizoen = new Seizoen();
+                $seizoen->id = $array_seizoen["id"];
+                $seizoen->seizoen = $array_seizoen["seizoen"];
+                $seizoenen[] = $seizoen;
+            }
+            return $seizoenen;
+        }
+
+        public function create($seizoen)
         {
 
             //Bestaat seizoen al of niet?
@@ -84,16 +100,8 @@
             }
         }
 
-        private function get_huidig_seizoen()
-        {
-            $query = mysql_query("SELECT id, seizoen FROM intra_seizoen ORDER BY id DESC LIMIT 1;");
-            $resultaat = mysql_fetch_assoc($query);
-            $this->id = $resultaat['id'];
-            $this->seizoen = $resultaat['seizoen'];
-            return TRUE;
-        }
 
-        function bereken_huidig_seizoen()
+        public function bereken_huidig_seizoen()
         {
             $this->get_huidig_seizoen();
 

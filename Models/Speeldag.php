@@ -95,7 +95,7 @@
         private function get_laatste_speeldag()
         {
             $resultaat = mysql_query("SELECT * FROM intra_speeldagen ORDER BY id DESC LIMIT 1;");
-            return mysql_fetch_assoc($resultaat);
+            $this->vulop($resultaat);
         }
 
         /**
