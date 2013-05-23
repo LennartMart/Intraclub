@@ -233,21 +233,23 @@
             //Magic Sorting
             //Gebaseerd op http://php.net/manual/en/function.array-multisort.php
             //Deze foreach sorteert de spelers per speeldag
+            //Deze foreach sorteert de spelers per speeldag
             foreach ($speeldagen_seizoen as $speeldag) {
                 /* @var $speeldag Speeldag */
                 // Obtain a list of columns
                 foreach ($ranking_spelers_alle_speeldagen[$speeldag->id] as $key => $row) {
-                    $speler_id[$key] = $row['speler_id'];
                     $gemiddelde[$key] = $row['gemiddelde'];
                 }
 
-                // Add $data as the last parameter, to sort by the common key
-                array_multisort($gemiddelde, SORT_DESC, $data);
+                //Sorteert array op gemiddelde desc!
+                array_multisort($gemiddelde, SORT_DESC, $ranking_spelers_alle_speeldagen[$speeldag->id]);
 
                 foreach ($ranking_spelers_alle_speeldagen[$speeldag->id] as $key => $row) {
                     //Update the speeldagstats
                     $speler = new Speler();
-                    $speler->update_speeldagstats($row['speler_id'], $speeldag->id, $row['gemiddelde'], $key);
+
+                    //$key +1 = begint bij 0!
+                    $speler->update_speeldagstats($row['speler_id'], $speeldag->id, $row['gemiddelde'], $key +1);
                 }
 
             }
