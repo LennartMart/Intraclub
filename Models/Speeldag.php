@@ -24,6 +24,9 @@
          */
         public function voeg_toe($data)
         {
+            $seizoen = new Seizoen();
+            $seizoen->get_huidig_seizoen();
+
             $query = sprintf("
             INSERT INTO
                 intra_speeldagen
@@ -34,7 +37,7 @@
               gemiddeld_verliezend = 0,
               ",
                 mysql_real_escape_string($data['speeldagnummer']),
-                mysql_real_escape_string($data['seizoen_id']),
+                mysql_real_escape_string($seizoen->id),
                 mysql_real_escape_string($data['datum']));
 
             $result = mysql_query($query);

@@ -257,8 +257,14 @@
 
         }
 
-        public function get_speeldagen($seizoen_id)
+        public function get_speeldagen($seizoen_id = null)
         {
+            if($seizoen_id == null)
+            {
+                $this->get_huidig_seizoen();
+                $seizoen_id = $this->id;
+            }
+
             $query = sprintf("SELECT id, speeldagnummer from intra_speeldagen WHERE seizoen_id = '%s';", mysql_real_escape_string($seizoen_id));
             $resultaat = $query;
             $speeldagen = array();

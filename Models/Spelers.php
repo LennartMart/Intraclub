@@ -18,9 +18,9 @@
         public function get_spelers($is_lid)
         {
             if ($is_lid == true) {
-                $query = "SELECT * from intra_spelers where is_lid = $is_lid;";
+                $query = "SELECT * FROM intra_spelers WHERE is_lid = $is_lid ORDER BY voornaam;";
             } else {
-                $query = "SELECT * from intra_spelers";
+                $query = "SELECT * FROM intra_spelers ORDER BY voornaam";
             }
 
             $resultaat = mysql_query($query);
@@ -35,7 +35,7 @@
 
         public function get_gemiddelde_allespelers($seizoen_id)
         {
-            $query = sprintf("SELECT AVG(huidige_punten) as gemiddelde_alle from intra_spelerperseizoen where seizoen_id = '%s';", mysql_real_escape_string($seizoen_id));
+            $query = sprintf("SELECT AVG(huidige_punten) AS gemiddelde_alle FROM intra_spelerperseizoen WHERE seizoen_id = '%s';", mysql_real_escape_string($seizoen_id));
             $resultaat = mysql_query($query);
             return @mysql_result($resultaat, 0, gemiddelde_alle);
         }

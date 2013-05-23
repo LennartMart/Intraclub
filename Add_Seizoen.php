@@ -11,9 +11,32 @@
     if(isset($_REQUEST["verder"])) {
         $seizoen1 = strip_tags($_POST['seizoen1']);
         $seizoen2 = strip_tags($_POST['seizoen2']);
-        $seizoen = new Seizoen();
-        $uitkomst = $seizoen->create($seizoen1 ." - " . $seizoen2);
-        echo $uitkomst;
+        $errors = array();
+
+        if(!strlen($seizoen1) || !strlen($seizoen2)) {
+            $errors[] =  "Vul een seizoen in";
+        }
+        else if(strlen($seizoen1) != 4 || strlen($seizoen2) != 4) {
+            $errors[] =  "Vul een seizoen in van het fomaat xxxx";
+        }
+        else if($seizoen2 != $seizoen1+1 || !ctype_digit($seizoen1)) {
+            $errors[] =  "Vul een geldig seizoen in";
+        }
+
+        if(empty($errors))
+        {
+            $seizoen = new Seizoen();
+            $uitkomst = $seizoen->create($seizoen1 ." - " . $seizoen2);
+        }
+        else
+        {
+            echo "<h1>Er zijn enkele fouten opgetreden</h1>";
+            echo "<li>";
+            foreach ($errors as $error)
+            {
+                echo "<ul>" + $error + "</ul>";
+            }
+        }
     }
 
 ?>
