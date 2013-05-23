@@ -16,36 +16,13 @@
             $this->db->connect();
         }
 
-        /**
-         * Creatie ingevuld speeldagobject
-         * @static
-         * @param $speeldag_id
-         * @return Speeldag
-         */
-        static function metId($speeldag_id)
-        {
-            $instance = new self();
-            $instance->get($speeldag_id);
-            return $instance;
-        }
 
-        /**
-         * Creatie van laatste speeldag
-         * @static
-         * @return Speeldag
-         */
-        static function laatsteSpeeldag()
-        {
-            $instance = new self();
-            $instance->get_laatste_speeldag();
-            return $instance;
-        }
 
         /**
          * Voegt een nieuwe speeldag toe aan de database.
          * @param $data
          */
-        function voeg_toe($data)
+        public function voeg_toe($data)
         {
             $query = sprintf("
             INSERT INTO
@@ -67,7 +44,7 @@
          * Private functie om speeldag op te halen.
          * @param $speeldag_id
          */
-        private function get($speeldag_id)
+        public function get($speeldag_id)
         {
             $query = sprintf("SELECT * FROM intra_speeldagen WHERE id= '%s';", $speeldag_id);
             $resultaat = mysql_query($query);
@@ -79,7 +56,7 @@
          * Get alle wedstrijden uit de db en return een lijst van wedstrijden.
          * @return Wedstrijd[]
          */
-        function get_wedstrijden()
+        public function get_wedstrijden()
         {
             $query = sprintf("SELECT * FROM intra_wedstrijden WHERE speeldag_id= '%s' ORDER BY id ASC;", mysql_real_escape_string($this->id));
             $resultaat = mysql_query($query);
@@ -92,9 +69,15 @@
             return $wedstrijden;
         }
 
-        private function get_laatste_speeldag()
+        public function get_laatste_speeldag($seizoen_id = null)
         {
-            $resultaat = mysql_query("SELECT * FROM intra_speeldagen ORDER BY id DESC LIMIT 1;");
+            if($seizoen_id == null)
+            {
+                $seizoen = new Seizoen();
+                $seizoen->get_huidig_seizoen();
+                $seizoen_id = $seizoen->id;
+            }
+            $resultaat = mysql_query(sprintf("SELECT * FROM intra_speeldagen WHERE seizoen_id = '%s' ORDER BY speeldagnummer DESC LIMIT 1;",$seizoen_id));
             $this->vulop($resultaat);
         }
 
@@ -102,7 +85,7 @@
          * Om het Speeldag object keurig op te vullen
          * @param $data
          */
-        function vulop($data)
+        public function vulop($data)
         {
             $this->id = $data['id'];
             $this->gemiddeld_verliezend = $data['gemiddeld_verliezend'];
@@ -115,7 +98,7 @@
          * Alles kan worden aangepast, behalve seizoen én id
          * @return bool true indien gelukt
          */
-        function update()
+        public function update()
         {
             $query = sprintf("
             UPDATE intra_speeldagen

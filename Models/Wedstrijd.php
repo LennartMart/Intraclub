@@ -47,7 +47,7 @@
          * @param $data : moet alle info bevatten van de twee teams + speeldag_id
          * @return bool true indien geslaagd, false bij mislukking
          */
-        function voeg_toe($data)
+        public function voeg_toe($data)
         {
             //Beveiliging insert data!
             //Derde set = 0 indien niet gespeeld
@@ -90,7 +90,7 @@
          * Handig bij alle get functies!
          * @param $resultaat
          */
-        function vulop($resultaat)
+        public function vulop($resultaat)
         {
             $this->wedstrijd_id = $resultaat['id'];
             $this->speeldag_id = $resultaat['speeldag_id'];
@@ -107,7 +107,7 @@
             $this->set3_2 = $resultaat['set3_2'];
         }
 
-        function update($wedstrijd)
+        public function update($wedstrijd)
         {
             //Beveiliging insert data!
             //Derde set = 0 indien niet gespeeld
@@ -146,7 +146,7 @@
             return mysql_query($insert_query);
         }
 
-        function bepaal_winnaar()
+        public function bepaal_winnaar()
         {
             $gewonnen_sets_team1 = 0;
             $gewonnen_sets_team2 = 0;

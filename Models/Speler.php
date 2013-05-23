@@ -28,7 +28,7 @@
         }
 
         //Maak een nieuwe speler aan
-        function create($data)
+        public function create($data)
         {
             //Insert een nieuwe rij in de spelerstabel
             //Nieuwe speler is automatisch lid - waarom zou je hem anders toevoegen?
@@ -89,7 +89,7 @@
 
         }
 
-        function get_seizoen_stats($seizoen_id)
+        public function get_seizoen_stats($seizoen_id)
         {
             $query = sprintf("SELECT * from intra_spelerperseizoen where speler_id = '%s' AND seizoen_id = '%s';",
                                 mysql_real_escape_string($this->id),
@@ -101,7 +101,7 @@
             return mysql_fetch_assoc($resultaat);
         }
 
-        function get_speeldagstats($speeldag_id)
+        public function get_speeldagstats($speeldag_id)
         {
             $query = sprintf("SELECT * from intra_spelerperspeeldag where speler_id = '%s' AND speeldag_id = '%s';",
                                 mysql_real_escape_string($this->id),
@@ -113,7 +113,7 @@
             return mysql_fetch_assoc($resultaat);
         }
 
-        function update_basisinfo($data)
+        public function update_basisinfo($data)
         {
             $query = sprintf("
                 UPDATE
@@ -161,7 +161,7 @@
         }
 
 
-        function update_seizoenstats($data)
+        public function update_seizoenstats($data)
         {
 
             $query = sprintf("
@@ -192,7 +192,7 @@
 
         //TODO: Wat als er nog geen data zit in db?
         //FIx? ON DUPLICATE KEY
-        function update_speeldagstats($speler_id, $speeldag_id, $tussenstand_speeldag, $ranking)
+        public function update_speeldagstats($speler_id, $speeldag_id, $tussenstand_speeldag, $ranking)
         {
             $query = sprintf("
             INSERT INTO
@@ -216,7 +216,7 @@
             return mysql_query($query);
         }
 
-        function vulop($speler)
+        public function vulop($speler)
         {
             $this->id = $speler['id'];
             $this->voornaam = $speler['voornaam'];
@@ -230,7 +230,7 @@
          * @param $seizoen_id
          * @return Wedstrijd[]
          */
-        function get_wedstrijden($seizoen_id)
+        public function get_wedstrijden($seizoen_id)
         {
             $query = sprintf("SELECT * FROM  intra_wedstrijden
                                   WHERE (

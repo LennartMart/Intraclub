@@ -10,5 +10,7 @@ interface ISpeeldag
     function get_wedstrijden();
     function vulop($data);
     function update();
+    function get($speeldag_id);
+    function get_laatste_speeldag($seizoen_id = null);
 
 }
