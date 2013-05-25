@@ -2,10 +2,13 @@
 <?php
     include("Models/Seizoen.php");
     $show_form = true;
+    $huidig_seizoen = new Seizoen();
+    $huidig_seizoen->get_huidig_seizoen();
     if(isset($_POST["VoegSeizoenToe"]))
     {
         $seizoen1 = strip_tags($_POST['seizoen1']);
         $seizoen2 = strip_tags($_POST['seizoen2']);
+        $newSeizoen = $seizoen1 ." - " . $seizoen2;
         $errors = array();
 
         if(!strlen($seizoen1) || !strlen($seizoen2)) {
@@ -17,16 +20,19 @@
         else if($seizoen2 != $seizoen1+1 || !ctype_digit($seizoen1)) {
             $errors[] =  "Vul een geldig seizoen in";
         }
+        else if($newSeizoen == $huidig_seizoen->seizoen)
+        {
+            $errors[] =  "Dit seizoen werd reeds toegevoegd";
+        }
         if(empty($errors))
         {
             $seizoen = new Seizoen();
-            $newSeizoen = $seizoen1 ." - " . $seizoen2;
+
             $uitkomst = $seizoen->create($newSeizoen);
             if($uitkomst)
             {
                 echo "<h1>Seizoen " + $newSeizoen + " is succesvol toegevoegd!</h1>";
                 echo "<p>Alle gegevens van vorig seizoen werden weggeschreven, iedereen heeft nu als basispunt = eindpunt vorig seizoen!</p>";
-                unset($_POST["VoegSeizoenToe"]);
                 $show_form = false;
             }
             else
@@ -37,26 +43,27 @@
         else
         {
             echo "<h3>Er zijn enkele fouten opgetreden</h3>";
-            echo "<li>";
+            echo "<ul>";
             foreach ($errors as $error)
             {
-                echo "<ul>" + $error + "</ul>";
+                echo "<li>" . $error . "</li>";
             }
 
-            echo "</li><br/>";
+            echo "</ul><br/>";
         }
-
     }
 
     if($show_form)
     {
+
 ?>
 
 
 <form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post">
     <legend>Voer gegevens in voor het volgende seizoen</legend>
+    <p><label class='field'> Huidig seizoen: </label><?php echo $huidig_seizoen->seizoen ?></p>
     <p><label class='field'> Seizoen: </label><input type="text" id="seizoen1" name="seizoen1" maxlength="4" size="4"> - <input type="text" id="seizoen2" name="seizoen2" maxlength="4" size="4"></p>
-    <input class="btn" type="submit" value="Submit" name="VoegSeizoenToe">
+    <input class="btn" type="submit" value="Start nieuw seizoen!" name="VoegSeizoenToe">
 </form>
 
 <?php

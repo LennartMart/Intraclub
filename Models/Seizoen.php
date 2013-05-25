@@ -74,24 +74,27 @@
                 {
                     echo "Geen spelers in de db";
                 }
-                while ($rij = mysql_fetch_array($resultaat)) {
-                    $insert_query = sprintf("
-                    INSERT INTO
-                        intra_spelerperseizoen
-                    SET
-                        speler_id = '%s',
-                        seizoen_id = '%s',
-                        basispunten = '%s',
-                        gespeelde_sets = 0,
-                        gewonnen_sets = 0,
-                        gespeelde_punten = 0,
-                        gewonnen_punten = 0,
-                        aanwezig = 0
-                        ", $rij["speler_id"], $huidig_seizoen, $rij["gemiddelde"]);
+                else
+                {
+                    while ($rij = mysql_fetch_array($resultaat)) {
+                        $insert_query = sprintf("
+                        INSERT INTO
+                            intra_spelerperseizoen
+                        SET
+                            speler_id = '%s',
+                            seizoen_id = '%s',
+                            basispunten = '%s',
+                            gespeelde_sets = 0,
+                            gewonnen_sets = 0,
+                            gespeelde_punten = 0,
+                            gewonnen_punten = 0,
+                            aanwezig = 0
+                            ", $rij["speler_id"], $huidig_seizoen, $rij["gemiddelde"]);
 
-                    $gelukt = mysql_query($insert_query);
-                    if (!$gelukt) {
-                        return FALSE;
+                        $gelukt = mysql_query($insert_query);
+                        if (!$gelukt) {
+                            return FALSE;
+                        }
                     }
                 }
                 return TRUE;

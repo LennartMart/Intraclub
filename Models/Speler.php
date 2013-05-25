@@ -37,14 +37,14 @@
                 intra_spelers
             SET
                 voornaam = '%s',
-                achternaam = '%s',
+                naam = '%s',
                 geslacht = '%s',
                 jeugd = '%s',
                 klassement= '%s',
                 is_lid = 1
                 ",
                 mysql_real_escape_string($data['voornaam']),
-                mysql_real_escape_string($data['achternaam']),
+                mysql_real_escape_string($data['naam']),
                 mysql_real_escape_string($data['geslacht']),
                 mysql_real_escape_string($data['jeugd']),
                 mysql_real_escape_string($data['klassement']));
@@ -56,29 +56,27 @@
                 //Haal de gegenereerde ID op.
                 $speler_id = mysql_insert_id();
 
-                $huidig_seizoen = Seizoen::huidig_seizoen();
-                $spelers = new Spelers();
-                $gemiddelde_overal = $spelers->get_gemiddelde_allespelers($huidig_seizoen);
+                $huidig_seizoen = new Seizoen();
+                $huidig_seizoen->get_huidig_seizoen();
 
                 //Insert een rij voor de speler in het huidige seizoen
                 $query = sprintf("
                             INSERT INTO
                                 intra_spelerperseizoen
                             SET
-                              speler_id = '%s',
-                              seizoen_id = '%s',
+                              speler_id = '%d',
+                              seizoen_id = '%d',
                               basispunten = '%s',
-                              huidige_punten = '%s',
                               gespeelde_sets = 0,
                               gewonnen_sets = 0,
                               gespeelde_punten = 0,
-                              gewonnen_punten = 0,
-                              aanwezig = 0,
+                              gewonnen_punten = 0
                               ",
                     mysql_real_escape_string($speler_id),
-                    mysql_real_escape_string($huidig_seizoen),
-                    mysql_real_escape_string($gemiddelde_overal),
-                    mysql_real_escape_string($gemiddelde_overal));
+                    mysql_real_escape_string($huidig_seizoen->id),
+                    mysql_real_escape_string($data["basispunten"]));
+
+                echo $query;
 
                 $result = mysql_query($query);
                 if (!$result) {

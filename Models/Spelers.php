@@ -6,6 +6,7 @@
     require_once(__DIR__ . '/../connect.php');
     require_once(__DIR__ . '/../Interfaces/ISpelers.php');
     require_once(__DIR__ . '/Speler.php');
+    require_once(__DIR__ . '/Seizoen.php');
 
     class Spelers implements ISpelers
     {
@@ -33,16 +34,38 @@
             return $spelers;
         }
 
-        public function get_gemiddelde_allespelers($seizoen_id)
+        public function get_gemiddelde_allespelers($seizoen_id = null)
         {
-            $query = sprintf("SELECT AVG(huidige_punten) AS gemiddelde_alle FROM intra_spelerperseizoen WHERE seizoen_id = '%s';", mysql_real_escape_string($seizoen_id));
+            if($seizoen_id == null)
+            {
+                $seizoen = new Seizoen();
+                $seizoen->get_huidig_seizoen();
+                $seizoen_id = $seizoen->id;
+            }
+            $query = sprintf("SELECT AVG(basispunten) AS gemiddelde_alle FROM intra_spelerperseizoen WHERE seizoen_id = '%s';", mysql_real_escape_string($seizoen_id));
             $resultaat = mysql_query($query);
-            return @mysql_result($resultaat, 0, gemiddelde_alle);
+            $gemiddelde_alle =  @mysql_result($resultaat, 0, gemiddelde_alle);
+            if($gemiddelde_alle == false)
+            {
+                return 16;
+            }
+            else
+            {
+                return $gemiddelde_alle;
+            }
         }
 
         public function get_klassementen()
         {
-            $query = mysql_query("SELECT Naam,Leeftijd FROM Namen");
-
+            $enums = array();
+            $result=mysql_query('SHOW COLUMNS FROM intra_spelers WHERE field=\'klassement\'');
+            while ($row=mysql_fetch_row($result))
+            {
+                foreach(explode("','",substr($row[1],6,-2)) as $v)
+                {
+                    $enums[] = $v;
+                }
+            }
+            return $enums;
         }
     }

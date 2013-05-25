@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `intra_spelers` (
   `is_lid` tinyint(1) NOT NULL,
   `geslacht` enum('Man','Vrouw') NOT NULL,
   `jeugd` tinyint(1) NOT NULL,
-  `klassement` enum('A','B1','B2','C1','C2','D','Recreant') NOT NULL,
+  `klassement` enum('Recreant','D','C2','C1','B2','B1','A') NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -82,7 +82,7 @@ ALTER TABLE `intra_spelerperspeeldag`
 		ADD CONSTRAINT `resultatenSpelerFK` FOREIGN KEY (`speler_id`) REFERENCES `intra_spelers` (`id`) ON DELETE NO ACTION;
 
 ALTER TABLE `intra_spelerperseizoen`
-		ADD CONSTRAINT `resultatenSeizoenFK` FOREIGN KEY (`seizoen_id`) REFERENCES `intra_speeldagen` (`seizoen_id`) ON DELETE NO ACTION,
+		ADD CONSTRAINT `resultatenSeizoenFK` FOREIGN KEY (`seizoen_id`) REFERENCES `intra_seizoen` (`id`) ON DELETE NO ACTION,
 		ADD CONSTRAINT `resultatenSpelerFK2` FOREIGN KEY (`speler_id`) REFERENCES `intra_spelers` (`id`) ON DELETE NO ACTION;
 
 ALTER TABLE `intra_speeldagen`
