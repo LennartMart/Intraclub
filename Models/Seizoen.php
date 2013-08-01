@@ -236,7 +236,6 @@
             //Magic Sorting
             //Gebaseerd op http://php.net/manual/en/function.array-multisort.php
             //Deze foreach sorteert de spelers per speeldag
-            //Deze foreach sorteert de spelers per speeldag
             foreach ($speeldagen_seizoen as $speeldag) {
                 /* @var $speeldag Speeldag */
                 // Obtain a list of columns
@@ -268,8 +267,8 @@
                 $seizoen_id = $this->id;
             }
 
-            $query = sprintf("SELECT id, speeldagnummer from intra_speeldagen WHERE seizoen_id = '%s';", mysql_real_escape_string($seizoen_id));
-            $resultaat = $query;
+            $query = sprintf("SELECT * from intra_speeldagen WHERE seizoen_id = '%s';", mysql_real_escape_string($seizoen_id));
+            $resultaat = mysql_query($query);
             $speeldagen = array();
 
             while ($rij = mysql_fetch_assoc($resultaat)) {

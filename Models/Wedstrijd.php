@@ -49,38 +49,72 @@
          */
         public function voeg_toe($data)
         {
-            //Beveiliging insert data!
-            //Derde set = 0 indien niet gespeeld
-            //if ($data['set3_1'] == "" && $data['set3_2'] == "") {
-            //    $data['set3_1'] = 0;
-            //    $data['set3_2'] = 0;
-            //}
-            $insert_query = sprintf("INSERT INTO intra_wedstrijden
-                             SET
-                                speeldag_id = '%s',
-                                team1_speler1 = '%s',
-                                team1_speler2 = '%s',
-                                team2_speler1 = '%s',
-                                team2_speler2 = '%s',
-                                set1_1 = '%s',
-                                set1_2 = '%s',
-                                set2_1 = '%s',
-                                set2_2 = '%s',
-                                set3_1 = '%s',
-                                set3_2 = '%s';",
-                             mysql_real_escape_string(${data}['speeldag_id']),
-                             mysql_real_escape_string(${data}['team1_speler1']),
-                             mysql_real_escape_string(${data}['team1_speler2']),
-                             mysql_real_escape_string(${data}['team2_speler1']),
-                             mysql_real_escape_string(${data}['team2_speler2']),
-                             mysql_real_escape_string(${data}['set1_1']),
-                             mysql_real_escape_string(${data}['set1_2']),
-                             mysql_real_escape_string(${data}['set2_1']),
-                             mysql_real_escape_string(${data}['set2_2']),
-                             mysql_real_escape_string(${data}['set3_1']),
-                             mysql_real_escape_string(${data}['set3_2']));
 
-            return mysql_query($insert_query);
+            //Dubbel-Insert beveiliging
+
+            $result = mysql_query(sprintf("SELECT * FROM intra_wedstrijden
+
+                                                WHERE speeldag_id = '%s' AND
+                                                team1_speler1 = '%s' AND
+                                                team1_speler2 = '%s' AND
+                                                team2_speler1 = '%s' AND
+                                                team2_speler2 = '%s' AND
+                                                set1_1 = '%s' AND
+                                                set1_2 = '%s' AND
+                                                set2_1 = '%s' AND
+                                                set2_2 = '%s' AND
+                                                set3_1 = '%s' AND
+                                                set3_2 = '%s';",
+                                mysql_real_escape_string($data['speeldag_id']),
+                                mysql_real_escape_string($data['team1_speler1']),
+                                mysql_real_escape_string($data['team1_speler2']),
+                                mysql_real_escape_string($data['team2_speler1']),
+                                mysql_real_escape_string($data['team2_speler2']),
+                                mysql_real_escape_string($data['set1_1']),
+                                mysql_real_escape_string($data['set1_2']),
+                                mysql_real_escape_string($data['set2_1']),
+                                mysql_real_escape_string($data['set2_2']),
+                                mysql_real_escape_string($data['set3_1']),
+                                mysql_real_escape_string($data['set3_2'])));
+            $num_rows = mysql_num_rows($result);
+
+
+            if ($num_rows == 0) {
+                //Beveiliging insert data!
+                //Derde set = 0 indien niet gespeeld
+                //if ($data['set3_1'] == "" && $data['set3_2'] == "") {
+                //    $data['set3_1'] = 0;
+                //    $data['set3_2'] = 0;
+                //}
+                $insert_query = sprintf("INSERT INTO intra_wedstrijden
+                                 SET
+                                    speeldag_id = '%s',
+                                    team1_speler1 = '%s',
+                                    team1_speler2 = '%s',
+                                    team2_speler1 = '%s',
+                                    team2_speler2 = '%s',
+                                    set1_1 = '%s',
+                                    set1_2 = '%s',
+                                    set2_1 = '%s',
+                                    set2_2 = '%s',
+                                    set3_1 = '%s',
+                                    set3_2 = '%s';",
+                                 mysql_real_escape_string($data['speeldag_id']),
+                                 mysql_real_escape_string($data['team1_speler1']),
+                                 mysql_real_escape_string($data['team1_speler2']),
+                                 mysql_real_escape_string($data['team2_speler1']),
+                                 mysql_real_escape_string($data['team2_speler2']),
+                                 mysql_real_escape_string($data['set1_1']),
+                                 mysql_real_escape_string($data['set1_2']),
+                                 mysql_real_escape_string($data['set2_1']),
+                                 mysql_real_escape_string($data['set2_2']),
+                                 mysql_real_escape_string($data['set3_1']),
+                                 mysql_real_escape_string($data['set3_2']));
+
+                return mysql_query($insert_query);
+            }
+
+            return FALSE;
         }
 
 

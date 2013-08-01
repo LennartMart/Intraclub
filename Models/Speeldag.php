@@ -21,26 +21,35 @@
         /**
          * Voegt een nieuwe speeldag toe aan de database.
          * @param $data
+         * @return false als het mislukt is OF als datum reeds bestaat
          */
         public function voeg_toe($data)
         {
             $seizoen = new Seizoen();
             $seizoen->get_huidig_seizoen();
 
-            $query = sprintf("
-            INSERT INTO
-                intra_speeldagen
-            SET
-              speeldagnummer = '%s',
-              seizoen_id = '%s',
-              datum = '%s',
-              gemiddeld_verliezend = 0,
-              ",
-                mysql_real_escape_string($data['speeldagnummer']),
-                mysql_real_escape_string($seizoen->id),
-                mysql_real_escape_string($data['datum']));
+            $result = mysql_query(sprintf("SELECT * FROM intra_speeldagen WHERE datum = '%s'", mysql_real_escape_string($data['datum'])));
+            $num_rows = mysql_num_rows($result);
 
-            $result = mysql_query($query);
+            if ($num_rows == 0) {
+                $query = sprintf("
+                    INSERT INTO
+                        intra_speeldagen
+                    SET
+                      speeldagnummer = '%s',
+                      seizoen_id = '%s',
+                      datum = '%s',
+                      gemiddeld_verliezend = 0
+                      ",
+                            mysql_real_escape_string($data['speeldagnummer']),
+                            mysql_real_escape_string($seizoen->id),
+                            mysql_real_escape_string($data['datum']));
+                return mysql_query($query);
+            }
+
+
+            return FALSE;
+
         }
 
         /**
@@ -81,7 +90,8 @@
                 $seizoen_id = $seizoen->id;
             }
             $resultaat = mysql_query(sprintf("SELECT * FROM intra_speeldagen WHERE seizoen_id = '%s' ORDER BY speeldagnummer DESC LIMIT 1;",$seizoen_id));
-            $this->vulop($resultaat);
+            $array_speeldag = mysql_fetch_array($resultaat);
+            $this->vulop($array_speeldag);
         }
 
         /**

@@ -15,7 +15,7 @@
     {
         public $id;
         public $voornaam;
-        public $achternaam;
+        public $naam;
         public $geslacht;
         public $jeugd;
         public $klassement;
@@ -76,8 +76,6 @@
                     mysql_real_escape_string($huidig_seizoen->id),
                     mysql_real_escape_string($data["basispunten"]));
 
-                echo $query;
-
                 $result = mysql_query($query);
                 if (!$result) {
                     return FALSE;
@@ -118,7 +116,7 @@
                     intra_spelers
                 SET
                     voornaam = '%s',
-                    achternaam = '%s',
+                    naam = '%s',
                     geslacht = '%s',
                     jeugd = '%s',
                     klassement_id= '%s'
@@ -128,7 +126,7 @@
                     id = '%s';
                 ",
                     mysql_real_escape_string($data['voornaam']),
-                    mysql_real_escape_string($data['achternaam']),
+                    mysql_real_escape_string($data['naam']),
                     mysql_real_escape_string($data['geslacht']),
                     mysql_real_escape_string($data['jeugd']),
                     mysql_real_escape_string($data['klassement']),
@@ -218,7 +216,7 @@
         {
             $this->id = $speler['id'];
             $this->voornaam = $speler['voornaam'];
-            $this->achternaam = $speler['achternaam'];
+            $this->naam = $speler['naam'];
             $this->geslacht = $speler['geslacht'];
             $this->jeugd = $speler['jeugd'];
             $this->klassement = $speler['klassement'];

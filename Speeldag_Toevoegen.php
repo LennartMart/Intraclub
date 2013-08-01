@@ -2,6 +2,8 @@
 <?php
 
     include("Models/Speeldag.php");
+    include("Models/Seizoen.php");
+
 
     $speeldag = new Speeldag();
     $speeldag->get_laatste_speeldag();
@@ -20,16 +22,18 @@
         $result = $speeldag->voeg_toe(array("speeldagnummer" => $speeldagnummer, "datum" => $datum));
         if(!$result)
         {
-            echo "<h3> Ernstige error: ".mysql_error() + " </h3>";
+            echo "<h3>Speeldag bestaat al! </h3>";
         }
         else
         {
             echo "<h3>Nieuwe speeldag correct toegevoegd!</h3>";
             $show_form = false;
         }
-        unset($_POST["VoegSpeeldagToe"]);
-    }
+        unset($_POST);
 
+        $speeldag->get_laatste_speeldag();
+        $speeldagnummer = $speeldag->speeldagnummer +1;
+    }
     if($show_form)
     {
         date_default_timezone_set('UTC');

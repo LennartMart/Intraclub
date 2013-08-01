@@ -39,12 +39,12 @@
             'set3_2' => $set3_team2
             ));
         if(!$result) {
-            echo "kon gegevens niet toevoegen aan de database, probeer het later opnieuw<br>".mysql_error();
+            echo "<h3>Wedstrijd werd niet toegevoegd!</h3>";
 
             unset($_POST["VoegWedstrijdToe"]);
         }
         else {
-            echo "Wedstrijd toegevoegd...";
+            echo "<h3>Wedstrijd succesvol toegevoegd!</h3>";
         }
     }
 ?>
@@ -60,8 +60,8 @@
         <tr>
             <td align="center">
                 Team 1<br>
-                <?php spelerlijst("team1_speler1"); ?> <br>
-                <?php spelerlijst("team1_speler2"); ?>
+                <?php spelerslijst('team1_speler1'); ?> <br>
+                <?php spelerslijst('team1_speler2'); ?>
             </td>
             <td align="center">
                 Set 1 <br>
@@ -73,8 +73,8 @@
             </td>
             <td align="center">
                 Team 2<br>
-                <?php spelerlijst("team2_speler1"); ?> <br>
-                <?php spelerlijst("team2_speler2"); ?>
+                <?php spelerslijst("team2_speler1"); ?> <br>
+                <?php spelerslijst("team2_speler2"); ?>
             </td>
         </tr>
     </table>
@@ -108,12 +108,12 @@
     function spelerslijst($speler_html)
     {
         $spelers = new Spelers();
-        $spelers->get_spelers(true);
+        $opgehaalde_spelers = $spelers->get_spelers(true);
 
         echo "<select name='$speler_html'>";
-        foreach($spelers as $speler) {
+        foreach($opgehaalde_spelers as $speler) {
             /* @var $speler Speler */
-            echo "<option value='".$speler->id."'>".$speler->voornaam." ".$speler->achternaam."</option>";
+            echo "<option value='".$speler->id."'>".$speler->voornaam." ".$speler->naam."</option>";
         }
         echo "</select>";
 
