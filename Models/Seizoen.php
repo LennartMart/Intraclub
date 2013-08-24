@@ -128,13 +128,13 @@
                 foreach ($wedstrijden as $wedstrijd) {
                     /* @var $wedstrijd Wedstrijd */
                     $score_array = $wedstrijd->bepaal_winnaar();
-                    $gemiddelde_verliezers += $score_array['gemiddelde_verliezers'];
+                    $gemiddelde_verliezers += $score_array['gemiddelde_punten_verliezers'];
                     $aantal_wedstrijden++;
                 }
 
                 $gemiddelde_verliezend_speeldag = $gemiddelde_verliezers / $aantal_wedstrijden;
                 $speeldag->gemiddeld_verliezend = $gemiddelde_verliezend_speeldag;
-                $speeldag->update();
+                $speeldag->update_gemiddeldverliezend();
 
                 $gemiddelde_verliezers_array[$speeldagnummer] = $speeldag->gemiddeld_verliezend;
                 $speeldagnummer++;
@@ -169,7 +169,8 @@
                 $wedstrijden_speler = $speler->get_wedstrijden($this->id);
                 foreach ($wedstrijden_speler as $wedstrijd_speler) {
                     /* @var $wedstrijd_speler Wedstrijd */
-                    $huidige_speeldag = Speeldag::metId($wedstrijd_speler->speeldag_id);
+                    $huidige_speeldag = new Speeldag();
+                    $huidige_speeldag->get($wedstrijd_speler->speeldag_id);
                     while ($huidige_speeldag->speeldagnummer > $speeldag) {
                         //Speler niet aanwezig op $speeldag
                         //Geef hem gemiddelde verliezers van die speeldag!
@@ -182,14 +183,14 @@
                     } //We zitten goed!
                     else if ($speeldag == $huidige_speeldag->speeldagnummer) {
                         $winnaar_array = $wedstrijd_speler->bepaal_winnaar();
+
                         $seizoen_stats["gespeelde_punten"] += $winnaar_array["aantal_punten"];
                         $seizoen_stats["gespeelde_sets"] += $winnaar_array["aantal_sets"];
-                        $afwezig_array[$speeldag] = false;
 
                         if (in_array($speler->id, $winnaar_array["id_winnaars"])) {
                             // speler heeft gewonnen!
                             $uitslag_array[$speeldag] = $winnaar_array["gemiddelde_punten_winnaars"];
-                            $seizoen_stats["gespeelde_punten"] += $winnaar_array["totaal_punten_winnaars"];
+                            $seizoen_stats["gewonnen_punten"] += $winnaar_array["totaal_punten_winnaars"];
                             $seizoen_stats["gewonnen_sets"] += 2;
                             $seizoen_stats["gewonnen_matchen"]++;
                         } else {
@@ -215,16 +216,21 @@
                 //Hebben gemiddelde speeldag, MAAR MOETEN GEMIDDELDE TOT DIE SPEELDAG BEREKENEN! => done
 
                 //  spelers rankschikken per speeldag en dan pas update_speeldagstats => enkel nog update_speeldagstats
+
                 foreach ($speeldagen_seizoen as $speeldag) {
                     /* @var $speeldag Speeldag */
                     $som = 0;
+                    $aantal_speeldagen = 0;
                     for ($j = 0; $j <= $speeldag->speeldagnummer; $j++) {
                         $som += $uitslag_array[$j];
+                        $aantal_speeldagen++;
                     }
                     //Tussenstand speeldag delen door aantal speeldagen +1
                     //+1 = basispunten
-                    $tussenstand_speeldag = $som / ($speeldag->speeldagnummer + 1);
-                    $ranking_spelers_alle_speeldagen[$speeldag->id][] = array('speler_id' => $speler->id, 'gemiddelde' => $tussenstand_speeldag);
+                    // +1 valt weg : laatste for-lus hierboven
+                    $tussenstand_speeldag = $som / ($aantal_speeldagen);
+                    $speler->update_speeldagstats($speler->id, $speeldag->id, $tussenstand_speeldag);
+                    //$ranking_spelers_alle_speeldagen[$speeldag->id][] = array('speler_id' => $speler->id, 'gemiddelde' => $tussenstand_speeldag);
 
                 }
                 //Ten slotte: update seizoeninfo!
@@ -233,28 +239,28 @@
 
             }
 
-            //Magic Sorting
-            //Gebaseerd op http://php.net/manual/en/function.array-multisort.php
-            //Deze foreach sorteert de spelers per speeldag
-            foreach ($speeldagen_seizoen as $speeldag) {
-                /* @var $speeldag Speeldag */
-                // Obtain a list of columns
-                foreach ($ranking_spelers_alle_speeldagen[$speeldag->id] as $key => $row) {
-                    $gemiddelde[$key] = $row['gemiddelde'];
-                }
-
-                //Sorteert array op gemiddelde desc!
-                array_multisort($gemiddelde, SORT_DESC, $ranking_spelers_alle_speeldagen[$speeldag->id]);
-
-                foreach ($ranking_spelers_alle_speeldagen[$speeldag->id] as $key => $row) {
-                    //Update the speeldagstats
-                    $speler = new Speler();
-
-                    //$key +1 = begint bij 0!
-                    $speler->update_speeldagstats($row['speler_id'], $speeldag->id, $row['gemiddelde'], $key +1);
-                }
-
-            }
+//            //Magic Sorting
+//            //Gebaseerd op http://php.net/manual/en/function.array-multisort.php
+//            //Deze foreach sorteert de spelers per speeldag
+//            foreach ($speeldagen_seizoen as $speeldag) {
+//                /* @var $speeldag Speeldag */
+//                // Obtain a list of columns
+//                foreach ($ranking_spelers_alle_speeldagen[$speeldag->id] as $key => $row) {
+//                    $gemiddelde[$key] = $row['gemiddelde'];
+//                }
+//
+//                //Sorteert array op gemiddelde desc!
+//                array_multisort($gemiddelde, SORT_DESC, $ranking_spelers_alle_speeldagen[$speeldag->id]);
+//
+//                foreach ($ranking_spelers_alle_speeldagen[$speeldag->id] as $key => $row) {
+//                    //Update the speeldagstats
+//                    $speler = new Speler();
+//
+//                    //$key +1 = begint bij 0!
+//                    $speler->update_speeldagstats($row['speler_id'], $speeldag->id, $row['gemiddelde'], $key +1);
+//                }
+//
+//            }
 
 
         }

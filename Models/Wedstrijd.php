@@ -198,7 +198,7 @@
             } else {
                 $gewonnen_sets_team2++;
             }
-            if ($this->set3_1 != '' || $this->set3_2 != '') {
+            if ($this->set3_1 != 0 && $this->set3_2 != 0) {
                 $aantal_sets_gespeeld = 3;
                 if ($this->set3_1 > $this->set3_2) {
                     $gewonnen_sets_team1++;
@@ -229,6 +229,7 @@
                 $id_winnaars = array($this->team2_speler1, $this->team2_speler2);
                 $id_verliezers = array($this->team1_speler1, $this->team1_speler2);
             }
+
             $return = array(
                 "winnaar" => $winnaar,
                 "aantal_sets" => $aantal_sets_gespeeld,

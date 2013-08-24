@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS `intra_speeldagen` (
   `speeldagnummer` int(11) NOT NULL,
   `datum` DATE NOT NULL,
   `seizoen_id` int(11) NOT NULL,
-  `gemiddeld_verliezend` int(11) DEFAULT NULL,
+  `gemiddeld_verliezend` DOUBLE DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `seizoen_id` (`seizoen_id`)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -17,8 +17,7 @@ CREATE TABLE IF NOT EXISTS `intra_speeldagen` (
 CREATE TABLE IF NOT EXISTS `intra_spelerperspeeldag` (
   `speler_id` int(11) NOT NULL,
   `speeldag_id` int(11) NOT NULL,
-  `ranking` int(11) NOT NULL,
-  `gemiddelde` int(11) NOT NULL,
+  `gemiddelde` DOUBLE NOT NULL,
   PRIMARY KEY (`speler_id`, `speeldag_id`)
 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -27,8 +26,7 @@ CREATE TABLE IF NOT EXISTS `intra_spelerperseizoen` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `speler_id` int(11) NOT NULL,
   `seizoen_id` int(11) NOT NULL,
-  `basispunten` int(11) NOT NULL,
-  `huidige_punten` int(11) NOT NULL,
+  `basispunten` DOUBLE NOT NULL,
   `gespeelde_sets` int(11) NOT NULL,
   `gewonnen_sets` int(11) NOT NULL,
   `gespeelde_punten` int(11) NOT NULL,

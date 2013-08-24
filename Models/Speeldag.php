@@ -60,7 +60,7 @@
         {
             $query = sprintf("SELECT * FROM intra_speeldagen WHERE id= '%s';", $speeldag_id);
             $resultaat = mysql_query($query);
-            $this->vulop($resultaat);
+            $this->vulop(mysql_fetch_assoc($resultaat));
         }
 
 
@@ -122,7 +122,19 @@
                 mysql_real_escape_string($this->speeldagnummer),
                 mysql_real_escape_string($this->datum),
                 mysql_real_escape_string($this->id));
+
             return mysql_query($query);
         }
+        public function update_gemiddeldverliezend()
+        {
+            $query = sprintf("
+            UPDATE intra_speeldagen
+            SET gemiddeld_verliezend = '%s'
+            WHERE id = '%s';
+        ",
+                mysql_real_escape_string($this->gemiddeld_verliezend),
+                mysql_real_escape_string($this->id));
 
+            return mysql_query($query);
+        }
     }

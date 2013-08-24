@@ -164,18 +164,14 @@
             UPDATE
                 intra_spelerperseizoen
             SET
-                basispunten = '%s',
-                huidige_punten = '%s',
                 gespeelde_sets = '%s',
                 gewonnen_sets = '%s',
-                gespeelde_punten= '%s'
+                gespeelde_punten= '%s',
                 gewonnen_punten = '%s'
 
             WHERE
                 speler_id = '%s' and seizoen_id = '%s';
             ",
-                mysql_real_escape_string($data['basispunten']),
-                mysql_real_escape_string($data['huidige_punten']),
                 mysql_real_escape_string($data['gespeelde_sets']),
                 mysql_real_escape_string($data['gewonnen_sets']),
                 mysql_real_escape_string($data['gespeelde_punten']),
@@ -183,30 +179,27 @@
                 mysql_real_escape_string($this->id),
                 mysql_real_escape_string($data['seizoen']));
 
+            echo $query;
             return mysql_query($query);
         }
 
         //TODO: Wat als er nog geen data zit in db?
         //FIx? ON DUPLICATE KEY
-        public function update_speeldagstats($speler_id, $speeldag_id, $tussenstand_speeldag, $ranking)
+        public function update_speeldagstats($speler_id, $speeldag_id, $tussenstand_speeldag)
         {
             $query = sprintf("
             INSERT INTO
                 intra_spelerperspeeldag
             SET
-                ranking = '%s',
                 gemiddelde = '%s',
                 speler_id = '%s',
                 speeldag_id = '%s'
             ON DUPLICATE KEY UPDATE
-                ranking = '%s',
                 gemiddelde = '%s'
             ",
-            mysql_real_escape_string($ranking),
             mysql_real_escape_string($tussenstand_speeldag),
             mysql_real_escape_string($speler_id),
             mysql_real_escape_string($speeldag_id),
-            mysql_real_escape_string($ranking),
             mysql_real_escape_string($tussenstand_speeldag));
 
             return mysql_query($query);
@@ -228,22 +221,23 @@
          */
         public function get_wedstrijden($seizoen_id)
         {
-            $query = sprintf("SELECT * FROM  intra_wedstrijden
+            $query = sprintf("SELECT * FROM  intra_wedstrijden iw
+                                  INNER JOIN intra_speeldagen ispeel ON iw.speeldag_id = ispeel.id
+
                                   WHERE (
                                           (
-                                             team1_speler1='%s' OR
-                                             team1_speler2='%s' OR
-                                             team2_speler1='%s' OR
-                                             team2_speler2='%s'
-                                          ) AND seizoen_id = '%s'
+                                             iw.team1_speler1='%s' OR
+                                             iw.team1_speler2='%s' OR
+                                             iw.team2_speler1='%s' OR
+                                             iw.team2_speler2='%s'
+                                          ) AND ispeel.seizoen_id = '%s'
                                         )
-                                  ORDER BY id ASC;",
+                                  ORDER BY iw.id ASC;",
                             mysql_real_escape_string($this->id),
                             mysql_real_escape_string($this->id),
                             mysql_real_escape_string($this->id),
                             mysql_real_escape_string($this->id),
                             mysql_real_escape_string($seizoen_id));
-
             $resultaat = mysql_query($query);
 
             $wedstrijden = array();
