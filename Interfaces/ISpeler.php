@@ -11,6 +11,6 @@
         function get_speeldagstats($speeldag_id);
         function update_basisinfo($data);
         function update_seizoenstats($data);
-        function update_speeldagstats($speler_id, $speeldag_id, $tussenstand_speeldag);
+        function update_speeldagstats($speeldag_id, $tussenstand_speeldag);
         function get_wedstrijden($seizoen_id);
     }

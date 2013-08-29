@@ -108,7 +108,7 @@
         {
             $this->get_huidig_seizoen();
 
-            $speeldagen_seizoen = $this->get_speeldagen($this->id);
+            $speeldagen_seizoen = $this->get_speeldagen();
 
             $gemiddelde_verliezers_array = array();
             $speeldagnummer = 1;
@@ -229,7 +229,7 @@
                     //+1 = basispunten
                     // +1 valt weg : laatste for-lus hierboven
                     $tussenstand_speeldag = $som / ($aantal_speeldagen);
-                    $speler->update_speeldagstats($speler->id, $speeldag->id, $tussenstand_speeldag);
+                    $speler->update_speeldagstats($speeldag->id, $tussenstand_speeldag);
                     //$ranking_spelers_alle_speeldagen[$speeldag->id][] = array('speler_id' => $speler->id, 'gemiddelde' => $tussenstand_speeldag);
 
                 }
@@ -265,15 +265,14 @@
 
         }
 
-        public function get_speeldagen($seizoen_id = null)
+        public function get_speeldagen()
         {
-            if($seizoen_id == null)
+            if($this->id == null)
             {
                 $this->get_huidig_seizoen();
-                $seizoen_id = $this->id;
             }
 
-            $query = sprintf("SELECT * from intra_speeldagen WHERE seizoen_id = '%s';", mysql_real_escape_string($seizoen_id));
+            $query = sprintf("SELECT * from intra_speeldagen WHERE seizoen_id = '%s';", mysql_real_escape_string($this->id));
             $resultaat = mysql_query($query);
             $speeldagen = array();
 

@@ -185,8 +185,9 @@
 
         //TODO: Wat als er nog geen data zit in db?
         //FIx? ON DUPLICATE KEY
-        public function update_speeldagstats($speler_id, $speeldag_id, $tussenstand_speeldag)
+        public function update_speeldagstats( $speeldag_id, $tussenstand_speeldag)
         {
+            if($this->id == null) return FALSE;
             $query = sprintf("
             INSERT INTO
                 intra_spelerperspeeldag
@@ -198,7 +199,7 @@
                 gemiddelde = '%s'
             ",
             mysql_real_escape_string($tussenstand_speeldag),
-            mysql_real_escape_string($speler_id),
+            mysql_real_escape_string($this->id),
             mysql_real_escape_string($speeldag_id),
             mysql_real_escape_string($tussenstand_speeldag));
 
