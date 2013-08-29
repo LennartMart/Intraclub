@@ -14,7 +14,7 @@ class Ranking {
 
     function getAlgemeneRanking($seizoen_id = null, $speeldag_id = null)
     {
-        checkSpeeldagenSeizoen($seizoen_id,$speeldag_id);
+        $this->checkSpeeldagenSeizoen($seizoen_id,$speeldag_id);
 
         $query = sprintf("SELECT ISP.id AS speler_id, ISP.naam AS naam, ISP.voornaam as voornaam, ISP.geslacht AS geslacht, ISP.jeugd as jeugd, ISPS.ranking AS ranking, ISPS.gemiddelde AS gemiddelde
                                   FROM  intra_spelerperspeeldag ISPS
@@ -39,7 +39,7 @@ class Ranking {
 
     function getVrouwenRanking($seizoen_id, $speeldag_id = null)
     {
-        checkSpeeldagenSeizoen($seizoen_id,$speeldag_id);
+        $this->checkSpeeldagenSeizoen($seizoen_id,$speeldag_id);
 
         $query = sprintf("SELECT ISP.id AS speler_id, ISP.naam AS naam, ISP.voornaam as voornaam, ISP.geslacht AS geslacht, ISP.jeugd as jeugd, ISPS.ranking AS ranking, ISPS.gemiddelde AS gemiddelde
                                   FROM  intra_spelerperspeeldag ISPS
@@ -64,7 +64,7 @@ class Ranking {
 
     function getJeugdRanking($seizoen_id, $speeldag_id = null)
     {
-        checkSpeeldagenSeizoen($seizoen_id,$speeldag_id);
+        $this->checkSpeeldagenSeizoen($seizoen_id,$speeldag_id);
 
         $query = sprintf("SELECT ISP.id AS speler_id, ISP.naam AS naam, ISP.voornaam as voornaam, ISP.geslacht AS geslacht, ISP.jeugd as jeugd, ISPS.ranking AS ranking, ISPS.gemiddelde AS gemiddelde
                                   FROM  intra_spelerperspeeldag ISPS
