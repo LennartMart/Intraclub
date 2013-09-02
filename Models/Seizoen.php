@@ -32,9 +32,10 @@
         }
 
 
+        // Recentste seizoen eerst
         public function get_seizoenen()
         {
-            $resultaat = mysql_query("SELECT * FROM intra_seizoen");
+            $resultaat = mysql_query("SELECT * FROM intra_seizoen ORDER BY id DESC ");
             $seizoenen = array();
             while ($array_seizoen = mysql_fetch_array($resultaat)) {
                 $seizoen = new Seizoen();
@@ -272,7 +273,7 @@
                 $this->get_huidig_seizoen();
             }
 
-            $query = sprintf("SELECT * from intra_speeldagen WHERE seizoen_id = '%s';", mysql_real_escape_string($this->id));
+            $query = sprintf("SELECT * from intra_speeldagen WHERE seizoen_id = '%s' ORDER BY id  ASC;", mysql_real_escape_string($this->id));
             $resultaat = mysql_query($query);
             $speeldagen = array();
 

@@ -187,7 +187,7 @@
         //FIx? ON DUPLICATE KEY
         public function update_speeldagstats( $speeldag_id, $tussenstand_speeldag)
         {
-            if($this->id == null) return FALSE;
+            if($this->id == null || $speeldag_id == null) return FALSE;
             $query = sprintf("
             INSERT INTO
                 intra_spelerperspeeldag
