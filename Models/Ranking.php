@@ -12,65 +12,126 @@
     require_once(__DIR__ . '/Seizoen.php');
 class Ranking {
 
-    function getAlgemeneRanking($seizoen_id = null, $speeldag_id = null)
+    function getRanking($seizoen_id = null, $speeldag_id = null)
     {
-        $this->checkSpeeldagenSeizoen($seizoen_id,$speeldag_id);
+        $this->checkSpeeldagenSeizoen($seizoen_id, $speeldag_id);
 
-        $query = sprintf("SELECT ISP.id AS speler_id, ISP.naam AS naam, ISP.voornaam as voornaam, ISP.geslacht AS geslacht, ISP.jeugd as jeugd, ISPS.ranking AS ranking, ISPS.gemiddelde AS gemiddelde
+        $ranking = Array();
+        $huidigeRankingstring = '';
+        $vorigeRankingString = '';
+        if($seizoen_id == null)
+        {
+            //Geen seizoenen gevonden
+            return $ranking;
+        }
+
+        //Geen speeldag voor dit seizoen
+        //Huidige ranking = basispunten
+        if($speeldag_id == null)
+        {
+            $huidigeRankingstring = "SELECT ISP.id AS speler_id, ISP.naam AS naam, ISP.voornaam as voornaam, ISP.geslacht AS geslacht, ISP.jeugd as jeugd,ISPS.basispunten AS gemiddelde
+                                  FROM  intra_spelerperseizoen ISPS
+                                  INNER JOIN intra_spelers ISP ON ISP.id = ISPS.speler_id
+                                  ORDER BY gemiddelde DESC;";
+
+            //Nu: Vorig seizoen of niet?
+            $seizoen = new Seizoen();
+            $seizoenen = $seizoen->get_seizoenen();
+            if(count($seizoenen) > 1) {
+                //We hebben een vorig seizoen
+                $seizoen->id = $seizoenen[1]->id;
+
+                $speeldagen = $seizoen->getspeeldagen();
+                end($speeldagen);
+                $speeldag = prev($speeldagen);
+                $vorigeRankingString = sprintf("SELECT ISP.id AS speler_id, ISPS.gemiddelde AS gemiddelde
                                   FROM  intra_spelerperspeeldag ISPS
                                   INNER JOIN intra_spelers ISP ON ISP.id = ISPS.speler_id
                                   WHERE (
                                           ISPS.speeldag_id = '%s'
                                         )
                                   ORDER BY gemiddelde DESC;",
-            mysql_real_escape_string($speeldag_id));
-
-        $resultaat = mysql_query($query);
-
-        $ranking = array();
-
-        while ($ranking_array = mysql_fetch_array($resultaat)) {
-
-            $ranking[] = $ranking_array;
+                    mysql_real_escape_string($speeldag->id));
+            }
         }
-
-        return $ranking;
-    }
-
-    function getVrouwenRanking($seizoen_id, $speeldag_id = null)
-    {
-        $this->checkSpeeldagenSeizoen($seizoen_id,$speeldag_id);
-
-        $query = sprintf("SELECT ISP.id AS speler_id, ISP.naam AS naam, ISP.voornaam as voornaam, ISP.geslacht AS geslacht, ISP.jeugd as jeugd, ISPS.ranking AS ranking, ISPS.gemiddelde AS gemiddelde
+        else
+        {
+            $huidigeRankingstring = sprintf("SELECT ISP.id AS speler_id, ISP.naam AS naam, ISP.voornaam as voornaam, ISP.geslacht AS geslacht, ISP.jeugd as jeugd, ISPS.gemiddelde AS gemiddelde
                                   FROM  intra_spelerperspeeldag ISPS
                                   INNER JOIN intra_spelers ISP ON ISP.id = ISPS.speler_id
                                   WHERE (
-                                          ISPS.speeldag_id = '%s' AND ISP.geslacht = 'Vrouw'
+                                          ISPS.speeldag_id = '%s'
                                         )
-                                 ORDER BY gemiddelde DESC;",
-            mysql_real_escape_string($speeldag_id));
+                                  ORDER BY gemiddelde DESC;",
+                mysql_real_escape_string($speeldag_id));
 
-        $resultaat = mysql_query($query);
+            $speeldag = new Speeldag();
+            $speeldag->get($speeldag_id);
+            if($speeldag->speeldagnummer == 1){
 
+                $queryvorig = "SELECT ISP.id AS speler_id, ISPS.basispunten AS gemiddelde
+                                  FROM  intra_spelerperseizoen ISPS
+                                  INNER JOIN intra_spelers ISP ON ISP.id = ISPS.speler_id
+                                  ORDER BY gemiddelde DESC;";
+            }
+            else
+            {
+                $vorigespeeldagnummer = $speeldag->speeldagnummer -1;
+                $vorigeRankingString = sprintf("SELECT ISPS.speler_id AS speler_id, ISPS.gemiddelde AS gemiddelde
+                                  FROM  intra_spelerperspeeldag ISPS
+                                  INNER JOIN intra_speeldagen ISP ON ISP.id = ISPS.speeldag_id
+                                  WHERE (
+                                          ISP.seizoen_id = '%s' AND ISPS.speeldagnummer = '%s'
+                                        )
+                                  ORDER BY gemiddelde DESC;",
+                    mysql_real_escape_string($seizoen_id),mysql_real_escape_string($vorigespeeldagnummer));
+
+            }
+        }
+
+        $huidigeRanking = mysql_query($huidigeRankingstring);
         $ranking = array();
 
-        while ($ranking_array = mysql_fetch_array($resultaat)) {
-
+        while ($ranking_array = mysql_fetch_array($huidigeRanking)) {
             $ranking[] = $ranking_array;
         }
 
-        return $ranking;
-    }
+        if($vorigeRankingString != "")
+        {
+            $vorigeRankingArray = array();
+            $vorigeRanking = mysql_query($vorigeRankingString);
 
-    function getJeugdRanking($seizoen_id, $speeldag_id = null)
+            while ($ranking_array = mysql_fetch_array($vorigeRanking)) {
+                $vorigeRankingArray[] = $ranking_array;
+            }
+
+            //voeg deze twee samen
+            for($i=0; $i<=count($ranking);$i++)
+            {
+                for($j=0; $j<=count($vorigeRankingArray);$j++)
+                {
+                    if($vorigeRankingArray[$j]["speler_id"] == $ranking[$i]["speler_id"])
+                    {
+                        $ranking[$i]["vorige_positie"] = $j +1;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return $ranking;
+
+
+    }
+    function getAlgemeneRanking($seizoen_id = null, $speeldag_id = null)
     {
         $this->checkSpeeldagenSeizoen($seizoen_id,$speeldag_id);
 
-        $query = sprintf("SELECT ISP.id AS speler_id, ISP.naam AS naam, ISP.voornaam as voornaam, ISP.geslacht AS geslacht, ISP.jeugd as jeugd, ISPS.ranking AS ranking, ISPS.gemiddelde AS gemiddelde
+        $query = sprintf("SELECT ISP.id AS speler_id, ISP.naam AS naam, ISP.voornaam as voornaam, ISP.geslacht AS geslacht, ISP.jeugd as jeugd ISPS.gemiddelde AS gemiddelde
                                   FROM  intra_spelerperspeeldag ISPS
                                   INNER JOIN intra_spelers ISP ON ISP.id = ISPS.speler_id
                                   WHERE (
-                                          ISPS.speeldag_id = '%s' AND ISP.jeugd =  1
+                                          ISPS.speeldag_id = '%s'
                                         )
                                   ORDER BY gemiddelde DESC;",
             mysql_real_escape_string($speeldag_id));
