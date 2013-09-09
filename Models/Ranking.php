@@ -44,13 +44,13 @@ class Ranking {
                 $speeldagen = $seizoen->getspeeldagen();
                 end($speeldagen);
                 $speeldag = prev($speeldagen);
-                $vorigeRankingString = sprintf("SELECT ISP.id AS speler_id, ISPS.gemiddelde AS gemiddelde
-                                  FROM  intra_spelerperspeeldag ISPS
-                                  INNER JOIN intra_spelers ISP ON ISP.id = ISPS.speler_id
-                                  WHERE (
-                                          ISPS.speeldag_id = '%s'
-                                        )
-                                  ORDER BY gemiddelde DESC;",
+                $vorigeRankingString = sprintf("SELECT @curRank := @curRank +1 AS rank, speler_id
+                                                    FROM (
+                                                            SELECT ISPS.speler_id AS speler_id, ISPS.gemiddelde AS gemiddelde
+                                                            FROM intra_spelerperspeeldag ISPS
+                                                            WHERE (ISPS.speeldag_id =  '%s')
+                                                    ORDER BY gemiddelde DESC)t,
+                                                    (SELECT @curRank :=0)r;",
                     mysql_real_escape_string($speeldag->id));
             }
         }
@@ -69,21 +69,26 @@ class Ranking {
             $speeldag->get($speeldag_id);
             if($speeldag->speeldagnummer == 1){
 
-                $queryvorig = "SELECT ISP.id AS speler_id, ISPS.basispunten AS gemiddelde
-                                  FROM  intra_spelerperseizoen ISPS
-                                  INNER JOIN intra_spelers ISP ON ISP.id = ISPS.speler_id
-                                  ORDER BY gemiddelde DESC;";
+                $vorigeRankingString = "SELECT @curRank := @curRank +1 AS rank, speler_id
+                                    FROM (
+                                            SELECT ISPS.id AS speler_id, ISPS.basispunten AS gemiddelde
+                                            FROM intra_spelerperseizoen ISPS
+                                            ORDER BY gemiddelde DESC
+                                            )t, (SELECT @curRank :=0)r";
             }
             else
             {
                 $vorigespeeldagnummer = $speeldag->speeldagnummer -1;
-                $vorigeRankingString = sprintf("SELECT ISPS.speler_id AS speler_id, ISPS.gemiddelde AS gemiddelde
-                                  FROM  intra_spelerperspeeldag ISPS
-                                  INNER JOIN intra_speeldagen ISP ON ISP.id = ISPS.speeldag_id
-                                  WHERE (
-                                          ISP.seizoen_id = '%s' AND ISPS.speeldagnummer = '%s'
-                                        )
-                                  ORDER BY gemiddelde DESC;",
+                $vorigeRankingString = sprintf("SELECT @curRank := @curRank +1 AS rank, speler_id
+                                                FROM (
+                                                        SELECT ISPS.speler_id AS speler_id, ISPS.gemiddelde AS gemiddelde
+                                                        FROM intra_spelerperspeeldag ISPS
+                                                        INNER JOIN intra_speeldagen ISP ON ISP.id = ISPS.speeldag_id
+                                                        WHERE (ISP.seizoen_id =  '%s' AND ISP.speeldagnummer =  '%s')
+                                                        ORDER BY gemiddelde DESC)t,
+                                                (
+                                                  SELECT @curRank :=0
+                                                )r",
                     mysql_real_escape_string($seizoen_id),mysql_real_escape_string($vorigespeeldagnummer));
 
             }
@@ -95,31 +100,22 @@ class Ranking {
         while ($ranking_array = mysql_fetch_array($huidigeRanking)) {
             $ranking[] = $ranking_array;
         }
-
+        $beide_rankings = Array();
         if($vorigeRankingString != "")
         {
             $vorigeRankingArray = array();
             $vorigeRanking = mysql_query($vorigeRankingString);
 
             while ($ranking_array = mysql_fetch_array($vorigeRanking)) {
-                $vorigeRankingArray[] = $ranking_array;
+                $vorigeRankingArray[$ranking_array["speler_id"]] = $ranking_array["rank"];
             }
+            $beide_rankings["vorigeRanking"] = $vorigeRankingArray;
 
-            //voeg deze twee samen
-            for($i=0; $i<=count($ranking);$i++)
-            {
-                for($j=0; $j<=count($vorigeRankingArray);$j++)
-                {
-                    if($vorigeRankingArray[$j]["speler_id"] == $ranking[$i]["speler_id"])
-                    {
-                        $ranking[$i]["vorige_positie"] = $j +1;
-                        break;
-                    }
-                }
-            }
         }
 
-        return $ranking;
+        $beide_rankings["ranking"] = $ranking;
+
+        return $beide_rankings;
 
 
     }

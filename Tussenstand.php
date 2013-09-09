@@ -6,15 +6,16 @@
     require_once("Models/Ranking.php");
 
     $ranking = new Ranking();
-    $spelerslijst = $ranking->getRanking();
+    $rankings = $ranking->getRanking();
+    $vorige_ranking_exists = array_key_exists("vorigeRanking", $rankings);
     echo "<table>";
-    for($i = 0; $i < count($spelerslijst); $i++)
+    for($i = 0; $i < count($rankings["ranking"]); $i++)
     {
         echo "<tr>";
-        $naam = $spelerslijst[$i]["voornaam"]." ".$spelerslijst[$i]["naam"];
-        $gemiddelde = $spelerslijst[$i]['gemiddelde'];
+        $naam = $rankings["ranking"][$i]["voornaam"]." ".$rankings["ranking"][$i]["naam"];
+        $gemiddelde = $rankings["ranking"][$i]['gemiddelde'];
         $positie = $i +1;
-        $vorige_positie = array_key_exists('vorige_positie',$spelerslijst[$i]) ?$spelerslijst[$i]['vorige_positie'] : 0;
+        $vorige_positie = $vorige_ranking_exists ? $positie - $rankings["vorigeRanking"][$rankings["ranking"][$i]['speler_id']] : 0;
         echo "<td>$positie</td>";
         echo "<td>$vorige_positie</td>";
         echo "<td>$naam</td>";
