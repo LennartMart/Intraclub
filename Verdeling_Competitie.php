@@ -18,7 +18,8 @@
             require_once("Models/Ranking.php");
 
             $ranking = new Ranking();
-            $spelerslijst = $ranking->getAlgemeneRanking();
+            $spelerslijst = $ranking->getRanking();
+            $spelerslijst = $spelerslijst["ranking"];
             foreach($spelerslijst as $speler)
             {
 
