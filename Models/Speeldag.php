@@ -60,7 +60,10 @@
         {
             $query = sprintf("SELECT * FROM intra_speeldagen WHERE id= '%s';", $speeldag_id);
             $resultaat = mysql_query($query);
-            $this->vulop(mysql_fetch_assoc($resultaat));
+            if($resultaat != FALSE)
+            {
+                $this->vulop(mysql_fetch_assoc($resultaat));
+            }
         }
 
 

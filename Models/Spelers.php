@@ -34,6 +34,24 @@
             return $spelers;
         }
 
+        //Index = id speler
+        public function get_spelers_associative_array($is_lid){
+            if ($is_lid == true) {
+                $query = "SELECT * FROM intra_spelers WHERE is_lid = $is_lid ORDER BY voornaam;";
+            } else {
+                $query = "SELECT * FROM intra_spelers ORDER BY voornaam";
+            }
+
+            $resultaat = mysql_query($query);
+            $spelers = array();
+            while ($array_spelers = mysql_fetch_array($resultaat)) {
+                $speler = new Speler();
+                $speler->vulop($array_spelers);
+                $spelers[$speler->id] = $speler;
+            }
+            return $spelers;
+        }
+
         public function get_gemiddelde_allespelers($seizoen_id = null)
         {
             if($seizoen_id == null)
