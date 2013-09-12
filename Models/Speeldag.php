@@ -6,6 +6,7 @@
     class Speeldag implements ISpeeldag
     {
         public $id;
+        public $seizoen_id;
         public $speeldagnummer;
         public $gemiddeld_verliezend;
         public $datum;
@@ -107,6 +108,7 @@
             $this->gemiddeld_verliezend = $data['gemiddeld_verliezend'];
             $this->speeldagnummer = $data['speeldagnummer'];
             $this->datum = $data['datum'];
+            $this->seizoen_id = $data["seizoen_id"];
         }
 
         /**

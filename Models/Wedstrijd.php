@@ -31,7 +31,7 @@
         public function get($wedstrijd_id)
         {
             //Haal wedstrijd op en vul de members in
-            $get_query = "SELECT from intra_wedstrijden WHERE id = '$wedstrijd_id';";
+            $get_query = sprintf("SELECT from intra_wedstrijden WHERE id = '%s';",mysql_real_escape_string($wedstrijd_id));
 
             $gelukt = mysql_query($get_query);
             if ($gelukt) {
@@ -197,7 +197,7 @@
             } else {
                 $gewonnen_sets_team2++;
             }
-            if (($this->set3_1 != '' && $this->set3_2 != '') || ($this->set3_1 != 0 && $this->set3_2 != 0)) {
+            if (($this->set3_1 != '' && $this->set3_2 != '') && ($this->set3_1 != 0 && $this->set3_2 != 0)) {
                 $aantal_sets_gespeeld = 3;
                 if ($this->set3_1 > $this->set3_2) {
                     $gewonnen_sets_team1++;

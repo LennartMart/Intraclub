@@ -22,6 +22,26 @@
             $this->db->connect();
         }
 
+        public function get($seizoen_id)
+        {
+            //Haal wedstrijd op en vul de members in
+            $query = sprintf("SELECT from intra_seizoenen WHERE id = '%s';",mysql_real_escape_string($seizoen_id));
+            $gelukt = mysql_query($query);
+            if ($gelukt) {
+                $row = mysql_fetch_assoc($gelukt);
+                $this->vulop($row);
+                return TRUE;
+            }
+
+            return FALSE;
+        }
+
+        private function vulop($data)
+        {
+            $this->id = $data["id"];
+            $this->seizoen = $data["seizoen"];
+        }
+
         public function get_huidig_seizoen()
         {
             $query = mysql_query("SELECT id, seizoen FROM intra_seizoen ORDER BY id DESC LIMIT 1;");

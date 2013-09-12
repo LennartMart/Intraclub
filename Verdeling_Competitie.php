@@ -27,6 +27,17 @@
                 $ID = $speler["speler_id"];
                 echo "<label><input type='checkbox' name='$naam' value='$ID' /> $naam</label>";
             }
+
+            //Extra spelers
+            for($i=1;$i<=3;$i++) {
+                echo "
+                <label id='nieuwe_speler_rij_$i'>
+                        <input type='checkbox' name='nieuwe_speler'/>
+                        Voornaam: <input type='textbox' id='voornaam_nieuwe_speler_$i' style='width:150px'>,
+                        Achternaam: <input type='textbox' id='achternaam_nieuwe_speler_$i' style='width:150px'>
+                        <input class='btn btn-success' type='button' value='OK' onclick=\"nieuwe_speler(document.getElementById('nieuwe_speler_rij_$i'), document.getElementById('voornaam_nieuwe_speler_$i'), document.getElementById('achternaam_nieuwe_speler_$i'))\">
+                </label>";
+            }
         ?>
 
 <!--   </div>-->
@@ -74,7 +85,7 @@
         // Alle aanwezige spelers zitten in aanwezigeSpelers
 
         //Eerst: dropdownlist om eventueel te kunnen aanvullen
-        spelersLijstVoorDropdown = aanwezigeSpelers;
+        spelersLijstVoorDropdown = aanwezigeSpelers.slice();
 
         var matchNummer = 0;	// volgnummer van de match (1ste = 0)
 
@@ -151,7 +162,7 @@
 
         var output = "<table style='width:75%' class='table table-striped table-bordered table-condensed'>";
         //output += "<colgroup><col span='1' style='width: 25%;'><col span='2' style='max-width:10%;'><col span='2' style='max-width:10%;'><col span='2' style='max-width:10%;'><col span='1' style='width:25%;'><col span='1' style='width:25%;'></colgroup>";
-        output += "<thead><tr><td><b>Team 1</b></td><td><b>Team 2</b></td><td><b>Handicap</b></td><td COLSPAN='2'><b>Set 1</b></td><td COLSPAN='2'><b>Set 2</b></td><td COLSPAN='2'><b>Set 3</b></td></tr></thead>";
+        output += "<thead><tr><th>Team 1</th><th>Team 2</th><th>Handicap</th><th COLSPAN='2'>Set 1</th><th COLSPAN='2'>Set 2</th><th COLSPAN='2'>Set 3</th></tr></thead>";
         for(var i = 0; i < matchNummer; i++)
         {
             output += '<tr>';
@@ -320,4 +331,15 @@
         }
         alert("Er zijn " + j + " spelers aanwezig.");
     }
-    </script>
+
+    function nieuwe_speler(rijObject, voornaamObject, achternaamObject) {
+        var voornaam = voornaamObject.value;
+        var achternaam =  achternaamObject.value;
+        var naam = voornaam + " " + achternaam;
+        var ID = Math.floor(Math.random() * 2000) + 1000;
+        rijObject.innerHTML = "<label><input type='checkbox' name='" + voornaam +" " + achternaam +"' value='" + ID + "'/> " + naam + "</label>";
+
+    }
+
+
+</script>

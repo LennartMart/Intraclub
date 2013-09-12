@@ -8,6 +8,7 @@
         <li><a href="#fragment-1"><span>Algemene Ranking</span></a></li>
         <li><a href="#fragment-2"><span>Jeugd Ranking</span></a></li>
         <li><a href="#fragment-3"><span>Vrouwen Ranking</span></a></li>
+        <li><a href="#fragment-4"><span>Speeldagen</span></a></li>
     </ul>
     <div id="fragment-1">
         <table class="table table-striped">
@@ -119,6 +120,28 @@
             ?>
         </table>
     </div>
+    <div id="fragment-4">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Datum</th>
+                <th>Gemiddelde voor afwezigen</th>
+            </tr>
+            </thead>
+            <?php
+                $seizoen = new Seizoen();
+                $seizoen->get_huidig_seizoen();
+                $speeldagen = $seizoen->get_speeldagen();
+                foreach($speeldagen as $speeldag)
+                {
+                    $datum = formatDate($speeldag->datum);
+                    echo "<tr><td>$speeldag->speeldagnummer</td><td>$datum</td><td>$speeldag->gemiddeld_verliezend</td></tr>";
+                }
+
+            ?>
+        </table>
+    </div>
 </div>
 
 <script>
@@ -128,4 +151,8 @@
 <?php
     function formatNum($num){
         return sprintf("%+d",$num);
+    }
+    function formatDate($datum)
+    {
+        return implode('/', array_reverse(explode('-', $datum)));
     }

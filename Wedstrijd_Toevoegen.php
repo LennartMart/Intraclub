@@ -21,9 +21,6 @@
         $set2_team2 = $_POST["set2_team2"];
         $set3_team1 = $_POST["set3_team1"];
         $set3_team2 = $_POST["set3_team2"];
-        if($set3_team1 == "") $set3_team1=0;
-        if($set3_team2 == "") $set3_team2=0;
-
         $wedstrijd = new Wedstrijd();
         $result = $wedstrijd->voeg_toe(array(
             'speeldag_id' => $speeldag_id,

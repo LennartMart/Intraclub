@@ -19,7 +19,9 @@
 
     $spelers = new Spelers();
     $spelerslijst = $spelers->get_spelers_associative_array(false);
-    echo "<h1>Speeldag $speeldag->speeldagnummer ($speeldag->datum) </h1>";
+    $datum = formatDate($speeldag->datum);
+    echo "<h1>Speeldag $speeldag->speeldagnummer</h1>";
+    echo "<table><tbody><tr><th align='left'>Tijdstip:</th><td>$datum</td></tr><tr><th>Gemiddelde voor afwezigen:</th><td>$speeldag->gemiddeld_verliezend</td></tr></tbody></table>";
     echo "<table>";
     echo "<thead><tr><th align='right'>Team 1 </th><th align='left'>Team 2</th><th>Uitslag</th></tr>";
 
@@ -43,7 +45,7 @@
         echo "</tbody></table></td>";
 
         echo "<td><span class='score'><span>$wedstrijd->set1_1-$wedstrijd->set1_2</span> <span>$wedstrijd->set2_1-$wedstrijd->set2_2</span>";
-        if($wedstrijd->set3_1 != '' && $wedstrijd->set3_2 != ''){
+        if(($wedstrijd->set3_1 != '' && $wedstrijd->set3_2 != '') && ($wedstrijd->set3_1 != 0 && $wedstrijd->set3_2 != 0)){
             echo " <span>$wedstrijd->set3_1-$wedstrijd->set3_2</span>";
         }
         echo "</span></td>";
@@ -51,4 +53,24 @@
         echo "</tr>";
     }
     echo "</table>";
+
+    //Nu lijst speeldagen ...
+    $seizoen = new Seizoen();
+    $seizoen->get($speeldag->seizoen_id);
+    $speeldagen = $seizoen->get_speeldagen();
+
+    echo "<select name='speeldag'>";
+    foreach($speeldagen as $speeldag)
+    {
+        /* @var $speeldag Speeldag */
+        echo "<option value='".$speeldag->id."'";
+        if($speeldag->id == $speeldag_id) { echo "SELECTED"; }
+        echo ">" . $speeldag->speeldagnummer . ": ".$speeldag->datum."</option>";
+    }
+    echo "</select>";
+
+    function formatDate($datum)
+    {
+        return implode('/', array_reverse(explode('-', $datum)));
+    }
 

@@ -6,6 +6,7 @@
 interface ISeizoen
 {
     public function create($seizoen);
+    public function get($seizoen_id);
     public function bereken_huidig_seizoen();
     public function get_speeldagen();
     public function get_seizoenen();
