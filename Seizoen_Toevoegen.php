@@ -1,4 +1,7 @@
-<h1>Voeg een nieuw seizoen toe</h1>
+<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+<!--<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">-->
+<h3>Voeg een nieuw seizoen toe</h3>
+<div class="hero-unit center">
 <?php
     include("Models/Seizoen.php");
     $show_form = true;
@@ -31,8 +34,10 @@
             $uitkomst = $seizoen->create($newSeizoen);
             if($uitkomst)
             {
-                echo "<h1>Seizoen " + $newSeizoen + " is succesvol toegevoegd!</h1>";
+                echo "<div class='alert alert-success'>";
+                echo "<h3>Seizoen $newSeizoen is succesvol toegevoegd!</h3>";
                 echo "<p>Alle gegevens van vorig seizoen werden weggeschreven, iedereen heeft nu als basispunt = eindpunt vorig seizoen!</p>";
+                echo "</div>";
                 $show_form = false;
             }
             else
@@ -42,14 +47,13 @@
         }
         else
         {
-            echo "<h3>Er zijn enkele fouten opgetreden</h3>";
-            echo "<ul>";
+            echo "<div class='alert alert-error'>";
             foreach ($errors as $error)
             {
-                echo "<li>" . $error . "</li>";
+                echo "<p>" . $error . "</p>";
             }
 
-            echo "</ul><br/>";
+            echo "</div>";
         }
     }
 
@@ -62,9 +66,10 @@
 <form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post">
     <legend>Voer gegevens in voor het volgende seizoen</legend>
     <p><label class='field'> Huidig seizoen: </label><?php echo $huidig_seizoen->seizoen ?></p>
-    <p><label class='field'> Seizoen: </label><input type="text" id="seizoen1" name="seizoen1" maxlength="4" size="4"> - <input type="text" id="seizoen2" name="seizoen2" maxlength="4" size="4"></p>
-    <input class="btn" type="submit" value="Start nieuw seizoen!" name="VoegSeizoenToe">
+    <p><label class='field'> Seizoen: </label><input class="input-small" type="text" id="seizoen1" name="seizoen1" maxlength="4" size="4"> - <input class="input-small"type="text" id="seizoen2" name="seizoen2" maxlength="4" size="4"></p>
+    <input class="btn btn-danger" type="submit" value="Start nieuw seizoen!" name="VoegSeizoenToe" onclick="return confirm('Bent u zeker dat u het seizoen ' + document.getElementById('seizoen1').value + '-' + document.getElementById('seizoen2').value + ' wilt toevoegen?')">
 </form>
+</div>
 
 <?php
     }

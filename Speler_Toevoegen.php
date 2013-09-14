@@ -1,90 +1,104 @@
+<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
 <?php
     require_once("Models/Speler.php");
     require_once("Models/Spelers.php");
 
     $spelers = new Spelers();
     if(isset($_POST["VoegSpelerToe"])) {
-        $error = array();
+        $errors = array();
         $gegevens = array(
             "voornaam" => $_POST["voornaam"],
             "naam" =>  $_POST["naam"],
-            "geslacht" => $_POST["geslacht"],
+            "geslacht" => isset($_POST["geslacht"])? $_POST["geslacht"]: '',
             "jeugd" => (isset($_POST["jeugd"])) ? 1 : 0,
             "klassement" => $_POST["klassement"],
             "basispunten" =>  $_POST["basispunten"]);
         if(!strlen($gegevens["voornaam"])) {
-            $error[] = "Een voornaam is verplicht";
+            $errors[] = "Een voornaam is verplicht";
         }
         if(!strlen($gegevens["naam"])) {
-            $error[] ="Een achternaam is verplicht";
+            $errors[] ="Een achternaam is verplicht";
         }
         if(!strlen($gegevens["geslacht"])) {
-            $error[] = "Kies een geslacht";
+            $errors[] = "Kies een geslacht";
         }
         if(!is_numeric($gegevens["basispunten"])) {
-            $error[] = "'Basispunten' moet een getal zijn!";
+            $errors[] = "'Basispunten' moet een getal zijn!";
         }
         //TO DO : Check of speler met dezelfde voor -en achternaam reeds bestaat!
 
-        if(empty($error)) {
+        if(empty($errors)) {
             $nieuwe_speler = new Speler();
             $resultaat = $nieuwe_speler->create($gegevens);
             if(!$resultaat) {
-                echo"<p>Probleem met toevoegen aan database. Contacteer beheerder en geef volgende foutboodschap</p>".mysql_error();
+                echo"<div class='alert alert-error'>Speler bestaat al! </div>";
             }
             else {
-                echo "<h3>".$gegevens["voornaam"]." ".$gegevens["naam"]." succesvol toegevoegd!</h3>";
+                echo "<div class='alert alert-success'>".$gegevens["voornaam"]." ".$gegevens["naam"]." succesvol toegevoegd</div>";
             }
+        }
+
+        else
+        {
+            echo"<div class='alert alert-error'>";
+            foreach ($errors as $error)
+            {
+                echo "<p>$error</p>";
+            }
+            echo "</div>";
+
         }
     }
 ?>
+<h3> Speler toevoegen </h3>
+<div class="hero-unit center">
 
-<h1> Speler toevoegen </h1>
 
-<form name="VoegSpelerToeForm" action="<?=$_SERVER['REQUEST_URI']?>" method="post">
+<form name="VoegSpelerToeForm" action="<?php echo $_SERVER['REQUEST_URI']?>" method="post">
     <table>
         <tr>
-            <td>Voornaam:</td>
+            <th align="left">Voornaam:</th>
             <td><input type="text" maxlength="25" name="voornaam"></td>
         </tr>
         <tr>
-            <td>Naam:</td>
+            <th align="left">Naam:</th>
             <td><input type="text" maxlength="25" name="naam"></td>
         </tr>
         <tr>
-            <td>Geslacht</td>
+            <th align="left">Geslacht:</th>
             <td>
-                <input type="radio" name="geslacht" value="Man">Man <br>
-                <input type="radio" name="geslacht" value="Vrouw">Vrouw
+                <input type="radio" name="geslacht" value="Man">Man
             </td>
         </tr>
+                <tr>
+                    <th></th>
+                    <td><input type="radio" name="geslacht" value="Vrouw">Vrouw</td>
+                </tr>
+
+
         <tr>
-            <td>Jeugd</td>
+            <th align="left">Jeugd:</th>
             <td>
                 <input type="checkbox" name="jeugd">
             </td>
         </tr>
         <tr>
-            <td>
-                Klassement
-            </td>
+            <th align="left">Klassement:</th>
             <td>
                 <?php klassementen(); ?>
             </td>
         </tr>
         <tr>
+            <th align="left">Basispunten:</th>
             <td>
-                Basispunten
-            </td>
-            <td>
-                <input type="number" maxlength="25" name="basispunten" value="<?php echo $spelers->get_gemiddelde_allespelers(); ?>">
+                <input type="number" step="any" min="0" class='input-medium' maxlength="25" name="basispunten" style="height:30px" value="<?php echo $spelers->get_gemiddelde_allespelers(); ?>">
             </td>
         </tr>
     </table>
-    <input type="submit" value="Toevoegen" name="VoegSpelerToe">
+    <input type="submit" class='btn' value="Toevoegen" name="VoegSpelerToe">
 </form>
 
-
+</div>
 <?php
 
     function klassementen()
@@ -92,7 +106,7 @@
         $spelers = new Spelers();
         $klassementen = $spelers->get_klassementen();
 
-        echo "<select name='klassement'>";
+        echo "<select class='input-medium' name='klassement'>";
         foreach($klassementen as $klassement)
         {
             echo "<option value='".$klassement."'";

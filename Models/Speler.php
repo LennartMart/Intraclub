@@ -30,57 +30,68 @@
         //Maak een nieuwe speler aan
         public function create($data)
         {
-            //Insert een nieuwe rij in de spelerstabel
-            //Nieuwe speler is automatisch lid - waarom zou je hem anders toevoegen?
-            $query = sprintf("
-            INSERT INTO
-                intra_spelers
-            SET
-                voornaam = '%s',
-                naam = '%s',
-                geslacht = '%s',
-                jeugd = '%s',
-                klassement= '%s',
-                is_lid = 1
-                ",
-                mysql_real_escape_string($data['voornaam']),
-                mysql_real_escape_string($data['naam']),
-                mysql_real_escape_string($data['geslacht']),
-                mysql_real_escape_string($data['jeugd']),
-                mysql_real_escape_string($data['klassement']));
 
-            $result = mysql_query($query);
-            if (!$result) {
-                return FALSE;
-            } else {
-                //Haal de gegenereerde ID op.
-                $speler_id = mysql_insert_id();
-
-                $huidig_seizoen = new Seizoen();
-                $huidig_seizoen->get_huidig_seizoen();
-
-                //Insert een rij voor de speler in het huidige seizoen
+            //Bestaat seizoen al of niet?
+            $query = sprintf("SELECT count(id) AS aantal FROM intra_spelers WHERE naam ='%s' AND voornaam = '%s'",$data['naam'], $data['voornaam']);
+            $resultaat = mysql_query($query);
+            $aantal = @mysql_result($resultaat, 0, aantal);
+            if (!$aantal) {
+                //Insert een nieuwe rij in de spelerstabel
+                //Nieuwe speler is automatisch lid - waarom zou je hem anders toevoegen?
                 $query = sprintf("
-                            INSERT INTO
-                                intra_spelerperseizoen
-                            SET
-                              speler_id = '%d',
-                              seizoen_id = '%d',
-                              basispunten = '%s',
-                              gespeelde_sets = 0,
-                              gewonnen_sets = 0,
-                              gespeelde_punten = 0,
-                              gewonnen_punten = 0
-                              ",
-                    mysql_real_escape_string($speler_id),
-                    mysql_real_escape_string($huidig_seizoen->id),
-                    mysql_real_escape_string($data["basispunten"]));
+                INSERT INTO
+                    intra_spelers
+                SET
+                    voornaam = '%s',
+                    naam = '%s',
+                    geslacht = '%s',
+                    jeugd = '%s',
+                    klassement= '%s',
+                    is_lid = 1
+                    ",
+                    mysql_real_escape_string($data['voornaam']),
+                    mysql_real_escape_string($data['naam']),
+                    mysql_real_escape_string($data['geslacht']),
+                    mysql_real_escape_string($data['jeugd']),
+                    mysql_real_escape_string($data['klassement']));
 
                 $result = mysql_query($query);
                 if (!$result) {
                     return FALSE;
+                } else {
+                    //Haal de gegenereerde ID op.
+                    $speler_id = mysql_insert_id();
+
+                    $huidig_seizoen = new Seizoen();
+                    $huidig_seizoen->get_huidig_seizoen();
+
+                    //Insert een rij voor de speler in het huidige seizoen
+                    $query = sprintf("
+                                INSERT INTO
+                                    intra_spelerperseizoen
+                                SET
+                                  speler_id = '%d',
+                                  seizoen_id = '%d',
+                                  basispunten = '%s',
+                                  gespeelde_sets = 0,
+                                  gewonnen_sets = 0,
+                                  gespeelde_punten = 0,
+                                  gewonnen_punten = 0
+                                  ",
+                        mysql_real_escape_string($speler_id),
+                        mysql_real_escape_string($huidig_seizoen->id),
+                        mysql_real_escape_string($data["basispunten"]));
+
+                    $result = mysql_query($query);
+                    if (!$result) {
+                        return FALSE;
+                    }
+                    return TRUE;
                 }
-                return TRUE;
+            }
+            else
+            {
+                return FALSE;
             }
 
         }
