@@ -49,7 +49,6 @@
          */
         public function voeg_toe($data)
         {
-
             //Dubbel-Insert beveiliging
 
             $result = mysql_query(sprintf("SELECT * FROM intra_wedstrijden

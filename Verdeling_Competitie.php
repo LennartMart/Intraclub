@@ -90,7 +90,7 @@
         var matchNummer = 0;	// volgnummer van de match (1ste = 0)
 
         // matchen verdelen
-        for(var i=0;i<Math.floor(aanwezigeSpelers.length/(matchenPerPoule*4));i++) { // i = poule
+        for(var i=0;i<Math.floor(spelersLijstVoorDropdown.length/(matchenPerPoule*4));i++) { // i = poule
 
             //Neem het aantal spelers voor in de poule
             var pouleSpelers =  aanwezigeSpelers.splice(0, matchenPerPoule * 4);

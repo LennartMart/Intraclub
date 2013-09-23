@@ -27,11 +27,11 @@
 
         $errors = Array();
 
-        if($set1_team1 == "" || $set1_team2 = '')
+        if($set1_team1 == "" || $set1_team2 == '')
         {
             $errors[] = "Onvolledige score voor set 1!";
         }
-        if($set2_team1 == "" || $set2_team2 = '')
+        if($set2_team1 == "" || $set2_team2 == '')
         {
             $errors[] = "Onvolledige score voor set 2!";
         }
@@ -59,6 +59,7 @@
                 'set3_1' => $set3_team1,
                 'set3_2' => $set3_team2
                 ));
+
             if(!$result) {
                 echo "<div class='alert alert-error'>Wedstrijd werd niet toegevoegd!</div>";
 
