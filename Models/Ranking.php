@@ -155,7 +155,7 @@ class Ranking {
         if($speeldag_id == null)
         {
             $laatste_speeldag = new Speeldag();
-            $laatste_speeldag->get_laatste_speeldag($seizoen_id);
+            $laatste_speeldag->get_laatste_berekende_speeldag($seizoen_id);
             $speeldag_id = $laatste_speeldag->id;
         }
     }

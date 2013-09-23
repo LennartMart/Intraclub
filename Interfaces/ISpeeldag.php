@@ -12,5 +12,6 @@ interface ISpeeldag
     function update();
     function get($speeldag_id);
     function get_laatste_speeldag($seizoen_id = null);
+    function get_laatste_berekende_speeldag($seizoen_id = null);
 
 }

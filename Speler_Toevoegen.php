@@ -67,7 +67,7 @@
         <tr>
             <th align="left">Geslacht:</th>
             <td>
-                <input type="radio" name="geslacht" value="Man">Man
+                <input type="radio" name="geslacht" value="Man" checked="true">Man
             </td>
         </tr>
                 <tr>

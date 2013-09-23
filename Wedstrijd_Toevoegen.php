@@ -1,4 +1,7 @@
+<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
 <?php
+
+
 /**
  * User: Lennart
  * Date: 23-5-13
@@ -21,64 +24,100 @@
         $set2_team2 = $_POST["set2_team2"];
         $set3_team1 = $_POST["set3_team1"];
         $set3_team2 = $_POST["set3_team2"];
-        $wedstrijd = new Wedstrijd();
-        $result = $wedstrijd->voeg_toe(array(
-            'speeldag_id' => $speeldag_id,
-            'team1_speler1' => $team1_speler1,
-            'team1_speler2' => $team1_speler2,
-            'team2_speler1' => $team2_speler1,
-            'team2_speler2' => $team2_speler2,
-            'set1_1' => $set1_team1,
-            'set1_2' => $set1_team2,
-            'set2_1' => $set2_team1,
-            'set2_2' => $set2_team2,
-            'set3_1' => $set3_team1,
-            'set3_2' => $set3_team2
-            ));
-        if(!$result) {
-            echo "<h3>Wedstrijd werd niet toegevoegd!</h3>";
 
-            unset($_POST["VoegWedstrijdToe"]);
+        $errors = Array();
+
+        if($set1_team1 == "" || $set1_team2 = '')
+        {
+            $errors[] = "Onvolledige score voor set 1!";
         }
-        else {
-            echo "<h3>Wedstrijd succesvol toegevoegd!</h3>";
+        if($set2_team1 == "" || $set2_team2 = '')
+        {
+            $errors[] = "Onvolledige score voor set 2!";
+        }
+        if(($set1_team1 >= 21 && $set1_team2 != $set1_team1 -2) && ($set1_team2 >= 21 && $set1_team1 != $set1_team2 -2))
+        {
+            $errors[] = "Geen duidelijke winnaar voor set 1!";
+        }
+        if(($set2_team1 >= 21 && $set2_team2 != $set2_team1 -2) && ($set2_team2 >= 21 && $set2_team1 != $set2_team2 -2))
+        {
+            $errors[] = "Geen duidelijke winnaar voor set 2!";
+        }
+        if(empty($errors))
+        {
+            $wedstrijd = new Wedstrijd();
+            $result = $wedstrijd->voeg_toe(array(
+                'speeldag_id' => $speeldag_id,
+                'team1_speler1' => $team1_speler1,
+                'team1_speler2' => $team1_speler2,
+                'team2_speler1' => $team2_speler1,
+                'team2_speler2' => $team2_speler2,
+                'set1_1' => $set1_team1,
+                'set1_2' => $set1_team2,
+                'set2_1' => $set2_team1,
+                'set2_2' => $set2_team2,
+                'set3_1' => $set3_team1,
+                'set3_2' => $set3_team2
+                ));
+            if(!$result) {
+                echo "<div class='alert alert-error'>Wedstrijd werd niet toegevoegd!</div>";
+
+                unset($_POST["VoegWedstrijdToe"]);
+            }
+            else {
+                echo "<div class='alert alert-success'>Wedstrijd succesvol toegevoegd!</div>";
+            }
+        }
+        else
+        {
+            echo "<div class='alert alert-error'>";
+            foreach ($errors as $error)
+            {
+                echo "<p>" . $error . "</p>";
+            }
+
+            echo "</div>";
         }
     }
 ?>
-<h1>Wedstrijd toevoegen</h1>
-<form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method='post'>
-    <table>
-        <tr>
-            <td align="center" colspan="3">
-                Speeldag <br>
-                <?php speeldagen(); ?>
-            </td>
-        </tr>
-        <tr>
-            <td align="center">
-                Team 1<br>
-                <?php spelerslijst('team1_speler1'); ?> <br>
-                <?php spelerslijst('team1_speler2'); ?>
-            </td>
-            <td align="center">
-                Set 1 <br>
-                <input type="text" size="1" maxlength="2" name="set1_team1"> - <input type="text" size="1" maxlength="2" name="set1_team2"> <br>
-                Set 2 <br>
-                <input type="text" size="1" maxlength="2" name="set2_team1"> - <input type="text" size="1" maxlength="2" name="set2_team2"> <br>
-                Set 3 <br>
-                <input type="text" size="1" maxlength="2" name="set3_team1"> - <input type="text" size="1" maxlength="2" name="set3_team2"> <br>
-            </td>
-            <td align="center">
-                Team 2<br>
-                <?php spelerslijst("team2_speler1"); ?> <br>
-                <?php spelerslijst("team2_speler2"); ?>
-            </td>
-        </tr>
+<h3>Wedstrijd toevoegen</h3>
+<div class="hero-unit center">
+    <form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method='post'>
+        <table class=''>
+            <tr>
+                <td align="center" colspan="3">
+                    Speeldag <br>
+                    <?php speeldagen(); ?>
+                </td>
+            </tr>
+            <tr>
+                <th>Team 1</th>
+                <th></th>
+                <th>Team 2</th>
+                <th COLSPAN='4'>Set 1</th>
+                <th COLSPAN='4'>Set 2</th>
+                <th COLSPAN='3'>Set 3</th>
+            </tr>
+            <tr>
+                <td align="center">
+                    <?php spelerslijst('team1_speler1'); ?> <br>
+                    <?php spelerslijst('team1_speler2'); ?>
+                </td>
+                <td>Vs</td>
+                <td align="center">
+                    <?php spelerslijst("team2_speler1"); ?> <br>
+                    <?php spelerslijst("team2_speler2"); ?>
+                </td>
+                <td><input style='width:75px' type='input' size='1' name="set1_team1"></td><td>-</td><td><input style='width:75px' type='input' size='1' name="set1_team2" ></td><td></td>
+                <td><input style='width:75px' type='input' size='1' name="set2_team1"></td><td>-</td><td><input style='width:75px' type='input' size='1' name="set2_team2" ></td><td></td>
+                <td><input style='width:75px' type='input' size='1' name="set3_team1"></td><td>-</td><td><input style='width:75px' type='input' size='1' name="set3_team2" ></td>
+            </tr>
+        </table>
     </table>
-</table>
 
-<input type="submit" value="Voeg toe" name="VoegWedstrijdToe">
-</form>
+    <input class="btn" type="submit" value="Voeg toe" name="VoegWedstrijdToe">
+    </form>
+</div>
 
 <?php
     $speeldag = new Speeldag();
@@ -91,7 +130,7 @@
         $laatste_speeldag = new Speeldag();
         $laatste_speeldag->get_laatste_speeldag();
 
-        echo "<select name='speeldag'>";
+        echo "<select class='input input-medium' name='speeldag'>";
         foreach($speeldagen as $speeldag)
         {
             /* @var $speeldag Speeldag */

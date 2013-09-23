@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS `intra_speeldagen` (
   `datum` DATE NOT NULL,
   `seizoen_id` int(11) NOT NULL,
   `gemiddeld_verliezend` DOUBLE DEFAULT NULL,
+  `is_berekend` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `seizoen_id` (`seizoen_id`)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

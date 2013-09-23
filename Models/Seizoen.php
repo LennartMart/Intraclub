@@ -166,7 +166,9 @@
 
             $laatste_speeldag = $speeldagnummer - 1;
 
-            //Resultaat per speler bepalen
+            /*
+             * Resultaat per speler bepalen
+             */
             $alle_spelers = new Spelers();
             $alle_spelers = $alle_spelers->get_spelers(true);
 
@@ -187,6 +189,9 @@
                     "gewonnen_matchen" => 0
                 );
 
+                /*
+                 * Overloop de wedstrijden van de speler
+                 */
                 $wedstrijden_speler = $speler->get_wedstrijden($this->id);
                 foreach ($wedstrijden_speler as $wedstrijd_speler) {
                     /* @var $wedstrijd_speler Wedstrijd */

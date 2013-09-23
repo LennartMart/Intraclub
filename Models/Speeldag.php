@@ -40,7 +40,8 @@
                       speeldagnummer = '%s',
                       seizoen_id = '%s',
                       datum = '%s',
-                      gemiddeld_verliezend = 0
+                      gemiddeld_verliezend = 0,
+                      is_berekend = 0
                       ",
                             mysql_real_escape_string($data['speeldagnummer']),
                             mysql_real_escape_string($seizoen->id),
@@ -98,6 +99,18 @@
             $this->vulop($array_speeldag);
         }
 
+        public function get_laatste_berekende_speeldag($seizoen_id = null)
+        {
+            if($seizoen_id == null)
+            {
+                $seizoen = new Seizoen();
+                $seizoen->get_huidig_seizoen();
+                $seizoen_id = $seizoen->id;
+            }
+            $resultaat = mysql_query(sprintf("SELECT * FROM intra_speeldagen WHERE seizoen_id = '%s' AND is_berekend = 1 ORDER BY speeldagnummer DESC LIMIT 1;",$seizoen_id));
+            $array_speeldag = mysql_fetch_array($resultaat);
+            $this->vulop($array_speeldag);
+        }
         /**
          * Om het Speeldag object keurig op te vullen
          * @param $data
@@ -120,7 +133,7 @@
         {
             $query = sprintf("
             UPDATE intra_speeldagen
-            set gemiddeld_verliezend = '%s' and  speeldagnummer = '%s' and datum = '%s'
+            SET gemiddeld_verliezend = '%s' AND speeldagnummer = '%s' AND datum = '%s' AND is_berekend = 1
             WHERE id = '%s';
         ",
                 mysql_real_escape_string($this->gemiddeld_verliezend),
@@ -134,7 +147,7 @@
         {
             $query = sprintf("
             UPDATE intra_speeldagen
-            SET gemiddeld_verliezend = '%s'
+            SET gemiddeld_verliezend = '%s' AND is_berekend = 1
             WHERE id = '%s';
         ",
                 mysql_real_escape_string($this->gemiddeld_verliezend),
