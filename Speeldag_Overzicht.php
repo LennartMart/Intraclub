@@ -22,7 +22,8 @@
     $spelerslijst = $spelers->get_spelers_associative_array(false);
     $datum = formatDate($speeldag->datum);
     echo "<h1>Speeldag $speeldag->speeldagnummer</h1>";
-    echo "<table><tbody><tr><th align='left'>Tijdstip:</th><td>$datum</td></tr><tr><th>Gemiddelde voor afwezigen:</th><td>$speeldag->gemiddeld_verliezend</td></tr></tbody></table>";
+    $afgerondVerliezend = round($speeldag->gemiddeld_verliezend,2);
+    echo "<table><tbody><tr><th align='left'>Tijdstip:</th><td>$datum</td></tr><tr><th>Gemiddelde voor afwezigen:</th><td>$afgerondVerliezend</td></tr></tbody></table>";
     echo "<table class='table table-striped'>";
     echo "<thead><tr><th style='text-align:right'>Team 1 </th><th style='text-align:left'>Team 2</th><th>Uitslag</th></tr></thead>";
 

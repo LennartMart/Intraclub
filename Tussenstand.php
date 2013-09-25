@@ -1,8 +1,40 @@
+<?php
+    //Variabelen voor URL's
+    $speeldag_url = "Speeldag_Overzicht.php?speeldag=";
+    ?>
+
+
 <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 <link href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+<style type="text/css">
+    .hover {
+        background-color: #ccc !important;
+        cursor: pointer;
+    }
+</style>
+<script type="text/javascript">
+    jQuery(document).ready(function() {
 
+        jQuery( "tr.selectable" ).hover(
+            function() {
+                jQuery(this).children('td').each(function() {
+                    jQuery(this).addClass("hover");
+                });
+            }, function() {
+                jQuery(this).children('td').each(function() {
+                    jQuery(this).removeClass("hover");
+                });
+            }
+        );
+        jQuery('tr.selectable').click(function() {
+            window.location = jQuery(this).attr('href');
+            return false;
+        });
+
+    });
+</script>
 <div id="tabs">
     <ul>
         <li><a href="#fragment-1"><span>Algemene Ranking</span></a></li>
@@ -34,7 +66,7 @@
 
     for($i = 0; $i < count($rankings["ranking"]); $i++)
     {
-        echo "<tr>";
+        echo "<tr class='selectable'>";
         $naam = $rankings["ranking"][$i]["voornaam"]." ".$rankings["ranking"][$i]["naam"];
         $gemiddelde = $rankings["ranking"][$i]['gemiddelde'];
         $positie = $i +1;
@@ -54,7 +86,8 @@
         }
         echo "$verschil </td>";
         echo "<td>$naam</td>";
-        echo "<td>$gemiddelde</td>";
+        $afgerondGemiddelde = round($gemiddelde,2);
+        echo "<td>$afgerondGemiddelde</td>";
         echo "</tr>";
     }
     echo "</table>";
@@ -75,12 +108,13 @@
                     {
                         if($rankings["ranking"][$i]["jeugd"] == 1)
                         {
-                            echo "<tr>";
+                            echo "<tr class='selectable'>";
                             $naam = $rankings["ranking"][$i]["voornaam"]." ".$rankings["ranking"][$i]["naam"];
                             $gemiddelde = $rankings["ranking"][$i]['gemiddelde'];
+                            $afgerondGemiddelde = round($gemiddelde,2);
                             echo "<td>$positie</td>";
                             echo "<td>$naam</td>";
-                            echo "<td>$gemiddelde</td>";
+                            echo "<td>$afgerondGemiddelde</td>";
                             echo "</tr>";
                             $positie++;
                         }
@@ -104,13 +138,13 @@
                 {
                     if($rankings["ranking"][$i]["geslacht"] == "Vrouw")
                     {
-                        echo "<tr>";
+                        echo "<tr class='selectable'>";
                         $naam = $rankings["ranking"][$i]["voornaam"]." ".$rankings["ranking"][$i]["naam"];
                         $gemiddelde = $rankings["ranking"][$i]['gemiddelde'];
-
+                        $afgerondGemiddelde = round($gemiddelde,2);
                         echo "<td>$positie</td>";
                         echo "<td>$naam</td>";
-                        echo "<td>$gemiddelde</td>";
+                        echo "<td>$afgerondGemiddelde</td>";
                         echo "</tr>";
 
                         $positie ++;
@@ -136,7 +170,9 @@
                 foreach($speeldagen as $speeldag)
                 {
                     $datum = formatDate($speeldag->datum);
-                    echo "<tr><td>$speeldag->speeldagnummer</td><td>$datum</td><td>$speeldag->gemiddeld_verliezend</td></tr>";
+                    $afgerondVerliezend = round($speeldag->gemiddeld_verliezend,2);
+                    $speeldagnummer= $speeldag->speeldagnummer;
+                    echo "<tr class='selectable' href='$speeldag_url$speeldagnummer'><td>$speeldagnummer</td><td>$datum</td><td>$afgerondVerliezend</td></tr>";
                 }
 
             ?>

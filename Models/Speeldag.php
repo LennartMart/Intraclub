@@ -133,7 +133,7 @@
         {
             $query = sprintf("
             UPDATE intra_speeldagen
-            SET gemiddeld_verliezend = '%s' AND speeldagnummer = '%s' AND datum = '%s' AND is_berekend = 1
+            SET gemiddeld_verliezend = '%s',speeldagnummer = '%s', datum = '%s', is_berekend = 1
             WHERE id = '%s';
         ",
                 mysql_real_escape_string($this->gemiddeld_verliezend),
@@ -147,12 +147,13 @@
         {
             $query = sprintf("
             UPDATE intra_speeldagen
-            SET gemiddeld_verliezend = '%s' AND is_berekend = 1
+            SET gemiddeld_verliezend = '%s', is_berekend = 1
             WHERE id = '%s';
         ",
                 mysql_real_escape_string($this->gemiddeld_verliezend),
                 mysql_real_escape_string($this->id));
 
+            echo "$query <br/>";
             return mysql_query($query);
         }
     }

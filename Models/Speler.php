@@ -190,7 +190,7 @@
                 mysql_real_escape_string($this->id),
                 mysql_real_escape_string($data['seizoen']));
 
-            echo $query;
+            echo "$query <br/>";
             return mysql_query($query);
         }
 
