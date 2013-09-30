@@ -1,8 +1,8 @@
-<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
 <!--<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">-->
 <h3>Voeg een nieuw seizoen toe</h3>
 <div class="hero-unit center">
 <?php
+    ('_JEXEC') or die;
     include("Models/Seizoen.php");
     $show_form = true;
     $huidig_seizoen = new Seizoen();

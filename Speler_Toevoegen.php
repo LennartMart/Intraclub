@@ -1,5 +1,5 @@
-<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
 <?php
+    ('_JEXEC') or die;
     require_once("Models/Speler.php");
     require_once("Models/Spelers.php");
 

@@ -1,6 +1,7 @@
 <h3>Speeldag toevoegen</h3>
-<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+
 <?php
+    ('_JEXEC') or die;
 
     include("Models/Speeldag.php");
     include("Models/Seizoen.php");

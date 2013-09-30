@@ -15,6 +15,7 @@
 <div class="span8 offset2" id="spelerslijst">
 <!--    <div id="label-switch" class="make-switch" data-on-label="SI" data-off-label="NO" data-on="success" data-off="danger">-->
         <?php
+            ('_JEXEC') or die;
             require_once("Models/Ranking.php");
 
             $ranking = new Ranking();

@@ -1,11 +1,10 @@
 <?php
+    ('_JEXEC') or die;
     require_once("Globals.php");
     ?>
 
-<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 <link href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" rel="stylesheet">
-<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
 <style type="text/css">
     .hover {
         background-color: #ccc !important;

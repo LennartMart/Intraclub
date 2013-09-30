@@ -1,6 +1,5 @@
-<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
 <?php
-
+    ('_JEXEC') or die;
 
 /**
  * User: Lennart

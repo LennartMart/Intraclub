@@ -1,4 +1,5 @@
 <?php
+
     require_once(__DIR__ . '/../connect.php');
     require_once(__DIR__ . '/../Interfaces/ISpeeldag.php');
     require_once(__DIR__ . '/Wedstrijd.php');
