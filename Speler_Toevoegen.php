@@ -1,5 +1,10 @@
 <?php
     ('_JEXEC') or die;
+    $user =& JFactory::getUser();
+    $authorisedGroups = $user->getAuthorisedGroups();
+    if(in_array("Super Administrator",$authorisedGroups)){
+        die("Onvoldoende rechten !");
+    }
     require_once("Models/Speler.php");
     require_once("Models/Spelers.php");
 

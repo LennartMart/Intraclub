@@ -1,8 +1,12 @@
 <!--<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">-->
-<h3>Voeg een nieuw seizoen toe</h3>
 <div class="hero-unit center">
 <?php
     ('_JEXEC') or die;
+    $user = JFactory::getUser();
+    $authorisedGroups = $user->getAuthorisedGroups();
+    if(in_array("Super Administrator",$authorisedGroups)){
+        die("Onvoldoende rechten !");
+    }
     include("Models/Seizoen.php");
     $show_form = true;
     $huidig_seizoen = new Seizoen();

@@ -2,7 +2,11 @@
 
 <?php
     ('_JEXEC') or die;
-
+    $user =& JFactory::getUser();
+    $authorisedGroups = $user->getAuthorisedGroups();
+    if(in_array("Super Administrator",$authorisedGroups)){
+        die("Onvoldoende rechten !");
+    }
     include("Models/Speeldag.php");
     include("Models/Seizoen.php");
 

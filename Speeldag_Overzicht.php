@@ -1,10 +1,37 @@
-<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-<link href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" rel="stylesheet">
-
 <style type="text/css">
     .hover {
         background-color: #ccc !important;
         cursor: pointer;
+    }
+
+    ul.tabs{
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+    }
+
+    ul.tabs li{
+    background: none;
+    color: #222;
+    display: inline-block;
+    padding: 10px 15px;
+    cursor: pointer;
+    }
+
+    ul.tabs li.current{
+    background: #ededed;
+    color: #222;
+    }
+
+    .tab-content{
+    display: none;
+    background: white;
+    padding: 15px;
+    }
+
+    .tab-content.current{
+    display: inherit;
+  
     }
 </style>
 <script type="text/javascript">
@@ -25,11 +52,20 @@
             window.location = jQuery(this).attr('href');
             return false;
         });
+        jQuery('ul.tabs li').click(function(){
+        var tab_id = jQuery(this).attr('data-tab');
 
+        jQuery('ul.tabs li').removeClass('current');
+        jQuery('.tab-content').removeClass('current');
+
+        jQuery(this).addClass('current');
+        jQuery("#"+tab_id).addClass('current');
+        });
     });
 </script>
 <?php
     ('_JEXEC') or die;
+
 /**
  * User: Lennart
  * Date: 11-9-13
@@ -49,12 +85,12 @@
     }
     $wedstrijden = $speeldag->get_wedstrijden();
 ?>
-<div id="tabs">
-    <ul>
-        <li><a href="#fragment-1"><span>Speeldag</span></a></li>
-        <li><a href="#fragment-2"><span>Speeldagen</span></a></li>
+<div id="container">
+    <ul class="tabs">
+        <li class="tab-link current" data-tab="tab-1">Speeldag</li> 
+        <li class="tab-link" data-tab="tab-2">Speeldagen</li> 
     </ul>
-    <div id="fragment-1">
+    <div id="tab-1" class="tab-content current">
 <?php
     $spelers = new Spelers();
     $spelerslijst = $spelers->get_spelers_associative_array(false);
@@ -91,7 +127,7 @@
     echo "</table>";
 ?>
     </div>
-    <div id="fragment-2">
+    <div id="tab-2" class="tab-content">
 
         <table class="table table-striped">
             <thead>
@@ -117,9 +153,7 @@
         </table>
     </div>
 </div>
-<script>
-    jQuery( "#tabs" ).tabs();
-</script>
+
 
     <?php
     function formatDate($datum)

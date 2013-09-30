@@ -2,13 +2,39 @@
     ('_JEXEC') or die;
     require_once("Globals.php");
     ?>
-
-<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-<link href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" rel="stylesheet">
 <style type="text/css">
     .hover {
         background-color: #ccc !important;
         cursor: pointer;
+    }
+    ul.tabs{
+        margin: 0px;
+        padding: 0px;
+        list-style: none;
+    }
+
+    ul.tabs li{
+        background: none;
+        color: #222;
+        display: inline-block;
+        padding: 10px 15px;
+        cursor: pointer;
+    }
+
+    ul.tabs li.current{
+        background: #ededed;
+        color: #222;
+    }
+
+    .tab-content{
+        display: none;
+        background: white;
+        padding: 15px;
+    }
+
+    .tab-content.current{
+        display: inherit;
+
     }
 </style>
 <script type="text/javascript">
@@ -30,16 +56,26 @@
             return false;
         });
 
+        jQuery('ul.tabs li').click(function(){
+            var tab_id = jQuery(this).attr('data-tab');
+
+            jQuery('ul.tabs li').removeClass('current');
+            jQuery('.tab-content').removeClass('current');
+
+            jQuery(this).addClass('current');
+            jQuery("#"+tab_id).addClass('current');
+        });
+
     });
 </script>
-<div id="tabs">
-    <ul>
-        <li><a href="#fragment-1"><span>Algemene Ranking</span></a></li>
-        <li><a href="#fragment-2"><span>Jeugd Ranking</span></a></li>
-        <li><a href="#fragment-3"><span>Vrouwen Ranking</span></a></li>
-        <li><a href="#fragment-4"><span>Speeldagen</span></a></li>
+<div id="container">
+    <ul class="tabs">
+        <li class="tab-link current" data-tab="tab-1">Algemene Ranking</li>
+        <li class="tab-link" data-tab="tab-2">Jeugd Ranking</li>
+        <li class="tab-link" data-tab="tab-3">Vrouwen Ranking</li>
+        <li class="tab-link" data-tab="tab-4">Speeldagen</li>
     </ul>
-    <div id="fragment-1">
+    <div id="tab-1" class="tab-content current">
         <table class="table table-striped">
             <thead>
             <tr>
@@ -63,7 +99,7 @@
 
     for($i = 0; $i < count($rankings["ranking"]); $i++)
     {
-        echo "<tr class='selectable' href ='$speler_url?speler_id=" . $rankings["ranking"][$i]["speler_id"] ."'>";
+        echo "<tr class='selectable' href ='$speler_url" . "speler_id=" . $rankings["ranking"][$i]["speler_id"] ."'>";
         $naam = $rankings["ranking"][$i]["voornaam"]." ".$rankings["ranking"][$i]["naam"];
         $gemiddelde = $rankings["ranking"][$i]['gemiddelde'];
         $positie = $i +1;
@@ -90,7 +126,7 @@
     echo "</table>";
 ?>
     </div>
-    <div id="fragment-2">
+    <div id="tab-2" class="tab-content">
             <table class="table table-striped">
                 <thead>
                 <tr>
@@ -105,7 +141,7 @@
                     {
                         if($rankings["ranking"][$i]["jeugd"] == 1)
                         {
-                            echo "<tr class='selectable' href ='$speler_url?speler_id=" . $rankings["ranking"][$i]["speler_id"] ."'>";
+                            echo "<tr class='selectable' href ='$speler_url". "speler_id=" . $rankings["ranking"][$i]["speler_id"] ."'>";
                             $naam = $rankings["ranking"][$i]["voornaam"]." ".$rankings["ranking"][$i]["naam"];
                             $gemiddelde = $rankings["ranking"][$i]['gemiddelde'];
                             $afgerondGemiddelde = round($gemiddelde,2);
@@ -120,7 +156,7 @@
                 ?>
              </table>
     </div>
-    <div id="fragment-3">
+    <div id="tab-3" class="tab-content">
         <table class="table table-striped">
             <thead>
             <tr>
@@ -135,7 +171,7 @@
                 {
                     if($rankings["ranking"][$i]["geslacht"] == "Vrouw")
                     {
-                        echo "<tr class='selectable' href ='$speler_url?speler_id=" . $rankings["ranking"][$i]["speler_id"] ."'>";
+                        echo "<tr class='selectable' href ='$speler_url". "speler_id=" . $rankings["ranking"][$i]["speler_id"] ."'>";
                         $naam = $rankings["ranking"][$i]["voornaam"]." ".$rankings["ranking"][$i]["naam"];
                         $gemiddelde = $rankings["ranking"][$i]['gemiddelde'];
                         $afgerondGemiddelde = round($gemiddelde,2);
@@ -151,7 +187,7 @@
             ?>
         </table>
     </div>
-    <div id="fragment-4">
+    <div id="tab-4" class="tab-content">
         <table class="table table-striped">
             <thead>
             <tr>
@@ -169,17 +205,13 @@
                     $datum = formatDate($speeldag->datum);
                     $afgerondVerliezend = round($speeldag->gemiddeld_verliezend,2);
                     $speeldagnummer= $speeldag->speeldagnummer;
-                    echo "<tr class='selectable' href='". $speeldag_url. "?speeldag=$speeldagnummer'><td>$speeldagnummer</td><td>$datum</td><td>$afgerondVerliezend</td></tr>";
+                    echo "<tr class='selectable' href='". $speeldag_url. "speeldag=$speeldagnummer'><td>$speeldagnummer</td><td>$datum</td><td>$afgerondVerliezend</td></tr>";
                 }
 
             ?>
         </table>
     </div>
 </div>
-
-<script>
-    jQuery( "#tabs" ).tabs();
-</script>
 
 <?php
     function formatNum($num){

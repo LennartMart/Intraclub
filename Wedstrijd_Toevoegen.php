@@ -1,6 +1,10 @@
 <?php
     ('_JEXEC') or die;
-
+    $user =& JFactory::getUser();
+    $authorisedGroups = $user->getAuthorisedGroups();
+    if(in_array("Super Administrator",$authorisedGroups)){
+        die("Onvoldoende rechten !");
+    }
 /**
  * User: Lennart
  * Date: 23-5-13
