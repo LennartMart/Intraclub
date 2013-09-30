@@ -1,8 +1,6 @@
 <?php
-    //Variabelen voor URL's
-    $speeldag_url = "Speeldag_Overzicht.php?speeldag=";
+    require_once("Globals.php");
     ?>
-
 
 <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
@@ -66,7 +64,7 @@
 
     for($i = 0; $i < count($rankings["ranking"]); $i++)
     {
-        echo "<tr class='selectable'>";
+        echo "<tr class='selectable' href ='$speler_url?speler_id=" . $rankings["ranking"][$i]["speler_id"] ."'>";
         $naam = $rankings["ranking"][$i]["voornaam"]." ".$rankings["ranking"][$i]["naam"];
         $gemiddelde = $rankings["ranking"][$i]['gemiddelde'];
         $positie = $i +1;
@@ -108,7 +106,7 @@
                     {
                         if($rankings["ranking"][$i]["jeugd"] == 1)
                         {
-                            echo "<tr class='selectable'>";
+                            echo "<tr class='selectable' href ='$speler_url?speler_id=" . $rankings["ranking"][$i]["speler_id"] ."'>";
                             $naam = $rankings["ranking"][$i]["voornaam"]." ".$rankings["ranking"][$i]["naam"];
                             $gemiddelde = $rankings["ranking"][$i]['gemiddelde'];
                             $afgerondGemiddelde = round($gemiddelde,2);
@@ -138,7 +136,7 @@
                 {
                     if($rankings["ranking"][$i]["geslacht"] == "Vrouw")
                     {
-                        echo "<tr class='selectable'>";
+                        echo "<tr class='selectable' href ='$speler_url?speler_id=" . $rankings["ranking"][$i]["speler_id"] ."'>";
                         $naam = $rankings["ranking"][$i]["voornaam"]." ".$rankings["ranking"][$i]["naam"];
                         $gemiddelde = $rankings["ranking"][$i]['gemiddelde'];
                         $afgerondGemiddelde = round($gemiddelde,2);
@@ -172,7 +170,7 @@
                     $datum = formatDate($speeldag->datum);
                     $afgerondVerliezend = round($speeldag->gemiddeld_verliezend,2);
                     $speeldagnummer= $speeldag->speeldagnummer;
-                    echo "<tr class='selectable' href='$speeldag_url$speeldagnummer'><td>$speeldagnummer</td><td>$datum</td><td>$afgerondVerliezend</td></tr>";
+                    echo "<tr class='selectable' href='". $speeldag_url. "?speeldag=$speeldagnummer'><td>$speeldagnummer</td><td>$datum</td><td>$afgerondVerliezend</td></tr>";
                 }
 
             ?>

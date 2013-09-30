@@ -305,7 +305,7 @@
             while ($rij = mysql_fetch_assoc($resultaat)) {
                 $speeldag = new Speeldag();
                 $speeldag->vulop($rij);
-                $speeldagen[] = $speeldag;
+                $speeldagen[$speeldag->id] = $speeldag;
             }
 
             return $speeldagen;

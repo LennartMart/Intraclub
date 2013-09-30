@@ -7,6 +7,7 @@
     interface ISpeler
     {
         function create($data);
+        function get($speler_id);
         function get_seizoen_stats($seizoen_id);
         function get_speeldagstats($speeldag_id);
         function update_basisinfo($data);

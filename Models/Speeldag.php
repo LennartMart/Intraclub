@@ -10,6 +10,7 @@
         public $speeldagnummer;
         public $gemiddeld_verliezend;
         public $datum;
+        public $is_berekend;
 
         function __construct()
         {
@@ -60,7 +61,7 @@
          */
         public function get($speeldag_id)
         {
-            $query = sprintf("SELECT * FROM intra_speeldagen WHERE id= '%s';", $speeldag_id);
+            $query = sprintf("SELECT * FROM intra_speeldagen WHERE id= '%s';", mysql_real_escape_string($speeldag_id));
             $resultaat = mysql_query($query);
             if($resultaat != FALSE)
             {
@@ -122,6 +123,7 @@
             $this->speeldagnummer = $data['speeldagnummer'];
             $this->datum = $data['datum'];
             $this->seizoen_id = $data["seizoen_id"];
+            $this->is_berekend = $data["is_berekend"];
         }
 
         /**

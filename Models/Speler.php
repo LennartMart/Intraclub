@@ -27,6 +27,15 @@
             $this->db->connect();
         }
 
+        public function get($speler_id)
+        {
+            $query = sprintf("SELECT * FROM intra_spelers WHERE id= '%s';", mysql_real_escape_string($speler_id));
+            $resultaat = mysql_query($query);
+            if($resultaat != FALSE)
+            {
+                $this->vulop(mysql_fetch_assoc($resultaat));
+            }
+        }
         //Maak een nieuwe speler aan
         public function create($data)
         {
@@ -231,8 +240,14 @@
          * @param $seizoen_id
          * @return Wedstrijd[]
          */
-        public function get_wedstrijden($seizoen_id)
+        public function get_wedstrijden($seizoen_id=null)
         {
+            if($seizoen_id==null)
+            {
+                $seizoen = new Seizoen();
+                $seizoen->get_huidig_seizoen();
+                $seizoen_id = $seizoen->id;
+            }
             $query = sprintf("SELECT * FROM  intra_wedstrijden iw
                                   INNER JOIN intra_speeldagen ispeel ON iw.speeldag_id = ispeel.id
 
