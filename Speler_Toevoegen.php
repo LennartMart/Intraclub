@@ -2,7 +2,7 @@
     ('_JEXEC') or die;
     $user =& JFactory::getUser();
     $authorisedGroups = $user->getAuthorisedGroups();
-    if(in_array("Super Administrator",$authorisedGroups)){
+    if(!in_array(8,$authorisedGroups)){
         die("Onvoldoende rechten !");
     }
     require_once("Models/Speler.php");
@@ -55,7 +55,6 @@
         }
     }
 ?>
-<h3> Speler toevoegen </h3>
 <div class="hero-unit center">
 
 
@@ -63,39 +62,39 @@
     <table>
         <tr>
             <th align="left">Voornaam:</th>
-            <td><input type="text" maxlength="25" name="voornaam"></td>
+            <td align="left"><input type="text" maxlength="25" name="voornaam"></td>
         </tr>
         <tr>
             <th align="left">Naam:</th>
-            <td><input type="text" maxlength="25" name="naam"></td>
+            <td align="left"><input type="text" maxlength="25" name="naam"></td>
         </tr>
         <tr>
             <th align="left">Geslacht:</th>
-            <td>
+            <td align="left">
                 <input type="radio" name="geslacht" value="Man" checked="true">Man
             </td>
         </tr>
                 <tr>
                     <th></th>
-                    <td><input type="radio" name="geslacht" value="Vrouw">Vrouw</td>
+                    <td align="left"><input type="radio" name="geslacht" value="Vrouw">Vrouw</td>
                 </tr>
 
 
         <tr>
             <th align="left">Jeugd:</th>
-            <td>
+            <td align="left">
                 <input type="checkbox" name="jeugd">
             </td>
         </tr>
         <tr>
             <th align="left">Klassement:</th>
-            <td>
+            <td align="left">
                 <?php klassementen(); ?>
             </td>
         </tr>
         <tr>
             <th align="left">Basispunten:</th>
-            <td>
+            <td align="left">
                 <input type="number" step="any" min="0" class='input-medium' maxlength="25" name="basispunten" style="height:30px" value="<?php echo $spelers->get_gemiddelde_allespelers(); ?>">
             </td>
         </tr>

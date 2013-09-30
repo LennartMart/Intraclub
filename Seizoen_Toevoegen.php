@@ -4,7 +4,7 @@
     ('_JEXEC') or die;
     $user = JFactory::getUser();
     $authorisedGroups = $user->getAuthorisedGroups();
-    if(in_array("Super Administrator",$authorisedGroups)){
+    if(!in_array(8,$authorisedGroups)){
         die("Onvoldoende rechten !");
     }
     include("Models/Seizoen.php");

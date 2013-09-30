@@ -1,10 +1,8 @@
-<h3>Speeldag toevoegen</h3>
-
 <?php
     ('_JEXEC') or die;
     $user =& JFactory::getUser();
     $authorisedGroups = $user->getAuthorisedGroups();
-    if(in_array("Super Administrator",$authorisedGroups)){
+    if(!in_array(8,$authorisedGroups)){
         die("Onvoldoende rechten !");
     }
     include("Models/Speeldag.php");
@@ -57,7 +55,7 @@
                     <p><label for="speeldag" class='field'>Speeldag: </label><input type="text" class="input input-small" size="1" maxlength="2" value="<?php echo $speeldagnummer; ?>" disabled="true" name="speeldag"/> </p>
                     <p><label class='field'>Datum: </label> <input class="input input-small" type="text" size="2" maxlength="2" name="dag" value="<?php echo $dag; ?>">/<input class="input input-small" type="text" size="2" maxlength="2" name="maand" value="<?php echo $maand; ?>">/<input class="input input-small" type="text" size="4" maxlength="4" name="jaar" value="<?php echo $jaar; ?>"></p>
                 </fieldset>
-                <input class = 'btn btn-success' type="submit" value="Toevoegen" name="VoegSpeeldagToe" onclick="return confirm('Speeldag <?php echo $speeldagnummer ?> wordt toegevoegd. Bent u zeker?')">
+                <input class = 'btn' type="submit" value="Toevoegen" name="VoegSpeeldagToe" onclick="return confirm('Speeldag <?php echo $speeldagnummer ?> wordt toegevoegd. Bent u zeker?')">
             </form>
         </div>
 

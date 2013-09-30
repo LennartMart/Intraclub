@@ -2,7 +2,7 @@
     ('_JEXEC') or die;
     $user =& JFactory::getUser();
     $authorisedGroups = $user->getAuthorisedGroups();
-    if(in_array("Super Administrator",$authorisedGroups)){
+    if(!in_array(8 ,$authorisedGroups)){
         die("Onvoldoende rechten !");
     }
 /**
@@ -84,7 +84,6 @@
         }
     }
 ?>
-<h3>Wedstrijd toevoegen</h3>
 <div class="hero-unit center">
     <form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method='post'>
         <table class=''>
@@ -112,9 +111,9 @@
                     <?php spelerslijst("team2_speler1"); ?> <br>
                     <?php spelerslijst("team2_speler2"); ?>
                 </td>
-                <td><input style='width:75px' type='input' size='1' name="set1_team1"></td><td>-</td><td><input style='width:75px' type='input' size='1' name="set1_team2" ></td><td></td>
-                <td><input style='width:75px' type='input' size='1' name="set2_team1"></td><td>-</td><td><input style='width:75px' type='input' size='1' name="set2_team2" ></td><td></td>
-                <td><input style='width:75px' type='input' size='1' name="set3_team1"></td><td>-</td><td><input style='width:75px' type='input' size='1' name="set3_team2" ></td>
+                <td><input style='width:30px' type='input' size='1' name="set1_team1"></td><td>-</td><td><input style='width:30px' type='input' size='1' name="set1_team2" ></td><td></td>
+                <td><input style='width:30px' type='input' size='1' name="set2_team1"></td><td>-</td><td><input style='width:30px' type='input' size='1' name="set2_team2" ></td><td></td>
+                <td><input style='width:30px' type='input' size='1' name="set3_team1"></td><td>-</td><td><input style='width:30px' type='input' size='1' name="set3_team2" ></td>
             </tr>
         </table>
     </table>
