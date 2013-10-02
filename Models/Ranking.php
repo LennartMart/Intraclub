@@ -1,4 +1,5 @@
 <?php
+    ('_JEXEC') or die;
 /**
  * User: Lennart
  * Date: 16-5-13

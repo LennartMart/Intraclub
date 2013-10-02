@@ -1,8 +1,8 @@
 <?php
     ('_JEXEC') or die;
     $user =& JFactory::getUser();
-    $authorisedGroups = $user->getAuthorisedGroups();
-    if(!in_array(8 ,$authorisedGroups)){
+    $authorisedViewLevels = $user->getAuthorisedViewLevels();
+    if(!in_array(5,$authorisedViewLevels)){
         die("Onvoldoende rechten !");
     }
 /**
@@ -84,7 +84,8 @@
         }
     }
 ?>
-<div class="hero-unit center">
+<h2>Wedstrijd Toevoegen</h2>
+<div class="center" style="background-color: #eee">
     <form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method='post'>
         <table class=''>
             <tr>

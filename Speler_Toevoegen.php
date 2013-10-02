@@ -1,8 +1,8 @@
 <?php
     ('_JEXEC') or die;
     $user =& JFactory::getUser();
-    $authorisedGroups = $user->getAuthorisedGroups();
-    if(!in_array(8,$authorisedGroups)){
+    $authorisedViewLevels = $user->getAuthorisedViewLevels();
+    if(!in_array(5,$authorisedViewLevels)){
         die("Onvoldoende rechten !");
     }
     require_once("Models/Speler.php");
@@ -55,11 +55,12 @@
         }
     }
 ?>
-<div class="hero-unit center">
+    <h2>Voeg een nieuwe speler toe</h2>
+<div class="center" style="background-color: #eee">
 
 
 <form name="VoegSpelerToeForm" action="<?php echo $_SERVER['REQUEST_URI']?>" method="post">
-    <table>
+    <table class="table">
         <tr>
             <th align="left">Voornaam:</th>
             <td align="left"><input type="text" maxlength="25" name="voornaam"></td>

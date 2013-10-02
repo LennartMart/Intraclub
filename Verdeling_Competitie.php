@@ -1,3 +1,4 @@
+<META http-equiv="Content-Type" content="text/html; charset=utf-8">
 <style type="text/css">
         /*!
          * Bootstrap v2.3.2
@@ -50,7 +51,9 @@
 
 
 <script language='javascript'>
-
+	window.onbeforeunload = function() {
+		return "Matchen en aangeduide spelers zullen verloren gaan.";
+	};
 
 
     function BerekenMatchen() {
@@ -254,19 +257,23 @@
     function inputSets()
     {
         var string = '';
-        string += "<td><input style='width:75px' type='input' size='1'></td><td><input style='width:75px' type='input' size='1' ></td>";
-        string += "<td><input style='width:75px' type='input' size='1'></td><td><input style='width:75px' type='input' size='1' ></td>";
-        string += "<td><input style='width:75px' type='input' size='1'></td><td><input style='width:75px' type='input' size='1' ></td>";
+        string += "<td><input style='width:30px' type='input' size='1'></td><td><input style='width:30px' type='input' size='1' ></td>";
+        string += "<td><input style='width:30px' type='input' size='1'></td><td><input style='width:30px' type='input' size='1' ></td>";
+        string += "<td><input style='width:30px' type='input' size='1'></td><td><input style='width:30px' type='input' size='1' ></td>";
         return string;
     }
     function BerekenHandicap(array){
         handicap = 0;
-        for(j=0;j<array.length;j = j +2)
+        for(j=0;j<array.length;j = j +3)
         {
             array[j]["handicap"] = handicap;
             if(j+1 < array.length){
                 array[j+1]["handicap"] = handicap;
             }
+            if(j+2 < array.length){
+                array[j+2]["handicap"] = handicap;
+            }
+
             handicap++;
         }
         return array;

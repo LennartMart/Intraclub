@@ -109,12 +109,12 @@
         $team2_speler2 = $spelerslijst[$wedstrijd->team2_speler2];
         echo "<tr>";
         echo "<td style='text-align:right'>";
-        echo "<a href='". $speler_url . "?speler_id=$team1_speler1->id"."'>$team1_speler1->voornaam $team1_speler1->naam</a><br/>";
-        echo "<a href='". $speler_url . "?speler_id=$team1_speler2->id"."'>$team1_speler2->voornaam $team1_speler2->naam</a></td>";
+        echo "<a href='". $speler_url . "speler_id=$team1_speler1->id"."'>$team1_speler1->voornaam $team1_speler1->naam</a><br/>";
+        echo "<a href='". $speler_url . "speler_id=$team1_speler2->id"."'>$team1_speler2->voornaam $team1_speler2->naam</a></td>";
 
         echo "<td style='text-align:left'>";
-        echo "<a href='". $speler_url . "?speler_id=$team2_speler1->id"."'>$team2_speler1->voornaam $team2_speler1->naam</a><br/>";
-        echo "<a href='". $speler_url . "?speler_id=$team2_speler2->id"."'>$team2_speler2->voornaam $team2_speler2->naam</a></td>";
+        echo "<a href='". $speler_url . "speler_id=$team2_speler1->id"."'>$team2_speler1->voornaam $team2_speler1->naam</a><br/>";
+        echo "<a href='". $speler_url . "speler_id=$team2_speler2->id"."'>$team2_speler2->voornaam $team2_speler2->naam</a></td>";
 
         echo "<td><span class='score'><span>$wedstrijd->set1_1-$wedstrijd->set1_2</span> <span>$wedstrijd->set2_1-$wedstrijd->set2_2</span>";
         if(($wedstrijd->set3_1 != '' && $wedstrijd->set3_2 != '') && ($wedstrijd->set3_1 != 0 && $wedstrijd->set3_2 != 0)){
@@ -146,7 +146,7 @@
                     $datum = formatDate($speeldag->datum);
                     $afgerondVerliezend = round($speeldag->gemiddeld_verliezend,2);
                     $speeldagnummer= $speeldag->speeldagnummer;
-                    echo "<tr class='selectable' href='" . $speeldag_url ."?speeldag=$speeldagnummer'><td>$speeldagnummer</td><td>$datum</td><td>$afgerondVerliezend</td></tr>";
+                    echo "<tr class='selectable' href='" . $speeldag_url ."speeldag=$speeldagnummer'><td>$speeldagnummer</td><td>$datum</td><td>$afgerondVerliezend</td></tr>";
                 }
 
             ?>

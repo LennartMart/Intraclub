@@ -3,8 +3,8 @@
 <?php
     ('_JEXEC') or die;
     $user = JFactory::getUser();
-    $authorisedGroups = $user->getAuthorisedGroups();
-    if(!in_array(8,$authorisedGroups)){
+    $authorisedViewLevels = $user->getAuthorisedViewLevels();
+    if(!in_array(5,$authorisedViewLevels)){
         die("Onvoldoende rechten !");
     }
     include("Models/Seizoen.php");
