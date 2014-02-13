@@ -37,6 +37,26 @@
                 $this->vulop(mysql_fetch_assoc($resultaat));
             }
         }
+        public function getRankingHistory($seizoen_id){
+            $query = sprintf("SELECT basispunten AS punten
+                        FROM intra_spelerperseizoen
+                        WHERE speler_id = '%s' AND seizoen_id = '%s'
+                      UNION
+                      (Select gemiddelde AS punten
+                      FROM intra_spelerperspeeldag
+                      WHERE speler_id = '%s' ORDER BY speeldag_id)",$this->id,$seizoen_id,$this->id);
+
+            $resultaat = mysql_query($query);
+            $punten = array();
+            if($resultaat != FALSE)
+            {
+                while ($punten_array = mysql_fetch_array($resultaat)) {
+                    $punten[] = round($punten_array["punten"],2);
+                }
+            }
+            return $punten;
+
+        }
         //Maak een nieuwe speler aan
         public function create($data)
         {

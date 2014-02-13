@@ -33,12 +33,12 @@
             //Extra spelers
             for($i=1;$i<=3;$i++) {
                 echo "
-                <label id='nieuwe_speler_rij_$i'>
+                <p id='nieuwe_speler_rij_$i'>
                         <input type='checkbox' name='nieuwe_speler'/>
                         Voornaam: <input type='textbox' id='voornaam_nieuwe_speler_$i' style='width:150px'>,
                         Achternaam: <input type='textbox' id='achternaam_nieuwe_speler_$i' style='width:150px'>
                         <input class='btn btn-success' type='button' value='OK' onclick=\"nieuwe_speler(document.getElementById('nieuwe_speler_rij_$i'), document.getElementById('voornaam_nieuwe_speler_$i'), document.getElementById('achternaam_nieuwe_speler_$i'))\">
-                </label>";
+                </p>";
             }
         ?>
 
