@@ -32,7 +32,7 @@
         public function get($wedstrijd_id)
         {
             //Haal wedstrijd op en vul de members in
-            $get_query = sprintf("SELECT from intra_wedstrijden WHERE id = '%s';",mysql_real_escape_string($wedstrijd_id));
+            $get_query = sprintf("SELECT * FROM intra_wedstrijden IW WHERE id = '%s';",mysql_real_escape_string($wedstrijd_id));
 
             $gelukt = mysql_query($get_query);
             if ($gelukt) {
@@ -140,6 +140,12 @@
             $this->set3_2 = $resultaat['set3_2'];
         }
 
+        public function delete($wedstrijd_id)
+        {
+            $delete_query = sprintf("DELETE FROM intra_wedstrijden WHERE id = '%s'",mysql_real_escape_string($wedstrijd_id));
+
+            return mysql_query($delete_query);
+        }
         public function update($wedstrijd)
         {
             //Beveiliging insert data!
@@ -150,7 +156,6 @@
             //}
             $insert_query = sprintf("UPDATE intra_wedstrijden
                              SET
-                                speeldag_id = '%s',
                                 team1_speler1 = '%s',
                                 team1_speler2 = '%s',
                                 team2_speler1 = '%s',
@@ -163,7 +168,6 @@
                                 set3_2 = '%s'
                              WHERE
                                 id = '%s'",
-                            mysql_real_escape_string(${wedstrijd}['speeldag_id']),
                             mysql_real_escape_string(${wedstrijd}['team1_speler1']),
                             mysql_real_escape_string(${wedstrijd}['team1_speler2']),
                             mysql_real_escape_string(${wedstrijd}['team2_speler1']),

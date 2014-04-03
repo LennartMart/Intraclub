@@ -20,9 +20,9 @@
         public function get_spelers($is_lid)
         {
             if ($is_lid == true) {
-                $query = "SELECT * FROM intra_spelers WHERE is_lid = $is_lid ORDER BY voornaam;";
+                $query = "SELECT * FROM intra_spelers WHERE is_lid = $is_lid ORDER BY voornaam, naam;";
             } else {
-                $query = "SELECT * FROM intra_spelers ORDER BY voornaam";
+                $query = "SELECT * FROM intra_spelers ORDER BY voornaam, naam";
             }
 
             $resultaat = mysql_query($query);
@@ -38,9 +38,9 @@
         //Index = id speler
         public function get_spelers_associative_array($is_lid){
             if ($is_lid == true) {
-                $query = "SELECT * FROM intra_spelers WHERE is_lid = $is_lid ORDER BY voornaam;";
+                $query = "SELECT * FROM intra_spelers WHERE is_lid = $is_lid ORDER BY voornaam, naam;";
             } else {
-                $query = "SELECT * FROM intra_spelers ORDER BY voornaam";
+                $query = "SELECT * FROM intra_spelers ORDER BY voornaam, naam";
             }
 
             $resultaat = mysql_query($query);

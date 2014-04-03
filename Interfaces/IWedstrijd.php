@@ -11,5 +11,5 @@
         function vulop($resultaat);
         function update($wedstrijd);
         function bepaal_winnaar();
-
+        function delete($wedstrijd_id);
     }
