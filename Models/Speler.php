@@ -160,7 +160,7 @@
                     naam = '%s',
                     geslacht = '%s',
                     jeugd = '%s',
-                    klassement_id= '%s'
+                    klassement= '%s',
                     is_lid = '%s'
 
                 WHERE
@@ -173,30 +173,8 @@
                     mysql_real_escape_string($data['klassement']),
                     mysql_real_escape_string($data['is_lid']),
                     mysql_real_escape_string($data['id']));
-
-            $gelukt = mysql_query($query);
-            if ($gelukt) {
-                $huidig_seizoen = Seizoen::huidig_seizoen();
-                $query = sprintf("
-                            UPDATE
-                                intra_spelerperseizoen
-                            SET
-                                is_lid = '%s',
-
-                            WHERE
-                                speler_id = '%s'
-                                AND
-                                seizoen_id = '%s';
-                            ",
-                            mysql_real_escape_string($data['is_lid']),
-                            mysql_real_escape_string($data['id']),
-                            mysql_real_escape_string($huidig_seizoen->id));
-                return mysql_query($query);
-            } else {
-                return false;
-            }
+            return mysql_query($query);
         }
-
 
         public function update_seizoenstats($data)
         {
@@ -255,6 +233,7 @@
             $this->geslacht = $speler['geslacht'];
             $this->jeugd = $speler['jeugd'];
             $this->klassement = $speler['klassement'];
+            $this->is_lid = $speler['is_lid'];
         }
 
         /**

@@ -86,7 +86,7 @@ echo "<input class='btn' type='submit' value='Kies wedstrijd' name='KiesWedstrij
         $team2_speler2 = $spelerslijst[$wedstrijd->team2_speler2];
 
 ?>
-        <input type="hidden" name="wedstrijdId" value=<?php echo $_POST["wedstrijd"] ?>>
+        <input type="hidden" name="wedstrijdId" value='<?php echo $_POST["wedstrijd"] ?>'>
         <div class="center" style="background-color: #eee">
             <table class=''>
                 <tr>
@@ -107,12 +107,12 @@ echo "<input class='btn' type='submit' value='Kies wedstrijd' name='KiesWedstrij
                         <?php spelerslijst("team2_speler1", $team2_speler1->id); ?> <br>
                         <?php spelerslijst("team2_speler2", $team2_speler2->id); ?>
                     </td>
-                    <td><input style='width:30px' type='input' size='1' name="set1_team1" value =<?php echo $wedstrijd->set1_1?>></td><td>-</td><td><input style='width:30px' type='input' size='1' name="set1_team2"  value =<?php echo $wedstrijd->set1_2?>></td><td></td>
-                    <td><input style='width:30px' type='input' size='1' name="set2_team1" value =<?php echo $wedstrijd->set2_1?>></td><td>-</td><td><input style='width:30px' type='input' size='1' name="set2_team2"  value =<?php echo $wedstrijd->set2_2?> ></td><td></td>
+                    <td><input style='width:30px' type='input' size='1' name="set1_team1" value='<?php echo $wedstrijd->set1_1?>'></td><td>-</td><td><input style='width:30px' type='input' size='1' name="set1_team2"  value ='<?php echo $wedstrijd->set1_2?>'></td><td></td>
+                    <td><input style='width:30px' type='input' size='1' name="set2_team1" value='<?php echo $wedstrijd->set2_1?>'></td><td>-</td><td><input style='width:30px' type='input' size='1' name="set2_team2"  value ='<?php echo $wedstrijd->set2_2?>'></td><td></td>
                     <?php if($wedstrijd->set3_1 != 0 || $wedstrijd->set3_2 !=0)
                     {
                       ?>
-                        <td><input style='width:30px' type='input' size='1' name="set3_team1" value =<?php echo $wedstrijd->set3_1 ?>></td><td>-</td><td><input style='width:30px' type='input' size='1' name="set3_team2"  value =<?php echo $wedstrijd->set3_2?> ></td>
+                        <td><input style='width:30px' type='input' size='1' name="set3_team1" value ='<?php echo $wedstrijd->set3_1 ?>'></td><td>-</td><td><input style='width:30px' type='input' size='1' name="set3_team2"  value ='<?php echo $wedstrijd->set3_2?>'></td>
                     <?php
                     }
                     else
