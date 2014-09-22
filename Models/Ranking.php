@@ -30,20 +30,24 @@ class Ranking {
         //Huidige ranking = basispunten
         if($speeldag_id == null)
         {
-            $huidigeRankingstring = "SELECT ISP.id AS speler_id, ISP.naam AS naam, ISP.voornaam as voornaam, ISP.geslacht AS geslacht, ISP.jeugd as jeugd,ISPS.basispunten AS gemiddelde
+            $huidigeRankingstring = sprintf("SELECT ISP.id AS speler_id, ISP.naam AS naam, ISP.voornaam as voornaam, ISP.geslacht AS geslacht, ISP.jeugd as jeugd,ISPS.basispunten AS gemiddelde
                                   FROM  intra_spelerperseizoen ISPS
+
                                   INNER JOIN intra_spelers ISP ON ISP.id = ISPS.speler_id
-                                  ORDER BY gemiddelde DESC;";
+                                  WHERE ISPS.seizoen_id = '%s'
+                                  ORDER BY gemiddelde DESC;",$seizoen_id);
 
             //Nu: Vorig seizoen of niet?
             $seizoen = new Seizoen();
             $seizoenen = $seizoen->get_seizoenen();
+
             if(count($seizoenen) > 1) {
                 //We hebben een vorig seizoen
                 $seizoen->id = $seizoenen[1]->id;
+                $speeldagen = $seizoen->get_speeldagen();
 
-                $speeldagen = $seizoen->getspeeldagen();
                 end($speeldagen);
+
                 $speeldag = prev($speeldagen);
                 $vorigeRankingString = sprintf("SELECT @curRank := @curRank +1 AS rank, speler_id
                                                     FROM (
@@ -52,6 +56,8 @@ class Ranking {
                                                             WHERE (ISPS.speeldag_id =  '%s')
                                                     ORDER BY gemiddelde DESC)t,
                                                     (SELECT @curRank :=0)r;",
+
+
                     mysql_real_escape_string($speeldag->id));
             }
         }
@@ -70,12 +76,14 @@ class Ranking {
             $speeldag->get($speeldag_id);
             if($speeldag->speeldagnummer == 1){
 
-                $vorigeRankingString = "SELECT @curRank := @curRank +1 AS rank, speler_id
+                $vorigeRankingString = sprintf("SELECT @curRank := @curRank +1 AS rank, speler_id
                                     FROM (
-                                            SELECT ISPS.id AS speler_id, ISPS.basispunten AS gemiddelde
+                                            SELECT ISPS.speler_id AS speler_id, ISPS.basispunten AS gemiddelde
                                             FROM intra_spelerperseizoen ISPS
+                                            WHERE ISPS.seizoen_id = '%s'
                                             ORDER BY gemiddelde DESC
-                                            )t, (SELECT @curRank :=0)r";
+                                            )t, (SELECT @curRank :=0)r", $seizoen_id);
+
             }
             else
             {

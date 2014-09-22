@@ -79,8 +79,8 @@
 
                 //Pak de eindpunten en zet deze als basispunten!
                 //Eerst: ID vorige seizoen ophalen
-                $vorige_seizoen = $this->get_huidig_seizoen();
-                $vorige_seizoen_id = $vorige_seizoen['id'];
+                $this->get_huidig_seizoen();
+                $vorige_seizoen_id = $this->id;
 
                 //Seizoen bestaat niet -> invullen in database
                 $query = "INSERT INTO intra_seizoen SET seizoen='$seizoen'";
@@ -91,7 +91,8 @@
 
                 //Haal de eindstand op van elke speler van vorig seizoen
                 //En voeg nieuwe rij toe in spelerperseizoen
-                $resultaat = mysql_query("SELECT speler_id, huidige__punten FROM intra_spelerperseizoen WHERE seizoen_id='$vorige_seizoen_id';");
+                $resultaat = mysql_query("SELECT speler_id FROM intra_spelerperseizoen WHERE seizoen_id='$vorige_seizoen_id';");
+                echo "SELECT speler_id FROM intra_spelerperseizoen WHERE seizoen_id='$vorige_seizoen_id';";
                 if($resultaat == false)
                 {
                     echo "Geen spelers in de db";
@@ -109,10 +110,10 @@
                             gespeelde_sets = 0,
                             gewonnen_sets = 0,
                             gespeelde_punten = 0,
-                            gewonnen_punten = 0,
-                            aanwezig = 0
-                            ", $rij["speler_id"], $huidig_seizoen, $rij["gemiddelde"]);
+                            gewonnen_punten = 0
+                            ", $rij["speler_id"], $huidig_seizoen, '19');
 
+                        echo $insert_query;
                         $gelukt = mysql_query($insert_query);
                         if (!$gelukt) {
                             return FALSE;
