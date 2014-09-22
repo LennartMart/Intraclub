@@ -70,9 +70,9 @@
 </script>
 <div id="container">
     <ul class="tabs">
-        <li class="tab-link current" data-tab="tab-1">Algemeen</li>
-        <li class="tab-link" data-tab="tab-2">Jeugd</li>
-        <li class="tab-link" data-tab="tab-3">Vrouwen</li>
+        <li class="tab-link current" data-tab="tab-1">Algemene Ranking</li>
+        <li class="tab-link" data-tab="tab-2">Jeugd Ranking</li>
+        <li class="tab-link" data-tab="tab-3">Vrouwen Ranking</li>
         <li class="tab-link" data-tab="tab-4">Speeldagen</li>
     </ul>
     <div id="tab-1" class="tab-content current">
