@@ -146,7 +146,8 @@
                     $datum = formatDate($speeldag->datum);
                     $afgerondVerliezend = round($speeldag->gemiddeld_verliezend,2);
                     $speeldagnummer= $speeldag->speeldagnummer;
-                    echo "<tr class='selectable' href='" . $speeldag_url ."speeldag=$speeldagnummer'><td>$speeldagnummer</td><td>$datum</td><td>$afgerondVerliezend</td></tr>";
+					$speeldag_id = $speeldag->id;
+                    echo "<tr class='selectable' href='" . $speeldag_url ."speeldag=$speeldag_id'><td>$speeldagnummer</td><td>$datum</td><td>$afgerondVerliezend</td></tr>";
                 }
 
             ?>
