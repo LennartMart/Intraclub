@@ -21,6 +21,7 @@
         public $jeugd;
         public $klassement;
         public $is_lid;
+        public $is_veteraan;
 
         function __construct()
         {
@@ -77,13 +78,15 @@
                     geslacht = '%s',
                     jeugd = '%s',
                     klassement= '%s',
+                    is_veteraan = '%s',
                     is_lid = 1
                     ",
                     mysql_real_escape_string($data['voornaam']),
                     mysql_real_escape_string($data['naam']),
                     mysql_real_escape_string($data['geslacht']),
                     mysql_real_escape_string($data['jeugd']),
-                    mysql_real_escape_string($data['klassement']));
+                    mysql_real_escape_string($data['klassement']),
+                    mysql_real_escape_string($data['is_veteraan']));
 
                 $result = mysql_query($query);
                 if (!$result) {
@@ -161,6 +164,7 @@
                     geslacht = '%s',
                     jeugd = '%s',
                     klassement= '%s',
+                    is_veteraan = '%s',
                     is_lid = '%s'
 
                 WHERE
@@ -171,7 +175,9 @@
                     mysql_real_escape_string($data['geslacht']),
                     mysql_real_escape_string($data['jeugd']),
                     mysql_real_escape_string($data['klassement']),
+                    mysql_real_escape_string($data['is_veteraan']),
                     mysql_real_escape_string($data['is_lid']),
+
                     mysql_real_escape_string($data['id']));
             return mysql_query($query);
         }
@@ -234,6 +240,7 @@
             $this->jeugd = $speler['jeugd'];
             $this->klassement = $speler['klassement'];
             $this->is_lid = $speler['is_lid'];
+            $this->is_veteraan = $speler['is_veteraan'];
         }
 
         /**

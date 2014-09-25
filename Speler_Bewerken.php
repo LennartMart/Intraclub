@@ -27,6 +27,7 @@ if(!empty($_POST['BewerkSpeler']))
         "geslacht" => isset($_POST["geslacht"])? $_POST["geslacht"]: '',
         "jeugd" => (isset($_POST["jeugd"])) ? 1 : 0,
         "is_lid" => (isset($_POST["is_lid"])) ? 1 : 0,
+        "is_veteraan" => (isset($_POST["is_veteraan"])) ? 1 : 0,
         "klassement" => $_POST["klassement"],
         "id" =>  $_POST["spelerId"]);
 
@@ -75,6 +76,12 @@ else
             <th align="left">Jeugd:</th>
             <td align="left">
                 <input type="checkbox" name="jeugd" <?php echo ($speler->jeugd)?'CHECKED':''?>>
+            </td>
+        </tr>
+        <tr>
+            <th align="left">Veteraan:</th>
+            <td align="left">
+                <input type="checkbox" name="is_veteraan" <?php echo ($speler->is_veteraan)?'CHECKED':''?>>
             </td>
         </tr>
         <tr>

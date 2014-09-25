@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS `intra_spelers` (
   `is_lid` tinyint(1) NOT NULL,
   `geslacht` enum('Man','Vrouw') NOT NULL,
   `jeugd` tinyint(1) NOT NULL,
+  `is_veteraan` tinyint(1) NOT NULL,
   `klassement` enum('Recreant','D','C2','C1','B2','B1','A') NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

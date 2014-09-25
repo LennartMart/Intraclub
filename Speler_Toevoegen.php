@@ -16,6 +16,7 @@
             "naam" =>  $_POST["naam"],
             "geslacht" => isset($_POST["geslacht"])? $_POST["geslacht"]: '',
             "jeugd" => (isset($_POST["jeugd"])) ? 1 : 0,
+            "is_veteraan" => (isset($_POST["is_veteraan"])) ? 1 : 0,
             "klassement" => $_POST["klassement"],
             "basispunten" =>  $_POST["basispunten"]);
         if(!strlen($gegevens["voornaam"])) {
@@ -85,6 +86,12 @@
             <th align="left">Jeugd:</th>
             <td align="left">
                 <input type="checkbox" name="jeugd">
+            </td>
+        </tr>
+        <tr>
+            <th align="left">Veteraan:</th>
+            <td align="left">
+                <input type="checkbox" name="is_veteraan">
             </td>
         </tr>
         <tr>

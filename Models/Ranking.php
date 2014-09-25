@@ -30,7 +30,7 @@ class Ranking {
         //Huidige ranking = basispunten
         if($speeldag_id == null)
         {
-            $huidigeRankingstring = sprintf("SELECT ISP.id AS speler_id, ISP.naam AS naam, ISP.voornaam as voornaam, ISP.geslacht AS geslacht, ISP.jeugd as jeugd,ISPS.basispunten AS gemiddelde
+            $huidigeRankingstring = sprintf("SELECT ISP.id AS speler_id, ISP.naam AS naam, ISP.voornaam as voornaam, ISP.geslacht AS geslacht,ISP.is_veteraan as is_veteraan, ISP.jeugd as jeugd,ISPS.basispunten AS gemiddelde
                                   FROM  intra_spelerperseizoen ISPS
 
                                   INNER JOIN intra_spelers ISP ON ISP.id = ISPS.speler_id
@@ -63,7 +63,7 @@ class Ranking {
         }
         else
         {
-            $huidigeRankingstring = sprintf("SELECT ISP.id AS speler_id, ISP.naam AS naam, ISP.voornaam as voornaam, ISP.geslacht AS geslacht, ISP.jeugd as jeugd, ISPS.gemiddelde AS gemiddelde
+            $huidigeRankingstring = sprintf("SELECT ISP.id AS speler_id, ISP.naam AS naam, ISP.voornaam as voornaam, ISP.geslacht AS geslacht, ISP.is_veteraan as is_veteraan, ISP.jeugd as jeugd, ISPS.gemiddelde AS gemiddelde
                                   FROM  intra_spelerperspeeldag ISPS
                                   INNER JOIN intra_spelers ISP ON ISP.id = ISPS.speler_id
                                   WHERE (

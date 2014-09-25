@@ -71,8 +71,8 @@
 <div id="container">
     <ul class="tabs">
         <li class="tab-link current" data-tab="tab-1">Algemeen</li>
-        <li class="tab-link" data-tab="tab-2">Jeugd</li>
-        <li class="tab-link" data-tab="tab-3">Vrouwen</li>
+        <li class="tab-link" data-tab="tab-2">Vrouwen</li>
+        <li class="tab-link" data-tab="tab-3">Veteranen</li>
         <li class="tab-link" data-tab="tab-4">Speeldagen</li>
     </ul>
     <div id="tab-1" class="tab-content current">
@@ -139,7 +139,7 @@
                     $positie = 1;
                     for($i = 0; $i < count($rankings["ranking"]); $i++)
                     {
-                        if($rankings["ranking"][$i]["jeugd"] == 1)
+                        if($rankings["ranking"][$i]["geslacht"] == "Vrouw")
                         {
                             echo "<tr class='selectable' href ='$speler_url". "speler_id=" . $rankings["ranking"][$i]["speler_id"] ."'>";
                             $naam = $rankings["ranking"][$i]["voornaam"]." ".$rankings["ranking"][$i]["naam"];
@@ -169,7 +169,7 @@
                 $positie = 1;
                 for($i = 0; $i < count($rankings["ranking"]); $i++)
                 {
-                    if($rankings["ranking"][$i]["geslacht"] == "Vrouw")
+                    if($rankings["ranking"][$i]["is_veteraan"] == 1)
                     {
                         echo "<tr class='selectable' href ='$speler_url". "speler_id=" . $rankings["ranking"][$i]["speler_id"] ."'>";
                         $naam = $rankings["ranking"][$i]["voornaam"]." ".$rankings["ranking"][$i]["naam"];
