@@ -85,9 +85,7 @@ class Ranking {
                     $seizoen->id = $seizoenen[1]->id;
                     $speeldagen = $seizoen->get_speeldagen();
 
-                    end($speeldagen);
-
-                    $speeldag = prev($speeldagen);
+                    $speeldag = end($speeldagen);
                     $vorigeRankingString = sprintf("SELECT @curRank := @curRank +1 AS rank, speler_id
                                                     FROM (
                                                             SELECT ISPS.speler_id AS speler_id, ISPS.gemiddelde AS gemiddelde
