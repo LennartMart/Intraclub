@@ -76,6 +76,31 @@ class Ranking {
             $speeldag->get($speeldag_id);
             if($speeldag->speeldagnummer == 1){
 
+                //Indien vorig seizoen beschikbaar, pak de laatste speeldag
+                $seizoen = new Seizoen();
+                $seizoenen = $seizoen->get_seizoenen();
+
+                if(count($seizoenen) > 1) {
+                    //We hebben een vorig seizoen
+                    $seizoen->id = $seizoenen[1]->id;
+                    $speeldagen = $seizoen->get_speeldagen();
+
+                    end($speeldagen);
+
+                    $speeldag = prev($speeldagen);
+                    $vorigeRankingString = sprintf("SELECT @curRank := @curRank +1 AS rank, speler_id
+                                                    FROM (
+                                                            SELECT ISPS.speler_id AS speler_id, ISPS.gemiddelde AS gemiddelde
+                                                            FROM intra_spelerperspeeldag ISPS
+                                                            WHERE (ISPS.speeldag_id =  '%s')
+                                                    ORDER BY gemiddelde DESC)t,
+                                                    (SELECT @curRank :=0)r;",
+
+
+                        mysql_real_escape_string($speeldag->id));
+                }
+                else
+                {
                 $vorigeRankingString = sprintf("SELECT @curRank := @curRank +1 AS rank, speler_id
                                     FROM (
                                             SELECT ISPS.speler_id AS speler_id, ISPS.basispunten AS gemiddelde
@@ -83,6 +108,7 @@ class Ranking {
                                             WHERE ISPS.seizoen_id = '%s'
                                             ORDER BY gemiddelde DESC
                                             )t, (SELECT @curRank :=0)r", $seizoen_id);
+                }
 
             }
             else
