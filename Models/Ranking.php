@@ -34,7 +34,7 @@ class Ranking {
                                   FROM  intra_spelerperseizoen ISPS
 
                                   INNER JOIN intra_spelers ISP ON ISP.id = ISPS.speler_id
-                                  WHERE ISPS.seizoen_id = '%s'
+                                  WHERE ISPS.seizoen_id = '%s' AND ISP.is_lid = 1
                                   ORDER BY gemiddelde DESC;",$seizoen_id);
 
             //Nu: Vorig seizoen of niet?
