@@ -30,7 +30,7 @@ class Ranking {
         //Huidige ranking = basispunten
         if($speeldag_id == null)
         {
-            $huidigeRankingstring = sprintf("SELECT ISP.id AS speler_id, ISP.naam AS naam, ISP.voornaam as voornaam, ISP.geslacht AS geslacht,ISP.is_veteraan as is_veteraan, ISP.jeugd as jeugd,ISPS.basispunten AS gemiddelde
+            $huidigeRankingstring = sprintf("SELECT ISP.id AS speler_id, ISP.naam AS naam, ISP.voornaam as voornaam, ISP.geslacht AS geslacht,ISP.is_veteraan as is_veteraan,ISP.klassement AS klassement, ISP.jeugd as jeugd,ISPS.basispunten AS gemiddelde
                                   FROM  intra_spelerperseizoen ISPS
 
                                   INNER JOIN intra_spelers ISP ON ISP.id = ISPS.speler_id
@@ -53,7 +53,9 @@ class Ranking {
                                                     FROM (
                                                             SELECT ISPS.speler_id AS speler_id, ISPS.gemiddelde AS gemiddelde
                                                             FROM intra_spelerperspeeldag ISPS
-                                                            WHERE (ISPS.speeldag_id =  '%s')
+															INNER JOIN intra_spelers ISP ON ISP.id = ISPS.speler_id															
+                                                            WHERE (ISPS.speeldag_id =  '%s' AND ISP.is_lid = 1)
+
                                                     ORDER BY gemiddelde DESC)t,
                                                     (SELECT @curRank :=0)r;",
 
@@ -63,7 +65,7 @@ class Ranking {
         }
         else
         {
-            $huidigeRankingstring = sprintf("SELECT ISP.id AS speler_id, ISP.naam AS naam, ISP.voornaam as voornaam, ISP.geslacht AS geslacht, ISP.is_veteraan as is_veteraan, ISP.jeugd as jeugd, ISPS.gemiddelde AS gemiddelde
+            $huidigeRankingstring = sprintf("SELECT ISP.id AS speler_id, ISP.naam AS naam, ISP.voornaam as voornaam, ISP.geslacht AS geslacht, ISP.is_veteraan as is_veteraan, ISP.klassement AS klassement, ISP.jeugd as jeugd, ISPS.gemiddelde AS gemiddelde
                                   FROM  intra_spelerperspeeldag ISPS
                                   INNER JOIN intra_spelers ISP ON ISP.id = ISPS.speler_id
                                   WHERE (
