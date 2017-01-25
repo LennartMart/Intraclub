@@ -72,8 +72,9 @@
     <ul class="tabs">
         <li class="tab-link current" data-tab="tab-1">Algemeen</li>
         <li class="tab-link" data-tab="tab-2">Vrouwen</li>
-        <li class="tab-link" data-tab="tab-3">Veteranen</li>
-        <li class="tab-link" data-tab="tab-4">Speeldagen</li>
+		<li class="tab-link" data-tab="tab-3">Recreanten</li>
+        <li class="tab-link" data-tab="tab-4">Veteranen</li>
+        <li class="tab-link" data-tab="tab-5">Speeldagen</li>
     </ul>
     <div id="tab-1" class="tab-content current">
         <table class="table table-striped">
@@ -156,7 +157,38 @@
                 ?>
              </table>
     </div>
-    <div id="tab-3" class="tab-content">
+	<div id="tab-3" class="tab-content">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Naam</th>
+                <th>Punten</th>
+            </tr>
+            </thead>
+            <?php
+                $positie = 1;
+                for($i = 0; $i < count($rankings["ranking"]); $i++)
+                {
+                    if($rankings["ranking"][$i]["klassement"] == "Recreant")
+                    {
+                        echo "<tr class='selectable' href ='$speler_url". "speler_id=" . $rankings["ranking"][$i]["speler_id"] ."'>";
+                        $naam = $rankings["ranking"][$i]["voornaam"]." ".$rankings["ranking"][$i]["naam"];
+                        $gemiddelde = $rankings["ranking"][$i]['gemiddelde'];
+                        $afgerondGemiddelde = round($gemiddelde,2);
+                        echo "<td>$positie</td>";
+                        echo "<td>$naam</td>";
+                        echo "<td>$afgerondGemiddelde</td>";
+                        echo "</tr>";
+
+                        $positie ++;
+                    }
+                }
+                echo "</table>";
+            ?>
+        </table>
+    </div>
+    <div id="tab-4" class="tab-content">
         <table class="table table-striped">
             <thead>
             <tr>
@@ -187,7 +219,7 @@
             ?>
         </table>
     </div>
-    <div id="tab-4" class="tab-content">
+    <div id="tab-5" class="tab-content">
         <table class="table table-striped">
             <thead>
             <tr>
