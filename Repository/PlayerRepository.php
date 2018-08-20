@@ -49,4 +49,33 @@
             }
             return $players; 
         }
+
+        public function update($id, $name, $lastName, $gender, $isYouth, $ranking, $isVeteran)
+        {
+            $query = sprintf("
+                UPDATE
+                    intra_spelers
+                SET
+                    voornaam = '%s',
+                    naam = '%s',
+                    geslacht = '%s',
+                    jeugd = '%s',
+                    klassement= '%s',
+                    is_veteraan = '%s',
+                    is_lid = '%s'
+
+                WHERE
+                    id = '%s';
+                ",
+                    $this->db->mysqli->real_escape_string($name),
+                    $this->db->mysqli->real_escape_string($lastName),
+                    $this->db->mysqli->real_escape_string($gender),
+                    $this->db->mysqli->real_escape_string($isYouth),
+                    $this->db->mysqli->real_escape_string($ranking),
+                    $this->db->mysqli->real_escape_string($isVeteran),
+                    $this->db->mysqli->real_escape_string($isMember),
+
+                    $this->db->mysqli->real_escape_string($id));
+            return $this->db->mysqli->query($query);
+        }
     }

@@ -43,16 +43,6 @@
             $this->seizoen = $data["seizoen"];
         }
 
-        public function get_huidig_seizoen()
-        {
-            $query = mysql_query("SELECT id, seizoen FROM intra_seizoen ORDER BY id DESC LIMIT 1;");
-            $resultaat = mysql_fetch_assoc($query);
-            $this->id = $resultaat['id'];
-            $this->seizoen = $resultaat['seizoen'];
-            return TRUE;
-        }
-
-
         // Recentste seizoen eerst
         public function get_seizoenen()
         {
@@ -292,28 +282,6 @@
 
 
         }
-
-        public function get_speeldagen()
-        {
-            if($this->id == null)
-            {
-                $this->get_huidig_seizoen();
-            }
-
-            $query = sprintf("SELECT * from intra_speeldagen WHERE seizoen_id = '%s' ORDER BY id  ASC;", mysql_real_escape_string($this->id));
-            $resultaat = mysql_query($query);
-            $speeldagen = array();
-
-            while ($rij = mysql_fetch_assoc($resultaat)) {
-                $speeldag = new Speeldag();
-                $speeldag->vulop($rij);
-                $speeldagen[$speeldag->id] = $speeldag;
-            }
-
-            return $speeldagen;
-
-        }
-
 
     }
 

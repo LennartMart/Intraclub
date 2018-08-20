@@ -6,43 +6,6 @@
 
     class Wedstrijd implements IWedstrijd
     {
-        public $wedstrijd_id;
-        public $speeldag_id;
-        public $team1_speler1;
-        public $team1_speler2;
-        public $team2_speler1;
-        public $team2_speler2;
-        public $set1_1;
-        public $set1_2;
-        public $set2_1;
-        public $set2_2;
-        public $set3_1;
-        public $set3_2;
-
-        function __construct()
-        {
-            $this->db = new ConnectionSettings();
-            $this->db->connect();
-        }
-        /**
-         * public get
-         * @param $wedstrijd_id
-         * @return bool true indien alles netjes ingevuld
-         */
-        public function get($wedstrijd_id)
-        {
-            //Haal wedstrijd op en vul de members in
-            $get_query = sprintf("SELECT * FROM intra_wedstrijden IW WHERE id = '%s';",mysql_real_escape_string($wedstrijd_id));
-
-            $gelukt = mysql_query($get_query);
-            if ($gelukt) {
-                $row = mysql_fetch_assoc($gelukt);
-                $this->vulop($row);
-                return TRUE;
-            }
-
-            return FALSE;
-        }
         /**
          * Voegt een nieuwe speeldag toe aan de database.
          * @param $data : moet alle info bevatten van de twee teams + speeldag_id
@@ -65,17 +28,17 @@
                                                 set2_2 = '%s' AND
                                                 set3_1 = '%s' AND
                                                 set3_2 = '%s';",
-                                mysql_real_escape_string($data['speeldag_id']),
-                                mysql_real_escape_string($data['team1_speler1']),
-                                mysql_real_escape_string($data['team1_speler2']),
-                                mysql_real_escape_string($data['team2_speler1']),
-                                mysql_real_escape_string($data['team2_speler2']),
-                                mysql_real_escape_string($data['set1_1']),
-                                mysql_real_escape_string($data['set1_2']),
-                                mysql_real_escape_string($data['set2_1']),
-                                mysql_real_escape_string($data['set2_2']),
-                                mysql_real_escape_string($data['set3_1']),
-                                mysql_real_escape_string($data['set3_2'])));
+                mysql_real_escape_string($data['speeldag_id']),
+                mysql_real_escape_string($data['team1_speler1']),
+                mysql_real_escape_string($data['team1_speler2']),
+                mysql_real_escape_string($data['team2_speler1']),
+                mysql_real_escape_string($data['team2_speler2']),
+                mysql_real_escape_string($data['set1_1']),
+                mysql_real_escape_string($data['set1_2']),
+                mysql_real_escape_string($data['set2_1']),
+                mysql_real_escape_string($data['set2_2']),
+                mysql_real_escape_string($data['set3_1']),
+                mysql_real_escape_string($data['set3_2'])));
             $num_rows = mysql_num_rows($result);
 
 
@@ -118,34 +81,6 @@
         }
 
 
-
-        /**
-         * Vult een object van Wedstrijd op
-         * Handig bij alle get functies!
-         * @param $resultaat
-         */
-        public function vulop($resultaat)
-        {
-            $this->wedstrijd_id = $resultaat['id'];
-            $this->speeldag_id = $resultaat['speeldag_id'];
-            $this->team1_speler1 = $resultaat['team1_speler1'];
-            $this->team1_speler2 = $resultaat['team1_speler2'];
-            $this->team2_speler1 = $resultaat['team2_speler1'];
-            $this->team2_speler2 = $resultaat['team2_speler2'];
-            $this->set1_1 = $resultaat['set1_1'];
-            $this->set1_2 = $resultaat['set1_2'];
-            $this->set2_1 = $resultaat['set2_1'];
-            $this->set2_2 = $resultaat['set2_2'];
-            $this->set3_1 = $resultaat['set3_1'];
-            $this->set3_2 = $resultaat['set3_2'];
-        }
-
-        public function delete($wedstrijd_id)
-        {
-            $delete_query = sprintf("DELETE FROM intra_wedstrijden WHERE id = '%s'",mysql_real_escape_string($wedstrijd_id));
-
-            return mysql_query($delete_query);
-        }
         public function update($wedstrijd)
         {
             //Beveiliging insert data!
