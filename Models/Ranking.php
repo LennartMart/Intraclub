@@ -114,16 +114,11 @@ class Ranking {
             else
             {
                 $vorigespeeldagnummer = $speeldag->speeldagnummer -1;
-                $vorigeRankingString = sprintf("SELECT @curRank := @curRank +1 AS rank, speler_id
-                                                FROM (
-                                                        SELECT ISPS.speler_id AS speler_id, ISPS.gemiddelde AS gemiddelde
-                                                        FROM intra_spelerperspeeldag ISPS
-                                                        INNER JOIN intra_speeldagen ISP ON ISP.id = ISPS.speeldag_id
-                                                        WHERE (ISP.seizoen_id =  '%s' AND ISP.speeldagnummer =  '%s')
-                                                        ORDER BY gemiddelde DESC)t,
-                                                (
-                                                  SELECT @curRank :=0
-                                                )r",
+                $vorigeRankingString = sprintf("SELECT ROW_NUMBER() OVER (ORDER BY ISPS.gemiddelde DESC) AS rank, ISPS.speler_id
+					FROM intra_spelerperspeeldag ISPS 
+					INNER JOIN intra_speeldagen ISP 
+					ON ISP.id = ISPS.speeldag_id WHERE (ISP.seizoen_id = '%s' AND ISP.speeldagnummer = '%s') 
+					ORDER BY rank",
                     mysql_real_escape_string($seizoen_id),mysql_real_escape_string($vorigespeeldagnummer));
 
             }
