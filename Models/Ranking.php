@@ -60,7 +60,7 @@ class Ranking {
                                                     (SELECT @curRank :=0)r;",
 
 
-                    mysql_real_escape_string($speeldag->id));
+                    mysqli_real_escape_string($speeldag->id));
             }
         }
         else
@@ -72,7 +72,7 @@ class Ranking {
                                           ISPS.speeldag_id = '%s'
                                         )
                                   ORDER BY gemiddelde DESC;",
-                mysql_real_escape_string($speeldag_id));
+                mysqli_real_escape_string($speeldag_id));
 
             $speeldag = new Speeldag();
             $speeldag->get($speeldag_id);
@@ -97,7 +97,7 @@ class Ranking {
                                                     (SELECT @curRank :=0)r;",
 
 
-                        mysql_real_escape_string($speeldag->id));
+                        mysqli_real_escape_string($speeldag->id));
                 }
                 else
                 {
@@ -119,24 +119,24 @@ class Ranking {
 					INNER JOIN intra_speeldagen ISP 
 					ON ISP.id = ISPS.speeldag_id WHERE (ISP.seizoen_id = '%s' AND ISP.speeldagnummer = '%s') 
 					ORDER BY rank",
-                    mysql_real_escape_string($seizoen_id),mysql_real_escape_string($vorigespeeldagnummer));
+                    mysqli_real_escape_string($seizoen_id),mysqli_real_escape_string($vorigespeeldagnummer));
 
             }
         }
 
-        $huidigeRanking = mysql_query($huidigeRankingstring);
+        $huidigeRanking = mysqli_query($huidigeRankingstring);
         $ranking = array();
 
-        while ($ranking_array = mysql_fetch_array($huidigeRanking)) {
+        while ($ranking_array = mysqli_fetch_array($huidigeRanking)) {
             $ranking[] = $ranking_array;
         }
         $beide_rankings = Array();
         if($vorigeRankingString != "")
         {
             $vorigeRankingArray = array();
-            $vorigeRanking = mysql_query($vorigeRankingString);
+            $vorigeRanking = mysqli_query($vorigeRankingString);
 
-            while ($ranking_array = mysql_fetch_array($vorigeRanking)) {
+            while ($ranking_array = mysqli_fetch_array($vorigeRanking)) {
                 $vorigeRankingArray[$ranking_array["speler_id"]] = $ranking_array["rank"];
             }
             $beide_rankings["vorigeRanking"] = $vorigeRankingArray;
@@ -160,13 +160,13 @@ class Ranking {
                                           ISPS.speeldag_id = '%s'
                                         )
                                   ORDER BY gemiddelde DESC;",
-            mysql_real_escape_string($speeldag_id));
+            mysqli_real_escape_string($speeldag_id));
 
-        $resultaat = mysql_query($query);
+        $resultaat = mysqli_query($query);
 
         $ranking = array();
 
-        while ($ranking_array = mysql_fetch_array($resultaat)) {
+        while ($ranking_array = mysqli_fetch_array($resultaat)) {
 
             $ranking[] = $ranking_array;
         }

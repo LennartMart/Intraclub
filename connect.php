@@ -11,13 +11,13 @@
         {
 
             // establish connection
-            if (!$this->connLink = mysql_connect($this->hostname, $this->username, $this->password)) {
-                throw new Exception('Error connecting to MySQL: ' . mysql_error());
+            if (!$this->connLink = mysqli_connect($this->hostname, $this->username, $this->password)) {
+                throw new Exception('Error connecting to MySQL: ' . mysqli_error());
             }
 
             // select database
-            if (!mysql_select_db($this->db, $this->connLink)) {
-                throw new Exception('Error selecting database: ' . mysql_error());
+            if (!mysqli_select_db($this->connLink, $this->db)) {
+                throw new Exception('Error selecting database: ' . mysqli_error());
             }
         }
     }

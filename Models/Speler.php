@@ -31,11 +31,11 @@
 
         public function get($speler_id)
         {
-            $query = sprintf("SELECT * FROM intra_spelers WHERE id= '%s';", mysql_real_escape_string($speler_id));
-            $resultaat = mysql_query($query);
+            $query = sprintf("SELECT * FROM intra_spelers WHERE id= '%s';", mysqli_real_escape_string($speler_id));
+            $resultaat = mysqli_query($query);
             if($resultaat != FALSE)
             {
-                $this->vulop(mysql_fetch_assoc($resultaat));
+                $this->vulop(mysqli_fetch_assoc($resultaat));
             }
         }
         public function getRankingHistory($seizoen_id){
@@ -47,11 +47,11 @@
                       FROM intra_spelerperspeeldag
                       WHERE speler_id = '%s' ORDER BY speeldag_id)",$this->id,$seizoen_id,$this->id);
 
-            $resultaat = mysql_query($query);
+            $resultaat = mysqli_query($query);
             $punten = array();
             if($resultaat != FALSE)
             {
-                while ($punten_array = mysql_fetch_array($resultaat)) {
+                while ($punten_array = mysqli_fetch_array($resultaat)) {
                     $punten[] = round($punten_array["punten"],2);
                 }
             }
@@ -62,11 +62,11 @@
         public function create($data)
         {
 
-            //Bestaat seizoen al of niet?
+            //Bestaat speler al of niet?
             $query = sprintf("SELECT count(id) AS aantal FROM intra_spelers WHERE naam ='%s' AND voornaam = '%s'",$data['naam'], $data['voornaam']);
-            $resultaat = mysql_query($query);
-            $aantal = @mysql_result($resultaat, 0, aantal);
-            if (!$aantal) {
+            $resultaat = mysqli_query($query);
+            $aantal = mysqli_num_rows($resultaat);
+            if ($aantal == 0) {
                 //Insert een nieuwe rij in de spelerstabel
                 //Nieuwe speler is automatisch lid - waarom zou je hem anders toevoegen?
                 $query = sprintf("
@@ -81,19 +81,19 @@
                     is_veteraan = '%s',
                     is_lid = 1
                     ",
-                    mysql_real_escape_string($data['voornaam']),
-                    mysql_real_escape_string($data['naam']),
-                    mysql_real_escape_string($data['geslacht']),
-                    mysql_real_escape_string($data['jeugd']),
-                    mysql_real_escape_string($data['klassement']),
-                    mysql_real_escape_string($data['is_veteraan']));
+                    mysqli_real_escape_string($data['voornaam']),
+                    mysqli_real_escape_string($data['naam']),
+                    mysqli_real_escape_string($data['geslacht']),
+                    mysqli_real_escape_string($data['jeugd']),
+                    mysqli_real_escape_string($data['klassement']),
+                    mysqli_real_escape_string($data['is_veteraan']));
 
-                $result = mysql_query($query);
+                $result = mysqli_query($query);
                 if (!$result) {
                     return FALSE;
                 } else {
                     //Haal de gegenereerde ID op.
-                    $speler_id = mysql_insert_id();
+                    $speler_id = mysqli_insert_id();
 
                     $huidig_seizoen = new Seizoen();
                     $huidig_seizoen->get_huidig_seizoen();
@@ -111,11 +111,11 @@
                                   gespeelde_punten = 0,
                                   gewonnen_punten = 0
                                   ",
-                        mysql_real_escape_string($speler_id),
-                        mysql_real_escape_string($huidig_seizoen->id),
-                        mysql_real_escape_string($data["basispunten"]));
+                        mysqli_real_escape_string($speler_id),
+                        mysqli_real_escape_string($huidig_seizoen->id),
+                        mysqli_real_escape_string($data["basispunten"]));
 
-                    $result = mysql_query($query);
+                    $result = mysqli_query($query);
                     if (!$result) {
                         return FALSE;
                     }
@@ -132,25 +132,25 @@
         public function get_seizoen_stats($seizoen_id)
         {
             $query = sprintf("SELECT * from intra_spelerperseizoen where speler_id = '%s' AND seizoen_id = '%s';",
-                                mysql_real_escape_string($this->id),
-                                mysql_real_escape_string($seizoen_id)
+                                mysqli_real_escape_string($this->id),
+                                mysqli_real_escape_string($seizoen_id)
                             );
-            $resultaat = mysql_query($query);
+            $resultaat = mysqli_query($query);
 
             //return assoc tabel
-            return mysql_fetch_assoc($resultaat);
+            return mysqli_fetch_assoc($resultaat);
         }
 
         public function get_speeldagstats($speeldag_id)
         {
             $query = sprintf("SELECT * from intra_spelerperspeeldag where speler_id = '%s' AND speeldag_id = '%s';",
-                                mysql_real_escape_string($this->id),
-                                mysql_real_escape_string($speeldag_id)
+                                mysqli_real_escape_string($this->id),
+                                mysqli_real_escape_string($speeldag_id)
                             );
 
-            $resultaat = mysql_query($query);
+            $resultaat = mysqli_query($query);
             //return assoc tabel
-            return mysql_fetch_assoc($resultaat);
+            return mysqli_fetch_assoc($resultaat);
         }
 
         public function update_basisinfo($data)
@@ -170,16 +170,16 @@
                 WHERE
                     id = '%s';
                 ",
-                    mysql_real_escape_string($data['voornaam']),
-                    mysql_real_escape_string($data['naam']),
-                    mysql_real_escape_string($data['geslacht']),
-                    mysql_real_escape_string($data['jeugd']),
-                    mysql_real_escape_string($data['klassement']),
-                    mysql_real_escape_string($data['is_veteraan']),
-                    mysql_real_escape_string($data['is_lid']),
+                    mysqli_real_escape_string($data['voornaam']),
+                    mysqli_real_escape_string($data['naam']),
+                    mysqli_real_escape_string($data['geslacht']),
+                    mysqli_real_escape_string($data['jeugd']),
+                    mysqli_real_escape_string($data['klassement']),
+                    mysqli_real_escape_string($data['is_veteraan']),
+                    mysqli_real_escape_string($data['is_lid']),
 
-                    mysql_real_escape_string($data['id']));
-            return mysql_query($query);
+                    mysqli_real_escape_string($data['id']));
+            return mysqli_query($query);
         }
 
         public function update_seizoenstats($data)
@@ -197,15 +197,15 @@
             WHERE
                 speler_id = '%s' and seizoen_id = '%s';
             ",
-                mysql_real_escape_string($data['gespeelde_sets']),
-                mysql_real_escape_string($data['gewonnen_sets']),
-                mysql_real_escape_string($data['gespeelde_punten']),
-                mysql_real_escape_string($data['gewonnen_punten']),
-                mysql_real_escape_string($this->id),
-                mysql_real_escape_string($data['seizoen']));
+                mysqli_real_escape_string($data['gespeelde_sets']),
+                mysqli_real_escape_string($data['gewonnen_sets']),
+                mysqli_real_escape_string($data['gespeelde_punten']),
+                mysqli_real_escape_string($data['gewonnen_punten']),
+                mysqli_real_escape_string($this->id),
+                mysqli_real_escape_string($data['seizoen']));
 
             echo "$query <br/>";
-            return mysql_query($query);
+            return mysqli_query($query);
         }
 
         //TODO: Wat als er nog geen data zit in db?
@@ -223,12 +223,12 @@
             ON DUPLICATE KEY UPDATE
                 gemiddelde = '%s'
             ",
-            mysql_real_escape_string($tussenstand_speeldag),
-            mysql_real_escape_string($this->id),
-            mysql_real_escape_string($speeldag_id),
-            mysql_real_escape_string($tussenstand_speeldag));
+            mysqli_real_escape_string($tussenstand_speeldag),
+            mysqli_real_escape_string($this->id),
+            mysqli_real_escape_string($speeldag_id),
+            mysqli_real_escape_string($tussenstand_speeldag));
 
-            return mysql_query($query);
+            return mysqli_query($query);
         }
 
         public function vulop($speler)
@@ -267,16 +267,16 @@
                                           ) AND ispeel.seizoen_id = '%s'
                                         )
                                   ORDER BY iw.id ASC;",
-                            mysql_real_escape_string($this->id),
-                            mysql_real_escape_string($this->id),
-                            mysql_real_escape_string($this->id),
-                            mysql_real_escape_string($this->id),
-                            mysql_real_escape_string($seizoen_id));
-            $resultaat = mysql_query($query);
+                            mysqli_real_escape_string($this->id),
+                            mysqli_real_escape_string($this->id),
+                            mysqli_real_escape_string($this->id),
+                            mysqli_real_escape_string($this->id),
+                            mysqli_real_escape_string($seizoen_id));
+            $resultaat = mysqli_query($query);
 
             $wedstrijden = array();
 
-            while ($wedstrijd_array = mysql_fetch_array($resultaat)) {
+            while ($wedstrijd_array = mysqli_fetch_array($resultaat)) {
                 $wedstrijd = new Wedstrijd();
                 $wedstrijd->vulop($wedstrijd_array);
                 $wedstrijden[] = $wedstrijd;
@@ -284,4 +284,5 @@
 
             return $wedstrijden;
         }
+        
     }

@@ -26,10 +26,10 @@
         public function get($seizoen_id)
         {
             //Haal wedstrijd op en vul de members in
-            $query = sprintf("SELECT from intra_seizoenen WHERE id = '%s';",mysql_real_escape_string($seizoen_id));
-            $gelukt = mysql_query($query);
+            $query = sprintf("SELECT from intra_seizoenen WHERE id = '%s';",mysqli_real_escape_string($seizoen_id));
+            $gelukt = mysqli_query($query);
             if ($gelukt) {
-                $row = mysql_fetch_assoc($gelukt);
+                $row = mysqli_fetch_assoc($gelukt);
                 $this->vulop($row);
                 return TRUE;
             }
@@ -45,8 +45,8 @@
 
         public function get_huidig_seizoen()
         {
-            $query = mysql_query("SELECT id, seizoen FROM intra_seizoen ORDER BY id DESC LIMIT 1;");
-            $resultaat = mysql_fetch_assoc($query);
+            $query = mysqli_query("SELECT id, seizoen FROM intra_seizoen ORDER BY id DESC LIMIT 1;");
+            $resultaat = mysqli_fetch_assoc($query);
             $this->id = $resultaat['id'];
             $this->seizoen = $resultaat['seizoen'];
             return TRUE;
@@ -56,9 +56,9 @@
         // Recentste seizoen eerst
         public function get_seizoenen()
         {
-            $resultaat = mysql_query("SELECT * FROM intra_seizoen ORDER BY id DESC ");
+            $resultaat = mysqli_query("SELECT * FROM intra_seizoen ORDER BY id DESC ");
             $seizoenen = array();
-            while ($array_seizoen = mysql_fetch_array($resultaat)) {
+            while ($array_seizoen = mysqli_fetch_array($resultaat)) {
                 $seizoen = new Seizoen();
                 $seizoen->id = $array_seizoen["id"];
                 $seizoen->seizoen = $array_seizoen["seizoen"];
@@ -72,8 +72,8 @@
 
             //Bestaat seizoen al of niet?
             $query = "SELECT count(id) AS aantal FROM intra_seizoen WHERE seizoen='$seizoen'";
-            $resultaat = mysql_query($query);
-            $aantal = @mysql_result($resultaat, 0, aantal);
+            $resultaat = mysqli_query($query);
+            $aantal = @mysqli_result($resultaat, 0, aantal);
 
             if (!$aantal) {
 
@@ -84,14 +84,14 @@
 
                 //Seizoen bestaat niet -> invullen in database
                 $query = "INSERT INTO intra_seizoen SET seizoen='$seizoen'";
-                mysql_query($query);
+                mysqli_query($query);
 
                 //Haal de gegenereerde ID op.
-                $huidig_seizoen = mysql_insert_id();
+                $huidig_seizoen = mysqli_insert_id();
 
                 //Haal de eindstand op van elke speler van vorig seizoen
                 //En voeg nieuwe rij toe in spelerperseizoen
-                $resultaat = mysql_query("SELECT speler_id FROM intra_spelerperseizoen WHERE seizoen_id='$vorige_seizoen_id';");
+                $resultaat = mysqli_query("SELECT speler_id FROM intra_spelerperseizoen WHERE seizoen_id='$vorige_seizoen_id';");
                 echo "SELECT speler_id FROM intra_spelerperseizoen WHERE seizoen_id='$vorige_seizoen_id';";
                 if($resultaat == false)
                 {
@@ -99,7 +99,7 @@
                 }
                 else
                 {
-                    while ($rij = mysql_fetch_array($resultaat)) {
+                    while ($rij = mysqli_fetch_array($resultaat)) {
                         $insert_query = sprintf("
                         INSERT INTO
                             intra_spelerperseizoen
@@ -114,7 +114,7 @@
                             ", $rij["speler_id"], $huidig_seizoen, '19');
 
                         echo $insert_query;
-                        $gelukt = mysql_query($insert_query);
+                        $gelukt = mysqli_query($insert_query);
                         if (!$gelukt) {
                             return FALSE;
                         }
@@ -300,11 +300,11 @@
                 $this->get_huidig_seizoen();
             }
 
-            $query = sprintf("SELECT * from intra_speeldagen WHERE seizoen_id = '%s' ORDER BY id  ASC;", mysql_real_escape_string($this->id));
-            $resultaat = mysql_query($query);
+            $query = sprintf("SELECT * from intra_speeldagen WHERE seizoen_id = '%s' ORDER BY id  ASC;", mysqli_real_escape_string($this->id));
+            $resultaat = mysqli_query($query);
             $speeldagen = array();
 
-            while ($rij = mysql_fetch_assoc($resultaat)) {
+            while ($rij = mysqli_fetch_assoc($resultaat)) {
                 $speeldag = new Speeldag();
                 $speeldag->vulop($rij);
                 $speeldagen[$speeldag->id] = $speeldag;

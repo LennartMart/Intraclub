@@ -46,7 +46,7 @@
             }
             else
             {
-                echo "<p> Er trad een uitzonderlijke error op: " + mysql_error() + " </p>";
+                echo "<p> Er trad een uitzonderlijke error op: " + mysqli_error() + " </p>";
             }
         }
         else

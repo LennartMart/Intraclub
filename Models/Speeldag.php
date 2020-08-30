@@ -31,8 +31,8 @@
             $seizoen = new Seizoen();
             $seizoen->get_huidig_seizoen();
 
-            $result = mysql_query(sprintf("SELECT * FROM intra_speeldagen WHERE datum = '%s'", mysql_real_escape_string($data['datum'])));
-            $num_rows = mysql_num_rows($result);
+            $result = mysqli_query(sprintf("SELECT * FROM intra_speeldagen WHERE datum = '%s'", mysqli_real_escape_string($data['datum'])));
+            $num_rows = mysqli_num_rows($result);
 
             if ($num_rows == 0) {
                 $query = sprintf("
@@ -45,10 +45,10 @@
                       gemiddeld_verliezend = 0,
                       is_berekend = 0
                       ",
-                            mysql_real_escape_string($data['speeldagnummer']),
-                            mysql_real_escape_string($seizoen->id),
-                            mysql_real_escape_string($data['datum']));
-                return mysql_query($query);
+                            mysqli_real_escape_string($data['speeldagnummer']),
+                            mysqli_real_escape_string($seizoen->id),
+                            mysqli_real_escape_string($data['datum']));
+                return mysqli_query($query);
             }
 
 
@@ -62,11 +62,11 @@
          */
         public function get($speeldag_id)
         {
-            $query = sprintf("SELECT * FROM intra_speeldagen WHERE id= '%s';", mysql_real_escape_string($speeldag_id));
-            $resultaat = mysql_query($query);
+            $query = sprintf("SELECT * FROM intra_speeldagen WHERE id= '%s';", mysqli_real_escape_string($speeldag_id));
+            $resultaat = mysqli_query($query);
             if($resultaat != FALSE)
             {
-                $this->vulop(mysql_fetch_assoc($resultaat));
+                $this->vulop(mysqli_fetch_assoc($resultaat));
             }
         }
 
@@ -77,10 +77,10 @@
          */
         public function get_wedstrijden()
         {
-            $query = sprintf("SELECT * FROM intra_wedstrijden WHERE speeldag_id= '%s' ORDER BY id ASC;", mysql_real_escape_string($this->id));
-            $resultaat = mysql_query($query);
+            $query = sprintf("SELECT * FROM intra_wedstrijden WHERE speeldag_id= '%s' ORDER BY id ASC;", mysqli_real_escape_string($this->id));
+            $resultaat = mysqli_query($query);
             $wedstrijden = array();
-            while ($array_uitslagen = mysql_fetch_array($resultaat)) {
+            while ($array_uitslagen = mysqli_fetch_array($resultaat)) {
                 $wedstrijd = new Wedstrijd();
                 $wedstrijd->vulop($array_uitslagen);
                 $wedstrijden[] = $wedstrijd;
@@ -96,8 +96,8 @@
                 $seizoen->get_huidig_seizoen();
                 $seizoen_id = $seizoen->id;
             }
-            $resultaat = mysql_query(sprintf("SELECT * FROM intra_speeldagen WHERE seizoen_id = '%s' ORDER BY speeldagnummer DESC LIMIT 1;",$seizoen_id));
-            $array_speeldag = mysql_fetch_array($resultaat);
+            $resultaat = mysqli_query(sprintf("SELECT * FROM intra_speeldagen WHERE seizoen_id = '%s' ORDER BY speeldagnummer DESC LIMIT 1;",$seizoen_id));
+            $array_speeldag = mysqli_fetch_array($resultaat);
             $this->vulop($array_speeldag);
         }
 
@@ -109,8 +109,8 @@
                 $seizoen->get_huidig_seizoen();
                 $seizoen_id = $seizoen->id;
             }
-            $resultaat = mysql_query(sprintf("SELECT * FROM intra_speeldagen WHERE seizoen_id = '%s' AND is_berekend = 1 ORDER BY speeldagnummer DESC LIMIT 1;",$seizoen_id));
-            $array_speeldag = mysql_fetch_array($resultaat);
+            $resultaat = mysqli_query(sprintf("SELECT * FROM intra_speeldagen WHERE seizoen_id = '%s' AND is_berekend = 1 ORDER BY speeldagnummer DESC LIMIT 1;",$seizoen_id));
+            $array_speeldag = mysqli_fetch_array($resultaat);
             $this->vulop($array_speeldag);
         }
         /**
@@ -139,12 +139,12 @@
             SET gemiddeld_verliezend = '%s',speeldagnummer = '%s', datum = '%s', is_berekend = 1
             WHERE id = '%s';
         ",
-                mysql_real_escape_string($this->gemiddeld_verliezend),
-                mysql_real_escape_string($this->speeldagnummer),
-                mysql_real_escape_string($this->datum),
-                mysql_real_escape_string($this->id));
+                mysqli_real_escape_string($this->gemiddeld_verliezend),
+                mysqli_real_escape_string($this->speeldagnummer),
+                mysqli_real_escape_string($this->datum),
+                mysqli_real_escape_string($this->id));
 
-            return mysql_query($query);
+            return mysqli_query($query);
         }
         public function update_gemiddeldverliezend()
         {
@@ -153,10 +153,10 @@
             SET gemiddeld_verliezend = '%s', is_berekend = 1
             WHERE id = '%s';
         ",
-                mysql_real_escape_string($this->gemiddeld_verliezend),
-                mysql_real_escape_string($this->id));
+                mysqli_real_escape_string($this->gemiddeld_verliezend),
+                mysqli_real_escape_string($this->id));
 
             echo "$query <br/>";
-            return mysql_query($query);
+            return mysqli_query($query);
         }
     }

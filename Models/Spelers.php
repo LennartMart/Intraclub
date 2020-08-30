@@ -25,9 +25,9 @@
                 $query = "SELECT * FROM intra_spelers ORDER BY voornaam, naam";
             }
 
-            $resultaat = mysql_query($query);
+            $resultaat = mysqli_query($query);
             $spelers = array();
-            while ($array_spelers = mysql_fetch_array($resultaat)) {
+            while ($array_spelers = mysqli_fetch_array($resultaat)) {
                 $speler = new Speler();
                 $speler->vulop($array_spelers);
                 $spelers[] = $speler;
@@ -43,9 +43,9 @@
                 $query = "SELECT * FROM intra_spelers ORDER BY voornaam, naam";
             }
 
-            $resultaat = mysql_query($query);
+            $resultaat = mysqli_query($query);
             $spelers = array();
-            while ($array_spelers = mysql_fetch_array($resultaat)) {
+            while ($array_spelers = mysqli_fetch_array($resultaat)) {
                 $speler = new Speler();
                 $speler->vulop($array_spelers);
                 $spelers[$speler->id] = $speler;
@@ -61,10 +61,10 @@
                 $seizoen->get_huidig_seizoen();
                 $seizoen_id = $seizoen->id;
             }
-            $query = sprintf("SELECT AVG(basispunten) AS gemiddelde_alle FROM intra_spelerperseizoen WHERE seizoen_id = '%s';", mysql_real_escape_string($seizoen_id));
-            $resultaat = mysql_query($query);
-            $gemiddelde_alle =  @mysql_result($resultaat, 0, gemiddelde_alle);
-            if($gemiddelde_alle == false)
+            $query = sprintf("SELECT AVG(basispunten) AS gemiddelde_alle FROM intra_spelerperseizoen WHERE seizoen_id = '%s';", mysqli_real_escape_string($seizoen_id));
+            $resultaat = mysqli_query($query);
+            $gemiddelde_alle =  mysqli_num_rows($resultaat);
+            if($gemiddelde_alle == 0)
             {
                 return 16;
             }
@@ -77,8 +77,8 @@
         public function get_klassementen()
         {
             $enums = array();
-            $result=mysql_query('SHOW COLUMNS FROM intra_spelers WHERE field=\'klassement\'');
-            while ($row=mysql_fetch_row($result))
+            $result=mysqli_query('SHOW COLUMNS FROM intra_spelers WHERE field=\'klassement\'');
+            while ($row=mysqli_fetch_row($result))
             {
                 foreach(explode("','",substr($row[1],6,-2)) as $v)
                 {
